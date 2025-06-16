@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HL7 FHIR Project: Team Roles & Responsibilities</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+        }
+        /* HL7 Brand Colors */
+        :root {
+            --hl7-blue: #00589C;
+            --hl7-orange: #F58A21;
+            --hl7-gray: #4A4A4A;
+        }
+        .hl7-blue-bg { background-color: var(--hl7-blue); }
+        .hl7-orange-bg { background-color: var(--hl7-orange); }
+        .hl7-blue-text { color: var(--hl7-blue); }
+        .hl7-orange-text { color: var(--hl7-orange); }
+        
+        .role-card {
+            border-left-width: 4px;
+            border-left-color: var(--hl7-blue);
+            transition: all 0.3s ease-in-out;
+        }
+        .role-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .sticky-nav a {
+            transition: all 0.2s ease;
+        }
+        .sticky-nav a:hover, .sticky-nav a.active {
+            background-color: var(--hl7-blue);
+            color: white;
+            transform: translateX(4px);
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <!-- Header -->
+    <header class="bg-white shadow-md p-4 sticky top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" viewBox="0 0 200 200" xml:space="preserve"><path fill="#00589C" d="M189.4 68.3c-5.8-3.3-10.4-8.8-12.8-15.4-2.1-5.8-2.1-12.2-0.3-18.2 1.5-5.2 4.4-9.8 8.4-13.4 4-3.6 8.8-6.1 14.1-7.2h-47.5L100 0 48.7 14.1H1.2C6.5 15.2 11.3 17.7 15.3 21.3c4 3.6 6.9 8.1 8.4 13.4 1.8 6 1.8 12.5-0.3 18.2-2.4 6.6-7 12.1-12.8 15.4-5.8 3.3-12.3 4.2-18.5 2.6v58.2c6.2 1.6 12.7 0.7 18.5 2.6 5.8 3.3 10.4 8.8 12.8 15.4 2.1 5.8 2.1 12.2 0.3 18.2-1.5 5.2-4.4 9.8-8.4 13.4-4 3.6-8.8 6.1-14.1 7.2h47.5L100 200l51.3-14.1h47.5c-5.3-1.1-10.1-3.6-14.1-7.2-4-3.6-6.9-8.1-8.4-13.4-1.8-6-1.8-12.5 0.3-18.2 2.4-6.6 7-12.1 12.8-15.4 5.8-3.3 12.3-4.2 18.5-2.6V70.9c-6.2-1.6-12.7-0.7-18.5-2.6zM100 135.5V200L51.3 185.9h97.4L100 135.5zM1.2 70.9v58.2h197.6V70.9H1.2zM100 64.5V0l48.7 14.1H51.3L100 64.5z"/></svg>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-bold hl7-blue-text">FHIR Project Team Roles</h1>
+                    <p class="text-sm text-slate-500">CDC Foundation FHIR Training | April-June 2025</p>
+                </div>
+            </div>
+            <div class="hidden md:block text-right">
+                <p class="font-semibold">Diego Kaminker, Viet Nguyen, Benji Graham</p>
+                <p class="text-sm text-slate-500">HL7 International, 2025</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="container mx-auto mt-8 flex flex-col lg:flex-row">
+        <!-- Sticky Navigation -->
+        <aside class="lg:w-1/4 lg:sticky top-24 self-start p-4 mb-8 lg:mb-0">
+            <h3 class="font-bold text-lg mb-4 hl7-blue-text border-b-2 border-slate-200 pb-2">Team Roles</h3>
+            <nav id="role-nav" class="sticky-nav space-y-1">
+                <a href="#role1" class="block p-2 rounded-md text-slate-700 font-medium">Systems Engineer</a>
+                <a href="#role2" class="block p-2 rounded-md text-slate-700 font-medium">UX/UI Designer</a>
+                <a href="#role3" class="block p-2 rounded-md text-slate-700 font-medium">Clinical Terminologist</a>
+                <a href="#role4" class="block p-2 rounded-md text-slate-700 font-medium">Solution Architect</a>
+                <a href="#role5" class="block p-2 rounded-md text-slate-700 font-medium">Health Enterprise Architect</a>
+                <a href="#role6" class="block p-2 rounded-md text-slate-700 font-medium">Information Security Officer</a>
+                <a href="#role7" class="block p-2 rounded-md text-slate-700 font-medium">Integrated Healthcare Expert</a>
+                <a href="#role8" class="block p-2 rounded-md text-slate-700 font-medium">Public Health SME</a>
+                <a href="#role9" class="block p-2 rounded-md text-slate-700 font-medium">Project Manager</a>
+                <a href="#role10" class="block p-2 rounded-md text-slate-700 font-medium">Business/System Analyst</a>
+                <a href="#role11" class="block p-2 rounded-md text-slate-700 font-medium">Interoperability/FHIR Expert</a>
+                <a href="#role12" class="block p-2 rounded-md text-slate-700 font-medium">Product Owner</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="lg:w-3/4 px-4 space-y-12">
+            <!-- Disclaimer & Intro Section -->
+            <section id="intro" class="bg-white p-6 rounded-lg shadow-sm">
+                <h2 class="text-2xl font-bold hl7-blue-text mb-4">Who Do You Need on Your FHIR Project?</h2>
+                <div class="bg-blue-50 border-l-4 border-blue-500 text-blue-800 p-4 mb-6" role="alert">
+                    <p class="font-bold">Disclaimer</p>
+                    <p>Do not think of these roles as people you need to hire. You may not need some of these, or these roles can be assigned to current staff if they can participate in the project and have the correct set of skills.</p>
+                </div>
+
+                <div class="bg-amber-50 border-l-4 border-amber-500 p-6 rounded-lg flex items-center space-x-6">
+                    <i class="fas fa-search text-5xl text-amber-500"></i>
+                    <div>
+                        <h3 class="text-2xl font-bold text-amber-700">Let's Play Clue!</h3>
+                        <p class="mt-2 text-slate-700">Team building can be boring... so let's play a game. Instead of "Whodunnit," we're playing <strong class="hl7-orange-text">"Who will do it?"</strong></p>
+                        <p class="mt-2 text-sm">Discover the roles and skills needed for a successful implementation.</p>
+                        <a href="https://tinyurl.com/fhircluedo" target="_blank" class="inline-block mt-4 hl7-orange-bg text-white font-bold py-2 px-4 rounded hover:bg-amber-600 transition-colors">Play the Game</a>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Dynamically generated role cards will go here -->
+            <div id="roles-container" class="space-y-12">
+              <!-- Cards are injected by JavaScript -->
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Back to Top Button -->
+    <button id="to-top-button" title="Go To Top"
+        class="hidden fixed z-50 bottom-10 right-10 p-4 border-0 w-14 h-14 rounded-full shadow-md hl7-blue-bg text-white text-lg font-semibold transition-opacity duration-300">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+        const rolesData = [
+            { id: "role1", title: "Systems Engineer/ Full Stack Developer", icon: "fa-cogs", content: {
+                description: "Designs, develops, and/or adapts digital health software (web and mobile) and implements PH specifications structured in HL7 FHIR IGs. Conducts comprehensive reviews of FHIR specs, designs modular components, develops testing frameworks, and works with domain experts to consume clinical practice guidelines as a service.",
+                skills: "Front-end (HTML, CSS, JS, React/Angular), Back-end (Node.js), Mobile (Android/iOS), Databases (SQL/NoSQL), Interoperability protocols (JSON, XML, REST), and proficient understanding of HL7 FHIR.",
+                education: "Essential: Bachelor's in CS or related. Desirable: Master's in Health Informatics, HL7/FHIR certifications.",
+                experience: "Essential: 3-5 years as Full Stack Developer, 2+ years in healthcare software, experience with HL7 FHIR."
+            }},
+            { id: "role2", title: "User Experience / User Interface (UX/UI) Designer", icon: "fa-palette", content: {
+                description: "Conducts user research, organizes design thinking sessions, and collaborates with a multidisciplinary team to ensure digital health interfaces are user-friendly, clinically accurate, and technically interoperable. Develops personas, journey maps, wireframes, and prototypes, and executes usability testing.",
+                skills: "Human-centered design, user flows, wireframing, prototyping tools (Figma, Adobe XD), accessibility standards, collaboration, and communication.",
+                education: "Essential: Bachelor's in interaction design, product design, or related. Desirable: Master's degree, specific education on UX/UI for healthcare.",
+                experience: "Essential: 3+ years in UX/UI product design (some in healthcare), mobile/responsive design, interactive prototyping, and usability testing."
+            }},
+            { id: "role3", title: "Clinical Terminologist", icon: "fa-book-medical", content: {
+                description: "Assesses national health information systems to identify and map clinical terminologies. Curates data dictionaries, creates concept mappings, and works with teams to implement chosen terminologies (e.g., SNOMED CT, LOINC, ICD) across digital health solutions, ensuring proper use in FHIR implementation guides.",
+                skills: "Deep understanding of healthcare data interoperability, proficiency in terminologies (ICD, SNOMED CT, LOINC), knowledge of terminology services, and health informatics principles.",
+                education: "Essential: Bachelor's in Health/Medical Informatics, Nursing, Pharmacy or related. Desirable: Certifications in terminologies and HL7 FHIR.",
+                experience: "Essential: Direct experience implementing clinical terminologies in HIT systems. Desirable: Experience with national health projects, FHIR value sets, and participation in standards working groups."
+            }},
+            { id: "role4", title: "Solution Architect", icon: "fa-sitemap", content: {
+                description: "Analyzes business, information, and technology elements to devise solutions for specific healthcare challenges. Proposes building blocks, oversees implementation tasks, mitigates risks, and ensures the solution remains consistent with requirements. Selects appropriate technologies and creates detailed architectural documentation.",
+                skills: "Solution architecture principles, various programming languages, in-depth knowledge of interoperability standards (HL7 FHIR), cloud platforms (AWS, Azure, GCP), DevOps, and agile methods.",
+                education: "Essential: Bachelor's in Software Engineering, IT or related. Desirable: Master's degree, certifications in software development, project management, and HL7 FHIR.",
+                experience: "Essential: 5+ years as an application architect or main developer leading technical teams. Proven experience in software architecture and DevOps."
+            }},
+            { id: "role5", title: "Health Enterprise Architect", icon: "fa-building", content: {
+                description: "Collaborates with national authorities to understand strategic healthcare goals. Develops and maintains a robust enterprise architecture framework (business, data, application, technology) and assists in aligning IT product acquisition with this framework. Leads the development of integrated designs for Health Information Exchange (HIE).",
+                skills: "HIE standards, data warehouse/BI solutions, data modeling, cloud services, network security, and international semantic standards (LOINC, SNOMED). Understanding of APIs, IaC, SDLC, and containerization.",
+                education: "Essential: Bachelor's/Master's in CS or IT. Specific training on Enterprise Architecture. Desirable: TOGAF/Zachman certification, interoperability certifications.",
+                experience: "Essential: 7+ years in IT (Systems Analysis, Software Engineering), with at least 3 years as an Enterprise/Solutions/Data Architect. Experience with DHP and HIE projects."
+            }},
+            { id: "role6", title: "Information Security Officer", icon: "fa-shield-alt", content: {
+                description: "Applies robust security measures to protect sensitive health information. Evaluates cybersecurity preparedness, identifies threats, develops risk mitigation strategies, and ensures compliance with security policies and regulations. Oversees security technology deployment and leads incident response.",
+                skills: "In-depth knowledge of cybersecurity, risk assessment, security audits, and familiarity with health interoperability frameworks. Strong analytical and communication skills.",
+                education: "Essential: Bachelor's in Information Security, Cybersecurity, or related. Desirable: Master's degree, CISSP/CISM/CEH or equivalent certification.",
+                experience: "Essential: 3-5 years in risk assessment and mitigation. Minimum 3 years in developing and implementing information security policies and incident response."
+            }},
+            { id: "role7", title: "Integrated Healthcare Expert", icon: "fa-heartbeat", content: {
+                description: "Advocates for integrated health services based on Primary Health Care principles. Assesses health system needs, identifies gaps, and coordinates among stakeholders to avoid siloed interventions, promoting the use of interoperability standards for a cohesive Digital Health Platform.",
+                skills: "Strategic/technical support for integrated healthcare, health program management, understanding of clinical pathways, and familiarity with interoperability standards (HL7 FHIR).",
+                education: "Essential: Bachelor's in Medicine, Nursing, Public Health, or Healthcare Management. Desirable: Master's/PhD, certifications in healthcare management or digital health.",
+                experience: "Essential: 5+ years in integrated healthcare, health management, and policy analysis. Desirable: Experience with nationwide healthcare initiatives and implementing digital health interventions."
+            }},
+            { id: "role8", title: "Public Health Subject Matter Expert (SME)", icon: "fa-user-md", content: {
+                description: "Acts as the final decision-maker for clinical and/or surveillance normative recommendations within a health program. Ensures decisions are evidence-based, verifies content accuracy, and collaborates with analysts, terminologists, and architects to ensure continuous refinement based on national policies.",
+                skills: "Demonstrated expertise in Public Health, strong analytical skills, excellent communication, proficiency in interpreting health data, and ability to adapt to new information.",
+                education: "Essential: Master's degree or above in Public Health, Epidemiology, or related. Desirable: Certifications related to the specific program, training in collaboration.",
+                experience: "Extensive experience in the specific public health domain is implicitly required to be considered a Subject Matter Expert."
+            }},
+            { id: "role9", title: "Project Manager", icon: "fa-tasks", content: {
+                description: "Develops a comprehensive work plan (RACI, timelines, resources), coordinates resources, leads project meetings, and monitors progress. Manages risks, establishes communication channels with stakeholders, and ensures project deliverables are met on time and within budget.",
+                skills: "Proficiency in project management methodologies and tools (e.g., Agile, Scrum), strong leadership, communication, organizational skills, and risk management.",
+                education: "Essential: Bachelor's in Business, Project Management, Public Health or related. Desirable: Master's degree, PMP, CAPM, or Agile certifications (CSM, PMI-ACP).",
+                experience: "Essential: 3+ years in project management. Desirable: 5+ years, experience with digital health interventions, Agile-Scrum, and multi-stakeholder projects."
+            }},
+            { id: "role10", title: "Business/System Analyst", icon: "fa-chart-pie", content: {
+                description: "Gathers and reviews national policies, understands the tool landscape, and engages stakeholders to define roles. Leads workshops to gather requirements, conducts ground-truthing through site visits, and uses human-centered design methods for interviews and observations.",
+                skills: "Business/system analysis methodologies, stakeholder engagement, creating user stories and BPMN workflows, familiarity with clinical workflows and HL7 FHIR toolbox capabilities.",
+                education: "Essential: Bachelor's in business, management, CS, or healthcare fields. Desirable: Certifications from IIBA or PMI (PMI-PBA), courses in health informatics.",
+                experience: "Essential: 3+ years as a business analyst, experience with BPMN and agile/human-centered design methods. Experience interacting with IT teams."
+            }},
+            { id: "role11", title: "Interoperability/HL7 FHIR Expert", icon: "fa-exchange-alt", content: {
+                description: "Encodes decision support logic and clinical quality measures into FHIR resources using technologies like CQL. Develops FHIR-based implementation guides, integrates with SDKs, and creates FHIR-based applications that adhere to interoperability standards. Works closely with architects and developers.",
+                skills: "Broad knowledge of healthcare interoperability standards (HL7, IHE), specialized knowledge of FHIR-API, CQL, CDS Hooks. Proficiency in JSON, XML, and Agile methodologies.",
+                education: "Essential: Bachelor's in CS, Engineering or related. HL7/FHIR certifications. Desirable: Master's degree, additional certifications in related tech like CQL.",
+                experience: "Essential: 5-10 years applying interoperability standards like HL7 FHIR. Experience in EHR/HIE implementation. Desirable: Expertise in Android FHIR SDK, involvement in standards working groups."
+            }},
+            { id: "role12", title: "Product Owner", icon: "fa-user-tie", content: {
+                description: "Collaborates with the Project Manager to align project goals with overall objectives. Provides an integrated vision for digital health products, supports interoperability project planning, synthesizes requirements, and manages the product backlog to ensure deliverables meet stakeholder needs.",
+                skills: "Familiarity with medical device regulations, proficiency in Agile/Scrum, deep understanding of health informatics, strong communication, and leadership abilities.",
+                education: "Essential: Bachelor's in Health Informatics, CS, Business or related. Scrum/Agile training. Desirable: Master's degree, CPHIMS, and Product Owner certifications (CSPO, PSPO).",
+                experience: "Essential: 5+ years as a Product Owner (preferably in healthcare). 3-5 years leading Agile/Scrum projects. Desirable: Experience in health informatics deployment and regulatory compliance."
+            }},
+        ];
+        
+        const rolesContainer = document.getElementById('roles-container');
+        rolesData.forEach(role => {
+            const card = document.createElement('section');
+            card.id = role.id;
+            card.className = 'role-card bg-white p-6 rounded-lg shadow-sm scroll-mt-24';
+            card.innerHTML = `
+                <div class="flex items-center mb-4">
+                    <i class="fas ${role.icon} text-3xl hl7-blue-text mr-4"></i>
+                    <h3 class="text-2xl font-bold">${role.title}</h3>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <h4 class="font-bold text-lg text-slate-700">Job Description</h4>
+                        <p class="text-slate-600">${role.content.description}</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-lg text-slate-700">Key Skills & Knowledge</h4>
+                        <p class="text-slate-600">${role.content.skills}</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-lg text-slate-700">Education</h4>
+                        <p class="text-slate-600">${role.content.education}</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-lg text-slate-700">Experience</h4>
+                        <p class="text-slate-600">${role.content.experience}</p>
+                    </div>
+                </div>
+            `;
+            rolesContainer.appendChild(card);
+        });
+
+        // Back to top button
+        const toTopBtn = document.getElementById('to-top-button');
+        window.addEventListener('scroll', () => {
+            if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+                toTopBtn.classList.remove('hidden');
+            } else {
+                toTopBtn.classList.add('hidden');
+            }
+        });
+        toTopBtn.addEventListener('click', () => {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        });
+
+        // Sticky nav active state
+        const navLinks = document.querySelectorAll('#role-nav a');
+        const roleSections = document.querySelectorAll('#roles-container section');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    navLinks.forEach(link => {
+                        link.classList.toggle('active', link.getAttribute('href').substring(1) === entry.target.id);
+                    });
+                }
+            });
+        }, { rootMargin: "-50% 0px -50% 0px" });
+
+        roleSections.forEach(section => observer.observe(section));
+
+    </script>
+</body>
+</html>
