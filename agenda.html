@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HL7 FHIR Training for Public Health - Agenda</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -30px;
+            top: 10px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #3b82f6;
+            border: 4px solid #f0f9ff;
+        }
+        .break-item::before {
+             background-color: #f59e0b;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8">
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-blue-600">HL7 FHIR Training for Public Health</h1>
+            <p class="text-xl text-gray-600 mt-2">2025 Virtual Training Agenda</p>
+        </header>
+
+        <!-- Main Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-8">
+            
+            <!-- Day 1 Column -->
+            <div class="day-column">
+                <h2 class="text-3xl font-bold text-center mb-8 pb-2 border-b-2 border-blue-500">Day 1</h2>
+                <div class="relative pl-8 border-l-2 border-blue-200">
+
+                    <!-- Session: Check-in -->
+                    <div class="timeline-item relative mb-8 pl-8 break-item">
+                        <p class="font-bold text-amber-600">8:45 - 9:00 AM</p>
+                        <h3 class="text-xl font-semibold text-amber-700"><i class="fas fa-clipboard-check mr-2"></i>Check-in</h3>
+                    </div>
+
+                    <!-- Session 1 -->
+                    <div class="timeline-item relative mb-8 pl-8">
+                        <p class="font-bold text-blue-600">9:00 - 10:30 AM</p>
+                        <h3 class="text-xl font-semibold">Session 1: Context</h3>
+                        <div class="mt-2 bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                            <ul class="list-disc list-inside space-y-2 text-gray-700">
+                                <li><b>Welcome and Introductions:</b> Setting the stage for the training.</li>
+                                <li><b>CDC Data Modernization Initiative:</b> Relationship between ASTP/ONC, CDC, CDC Foundation, PHFIC, Helios, ICs, HL7 Public Health WG.</li>
+                                <li><b>Policy:</b> High-level landscape (HTI-1/2, TEFCA, CMS) and Public Health Interoperability Policies.</li>
+                                <li><b>Technical Standards:</b> Relevance to CDC and STLT communities.</li>
+                            </ul>
+                            <p class="mt-4 text-sm font-semibold text-gray-500">
+                                <i class="fas fa-users mr-2"></i>Speakers: CDC Foundation Speaker, HL7 Leaders/Instructors
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Break -->
+                    <div class="timeline-item relative mb-8 pl-8 break-item">
+                        <p class="font-bold text-amber-600">10:30 - 10:55 AM</p>
+                        <h3 class="text-xl font-semibold text-amber-700"><i class="fas fa-coffee mr-2"></i>Break</h3>
+                    </div>
+
+                    <!-- Session 2 -->
+                    <div class="timeline-item relative mb-8 pl-8">
+                        <p class="font-bold text-blue-600">11:00 AM - 12:00 PM</p>
+                        <h3 class="text-xl font-semibold">Session 2: Landscape</h3>
+                        <div class="mt-2 bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                           <ul class="list-disc list-inside space-y-2 text-gray-700">
+                               <li><b>What is Interoperability in Healthcare:</b> Definition and importance.</li>
+                               <li><b>Brief History of HL7 Standards:</b> Evolution of FHIR and its use in public health.</li>
+                               <li><b>FHIR's Value:</b> Understanding APIs, REST, and exchange paradigms.</li>
+                           </ul>
+                            <p class="mt-4 text-sm font-semibold text-gray-500">
+                                <i class="fas fa-users mr-2"></i>Speakers: HL7 Instructors, Benji
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Lunch -->
+                    <div class="timeline-item relative mb-8 pl-8 break-item">
+                        <p class="font-bold text-amber-600">12:30 - 1:25 PM</p>
+                        <h3 class="text-xl font-semibold text-amber-700"><i class="fas fa-utensils mr-2"></i>Lunch</h3>
+                    </div>
+
+                    <!-- Session 3 -->
+                    <div class="timeline-item relative mb-8 pl-8">
+                        <p class="font-bold text-blue-600">1:30 - 3:00 PM</p>
+                        <h3 class="text-xl font-semibold">Session 3: Foundational FHIR Concepts Part 1</h3>
+                        <div class="mt-2 bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                           <ul class="list-disc list-inside space-y-2 text-gray-700">
+                               <li><b>Navigating the FHIR 4.0.1 Core Specification</b></li>
+                               <li><b>Resources:</b> Hands-on exercise with Immunization resource.</li>
+                               <li><b>Profiles and Extensions:</b> Overview of US Core and Public Health Profiles.</li>
+                               <li><b>FHIR Validation:</b> Hands-on exercise creating IMMDS Core Patient and Immunization.</li>
+                           </ul>
+                            <p class="mt-4 text-sm font-semibold text-gray-500">
+                                <i class="fas fa-users mr-2"></i>Speakers: HL7 Instructors, Diego
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Break -->
+                    <div class="timeline-item relative mb-8 pl-8 break-item">
+                        <p class="font-bold text-amber-600">3:00 - 3:30 PM</p>
+                        <h3 class="text-xl font-semibold text-amber-700"><i class="fas fa-coffee mr-2"></i>Break</h3>
+                    </div>
+
+                     <!-- Session 4 -->
+                    <div class="timeline-item relative mb-8 pl-8">
+                        <p class="font-bold text-blue-600">3:30 - 4:30 PM</p>
+                        <h3 class="text-xl font-semibold">Session 4: Foundational Concepts Part 2</h3>
+                         <div class="mt-2 bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                           <ul class="list-disc list-inside space-y-2 text-gray-700">
+                               <li><b>FHIR References:</b> Overview and hands-on exercise.</li>
+                               <li><b>Terminology Basics:</b> Concepts, Code Systems, Value Sets, Binding.</li>
+                               <li><b>Mapping:</b> V2 to FHIR and local storage models to FHIR.</li>
+                           </ul>
+                           <p class="mt-4 text-sm font-semibold text-gray-500">
+                                <i class="fas fa-users mr-2"></i>Speakers: HL7 Instructors, Benji, Diego
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Session 5 -->
+                    <div class="timeline-item relative mb-8 pl-8">
+                        <p class="font-bold text-blue-600">4:30 - 5:00 PM</p>
+                        <h3 class="text-xl font-semibold">Session 5: Wrap-up & Day 2 Preview</h3>
+                         <div class="mt-2 bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                           <p class="text-gray-700">Review of the day, open floor for questions, and a brief look at what's coming on Day 2.</p>
+                           <p class="mt-4 text-sm font-semibold text-gray-500">
+                                <i class="fas fa-users mr-2"></i>Speakers: HL7 Instructors
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Day 2 Column -->
+            <div class="day-column">
+                <h2 class="text-3xl font-bold text-center mb-8 pb-2 border-b-2 border-blue-500">Day 2</h2>
+                <div class="relative pl-8 border-l-2 border-blue-200">
+
+                    <!-- Session: Breakfast -->
+                    <div class="timeline-item relative mb-8 pl-8 break-item">
+                        <p class="font-bold text-amber-600">8:00 - 9:00 AM</p>
+                        <h3 class="text-xl font-semibold text-amber-700"><i class="fas fa-mug-saucer mr-2"></i>Breakfast</h3>
+                    </div>
+
+                    <!-- Session 6 -->
+                    <div class="timeline-item relative mb-8 pl-8">
+                        <p class="font-bold text-blue-600">9:00 - 10:30 AM</p>
+                        <h3 class="text-xl font-semibold">Session 6: FHIR Operations & Technologies Part 1</h3>
+                        <div class="mt-2 bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                            <ul class="list-disc list-inside space-y-2 text-gray-700">
+                                <li><b>Day 1 Recap and Questions</b></li>
+                                <li><b>FHIR Operations:</b> Overview.</li>
+                                <li><b>FHIR Search:</b> Overview and hands-on exercise.</li>
+                                <li><b>FHIR Technologies:</b> Demos of SMART on FHIR, CDS Hooks, CQL, Bulk FHIR, and Questionnaires.</li>
+                            </ul>
+                            <p class="mt-4 text-sm font-semibold text-gray-500">
+                                <i class="fas fa-users mr-2"></i>Speakers: HL7 Instructors, Diego
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Break -->
+                    <div class="timeline-item relative mb-8 pl-8 break-item">
+                        <p class="font-bold text-amber-600">10:30 - 11:00 AM</p>
+                        <h3 class="text-xl font-semibold text-amber-700"><i class="fas fa-coffee mr-2"></i>Break</h3>
+                    </div>
+
+                    <!-- Session 7 -->
+                    <div class="timeline-item relative mb-8 pl-8">
+                        <p class="font-bold text-blue-600">11:00 AM - 12:30 PM</p>
+                        <h3 class="text-xl font-semibold">Session 7: Implementation Guides</h3>
+                        <div class="mt-2 bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                           <ul class="list-disc list-inside space-y-2 text-gray-700">
+                               <li><b>Navigating FHIR Implementation Guides:</b> Organization and key terms.</li>
+                               <li><b>Vital Records (VRDR):</b> Birth and Fetal Death Reporting.</li>
+                               <li><b>Starting a FHIR Project:</b> Team roles, skills, and components.</li>
+                               <li><b>Exercises:</b> FHIR Clue and FHIR Architecture Supermarket.</li>
+                           </ul>
+                           <p class="mt-4 text-sm font-semibold text-gray-500">
+                               <i class="fas fa-users mr-2"></i>Speakers: HL7 Instructors, Benji
+                           </p>
+                        </div>
+                    </div>
+
+                    <!-- Lunch -->
+                    <div class="timeline-item relative mb-8 pl-8 break-item">
+                        <p class="font-bold text-amber-600">12:30 - 1:25 PM</p>
+                        <h3 class="text-xl font-semibold text-amber-700"><i class="fas fa-utensils mr-2"></i>Lunch</h3>
+                    </div>
+
+                    <!-- Session 8 -->
+                    <div class="timeline-item relative mb-8 pl-8">
+                        <p class="font-bold text-blue-600">1:30 - 3:00 PM</p>
+                        <h3 class="text-xl font-semibold">Session 8: HL7 Standards, Process, & Resources</h3>
+                        <div class="mt-2 bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                            <ul class="list-disc list-inside space-y-2 text-gray-700">
+                               <li><b>HL7 Standards Development Process</b></li>
+                               <li><b>HL7 Public Health Workgroup & Zulip</b></li>
+                               <li><b>HL7 Connectathons & Working Group Meetings</b></li>
+                               <li><b>HL7 Standards Implementation:</b> Foundry, educational resources, Accelerator Program.</li>
+                               <li><b>Helios Overview</b></li>
+                           </ul>
+                           <p class="mt-4 text-sm font-semibold text-gray-500">
+                                <i class="fas fa-users mr-2"></i>Speakers: HL7 Instructors, Diego, Benji
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Break -->
+                    <div class="timeline-item relative mb-8 pl-8 break-item">
+                        <p class="font-bold text-amber-600">3:00 - 3:30 PM</p>
+                        <h3 class="text-xl font-semibold text-amber-700"><i class="fas fa-coffee mr-2"></i>Break</h3>
+                    </div>
+
+                     <!-- Session 9 -->
+                    <div class="timeline-item relative mb-8 pl-8">
+                        <p class="font-bold text-blue-600">3:30 - 4:30 PM</p>
+                        <h3 class="text-xl font-semibold">Session 9: Next Steps & Ongoing Engagement</h3>
+                        <div class="mt-2 bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                           <ul class="list-disc list-inside space-y-2 text-gray-700">
+                               <li>Resources for implementers and further learning.</li>
+                               <li><b>Workshop:</b> Developing a Healthcare Interoperability Solution with FHIR.</li>
+                           </ul>
+                           <p class="mt-4 text-sm font-semibold text-gray-500">
+                                <i class="fas fa-users mr-2"></i>Speakers: HL7 Instructors, All
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Session 10 -->
+                    <div class="timeline-item relative mb-8 pl-8">
+                        <p class="font-bold text-blue-600">4:30 - 5:00 PM</p>
+                        <h3 class="text-xl font-semibold">Session 10: Wrap-up, Questions & Feedback</h3>
+                        <div class="mt-2 bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                           <p class="text-gray-700">Final questions, feedback on the training, and discussion of next steps.</p>
+                           <p class="mt-4 text-sm font-semibold text-gray-500">
+                               <i class="fas fa-users mr-2"></i>Speakers: CDC Foundation Leaders
+                           </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
