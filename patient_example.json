@@ -32,6 +32,12 @@
     "postalCode": "74048",
     "country": "US"
    }],
+   "telecom": [
+    {
+      "system": "phone",
+      "value": "123-456-7890"
+    }
+   ],
   "name": [
     {
       "family": "Wellington",
