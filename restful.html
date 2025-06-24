@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FHIR RESTful API Interactions: A Step-by-Step Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            color: #334155;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 2rem auto;
+            padding: 1.5rem;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .step-card {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .step-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .step-header {
+            background-color: #3b82f6;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .step-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background-color: #1e40af;
+            border-radius: 9999px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        .step-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            flex-grow: 1;
+        }
+
+        .step-content {
+            padding: 1rem 1.5rem;
+            display: none;
+            /* Hidden by default */
+        }
+
+        .step-content.active {
+            display: block;
+            /* Shown when active */
+        }
+
+        .code-block {
+            background-color: #1a202c;
+            color: #a0aec0;
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            font-size: 0.875rem;
+            margin-top: 1rem;
+        }
+
+        .code-block pre {
+            margin: 0;
+            white-space: pre-wrap;
+            /* Preserve whitespace and wrap long lines */
+            word-break: break-all;
+            /* Break words to prevent overflow */
+        }
+
+        .method-badge {
+            display: inline-block;
+            padding: 0.3rem 0.6rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-left: 0.75rem;
+            background-color: #22c55e;
+            /* Green for GET */
+            color: white;
+        }
+
+        .method-badge.POST {
+            background-color: #f97316;
+            /* Orange for POST */
+        }
+
+        .method-badge.PUT {
+            background-color: #0ea5e9;
+            /* Blue for PUT */
+        }
+
+        .method-badge.DELETE {
+            background-color: #ef4444;
+            /* Red for DELETE */
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                margin: 1rem;
+                padding: 1rem;
+            }
+
+            .step-header {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 0.75rem 1rem;
+            }
+
+            .step-number {
+                margin-bottom: 0.5rem;
+            }
+
+            .method-badge {
+                margin-left: 0;
+                margin-top: 0.5rem;
+            }
+
+            .step-title {
+                font-size: 1.1rem;
+            }
+
+            .step-content {
+                padding: 0.75rem 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="text-4xl font-bold text-center text-blue-700 mb-8">RESTful FHIR API: A Step-by-Step Guide</h1>
+        <p class="text-lg text-center text-gray-600 mb-8">
+            Explore common FHIR RESTful operations using Hoppscotch, an API client, with examples interacting with
+            <code
+                class="bg-gray-200 text-gray-800 px-2 py-1 rounded">https://fhirserver.hl7fundamentals.org/fhir/</code>.
+        <p class="text-sm text-gray-600 mb-8">Click on each step to reveal details!</p>
+        <p class="text-sm text-gray-600 mb-8">In order to use the Hopscoth collection you need to use
+        <p class="text-sm text-gray-600 mb-8">
+            1-Go to <a href="https://hoppscotch.io/" class="text-sm text-green-600 hover:underline"
+                target="_blank">https://hopscotch.io</a> </p>
+        <p class="text-sm text-gray-600 mb-8"> 2-Click on the 'Import from GIST' option and paste the following URL:
+            <a href="https://gist.github.com/diegokaminker/72d4b5bb17f9b175c55e656e378d153c"
+                class="text-sm text-green-600 hover:underline" target="_blank">
+                https://gist.github.com/diegokaminker/72d4b5bb17f9b175c55e656e378d153c </a>
+        </p>
+        </p>
+        </p>
+
+        <div id="steps-container">
+            <!-- Steps will be dynamically loaded here by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        const fhirRequests = [
+            {
+                "name": "Get Server Conformance Info (metadata)",
+                "method": "GET",
+                "endpoint": "https://fhirserver.hl7fundamentals.org/fhir/metadata",
+                "explanation": "This request retrieves the server's CapabilityStatement (also known as Conformance Statement). This resource describes the capabilities of the FHIR server, including supported resources, operations, and search parameters. It's crucial for understanding how to interact with a specific FHIR server."
+            },
+            {
+                "name": "Create Resource (Patient)",
+                "method": "POST",
+                "endpoint": "https://fhirserver.hl7fundamentals.org/fhir/Patient",
+                "contentType": "application/fhir+json",
+                "body": `{
+  "resourceType": "Patient",
+  "id": "Sample",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\\"http://www.w3.org/1999/xhtml\\">Steven A Smith</div>"
+  },
+  "identifier": [
+    {
+      "use": "official",
+      "system": "http://fhirintermediatecourse.org/NI",
+      "value": "343558"
+    }
+  ],
+  "name": [
+    {
+      "use": "official",
+      "text": "Steven A Smith",
+      "family": "Smith",
+      "given": [
+        "Steven",
+        "A"
+      ]
+    }
+  ],
+  "telecom": [
+    {
+      "system": "email",
+      "value": "steven.a.smith@espn.org"
+    }
+  ],
+  "gender": "male",
+  "birthDate": "1965-05-24",
+  "contact": [
+    {
+      "relationship": [
+        {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "127850001",
+              "display": "Wife"
+            }
+          ]
+        }
+      ],
+      "name": {
+        "use": "usual",
+        "text": "Mrs. Smith"
+      },
+      "telecom": [
+        {
+          "system": "phone",
+          "value": "555-123-4567",
+          "use": "home"
+        }
+      ]
+    }
+  ]
+}`,
+                "explanation": "This `POST` request sends a new Patient resource to the server for creation. The body contains all the details for the new patient, 'Steven A Smith'."
+            },
+            {
+                "name": "Read Resource (Patient)",
+                "method": "GET",
+                "endpoint": "https://fhirserver.hl7fundamentals.org/fhir/Patient/22",
+                "explanation": "This request retrieves the FHIR Patient resource with the ID '22' from the server. It's also called DIRECT GET."
+            },
+            {
+                "name": "Read Resource Version History (Patient)",
+                "method": "GET",
+                "endpoint": "https://fhirserver.hl7fundamentals.org/fhir/Patient/22/_history",
+                "explanation": "This request retrieves the version history for the Patient resource with ID '22'. This allows you to see all past versions of the resource."
+            },
+            {
+                "name": "Read Resource Specific Version (Patient)",
+                "method": "GET",
+                "endpoint": "https://fhirserver.hl7fundamentals.org/fhir/Patient/22/_history/10",
+                "explanation": "This request retrieves a specific version (version 10) of the Patient resource with ID '22' from its history."
+            },
+            {
+                "name": "Update Resource (Patient)",
+                "method": "PUT",
+                "endpoint": "https://fhirserver.hl7fundamentals.org/fhir/Patient",
+                "contentType": "application/fhir+json",
+                "body": `{
+  "resourceType": "Patient",
+  "id": "31750",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\\"http://www.w3.org/1999/xhtml\\">Steven A Smith</div>"
+  },
+  "identifier": [
+    {
+      "use": "official",
+      "system": "http://fhirintermediatecourse.org/NI",
+      "value": "343558"
+    }
+  ],
+  "name": [
+    {
+      "use": "official",
+      "text": "Steven A Smith",
+      "family": "Smith",
+      "given": [
+        "Steven",
+        "A"
+      ]
+    }
+  ],
+  "telecom": [
+    {
+      "system": "email",
+      "value": "steven.a.smith@espn.org"
+    }
+  ],
+  "gender": "male",
+  "birthDate": "1965-05-24",
+  "contact": [
+    {
+      "relationship": [
+        {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "127850001",
+              "display": "Wife"
+            }
+          ]
+        }
+      ],
+      "name": {
+        "use": "usual",
+        "text": "Mrs. Smith"
+      },
+      "telecom": [
+        {
+          "system": "phone",
+          "value": "555-123-4567",
+          "use": "home"
+        }
+      ]
+    }
+  ]
+}`,
+                "explanation": "Similar to creation, this `PUT` request with an `id` field in the body is used to update an existing Patient resource (ID '31750'). The server will overwrite the existing resource with the provided data."
+            },
+            {
+                "name": "Process Transaction Bundle",
+                "method": "POST",
+                "endpoint": "https://fhirserver.hl7fundamentals.org/fhir/",
+                "contentType": "application/fhir+json",
+                "body": `{
+  "resourceType": "Bundle",
+  "type": "transaction",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:25131980-1b95-4548-a01d-94786b40e4c6",
+      "request": {
+        "method": "PUT",
+        "url": "Patient?identifier=http://imm-messages.gov/MyEMR-DE-000004/patients|AD445566"
+      },
+      "resource": {
+        "resourceType": "Patient",
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns='http://www.w3.org/1999/xhtml'>Patient Record for AD445566 PARK SUNG H</div>"
+        },
+        "identifier": [
+          {
+            "system": "http://imm-messages.gov/MyEMR-DE-000004/patients",
+            "value": "AD445566"
+          }
+        ],
+        "name": [
+          {
+            "family": "PARK",
+            "given": [
+              "SUNG",
+              "H"
+            ]
+          }
+        ],
+        "birthDate": "1975-10-03",
+        "gender": "male",
+        "address": [
+          {
+            "line": [
+              "101 ELM ST"
+            ],
+            "city": "BOSTON",
+            "state": "MA",
+            "postalCode": "02108"
+          }
+        ],
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "MA-02108",
+            "use": "home"
+          }
+        ],
+        "communication": [
+          {
+            "language": {
+              "coding": [
+                {
+                  "system": "urn:ietf:bcp:47",
+                  "code": "en",
+                  "display": "English"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:265bbcbd-b9f0-4e0a-88f0-3d251216fcc7",
+      "request": {
+        "method": "PUT",
+        "url": "Practitioner?identifier=http://hl7.org/fhir/sid/us-npi|9876543210"
+      },
+      "resource": {
+        "resourceType": "Practitioner",
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns='http://www.w3.org/1999/xhtml'>Practitioner Record for 9876543210 Garcia Maria</div>"
+        },
+        "identifier": [
+          {
+            "system": "http://hl7.org/fhir/sid/us-npi",
+            "value": "9876543210"
+          }
+        ],
+        "name": [
+          {
+            "family": "Garcia",
+            "given": [
+              "Maria"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:cb06275e-1f3e-44d4-a2a5-ebc1a7f97fa5",
+      "request": {
+        "method": "PUT",
+        "url": "Immunization?identifier=http://imm-messages.gov/MyEMR-DE-000004|CA0004"
+      },
+      "resource": {
+        "resourceType": "Immunization",
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns='http://www.w3.org/1999/xhtml'>Immunization Record for AD445566: 113 Td (adult), 5 Lf tetanus toxoid, preservative free, adsorbed</div>"
+        },
+        "identifier": [
+          {
+            "system": "http://imm-messages.gov/MyEMR-DE-000004",
+            "value": "CA0004"
+          }
+        ],
+        "status": "completed",
+        "vaccineCode": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/cvx",
+              "code": "113",
+              "display": "Td (adult), 5 Lf tetanus toxoid, preservative free, adsorbed"
+            }
+          ]
+        },
+        "patient": {
+          "reference": "urn:uuid:25131980-1b95-4548-a01d-94786b40e4c6"
+        },
+        "performer": [
+          {
+            "actor": {
+              "reference": "urn:uuid:265bbcbd-b9f0-4e0a-88f0-3d251216fcc7"
+            }
+          }
+        ],
+        "occurrenceDateTime": "2022-09-20",
+        "primarySource": true,
+        "lotNumber": "CD9012",
+        "expirationDate": "2025-11-30",
+        "site": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ActSite",
+              "code": "LA",
+              "display": "LEFT ARM"
+            }
+          ]
+        },
+        "route": {
+          "coding": [
+            {
+              "system": "http://ncimeta.nci.nih.gov/ncimb/",
+              "code": "C28161",
+              "display": "INTRAMUSCULAR"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}`,
+                "explanation": "This powerful request sends a `Bundle` of type `transaction` to the server. It allows you to perform multiple operations (like creating a `Patient`, and `Immunization` in this example) as a single atomic transaction. If any operation fails, the entire transaction is rolled back."
+            },
+            {
+                "name": "Get All the Information about a Patient ($everything)",
+                "method": "GET",
+                "endpoint": "https://fhirserver.hl7fundamentals.org/fhir/Patient/22/$everything",
+                "explanation": "The `$everything` operation on a Patient resource retrieves all information related to that patient. This includes the patient's demographics, as well as all associated clinical data like Observations, Conditions, Medications, etc. It provides a comprehensive view of a patient's record."
+            },
+            {
+                "name": "Search Patients (by gender)",
+                "method": "GET",
+                "endpoint": "https://fhirserver.hl7fundamentals.org/fhir/Patient?gender=male",
+                "explanation": "This request searches for all Patient resources where the `gender` field is 'male'. FHIR provides powerful search capabilities using various parameters."
+            },
+            {
+                "name": "Search Patient (by gender and name)",
+                "method": "GET",
+                "endpoint": "https://fhirserver.hl7fundamentals.org/fhir/Patient?gender=male&name=smith",
+                "explanation": "This request searches for Patient resources that are male AND have 'smith' in their name. This demonstrates combining multiple search parameters."
+            },
+            {
+                "name": "Complex Search: Chaining - All observations by patient's gender and name",
+                "method": "GET",
+                "endpoint": "https://fhirserver.hl7fundamentals.org/fhir/Observation?subject.gender=male&subject.name=smith&date=ge2020-01-31",
+                "explanation": "This is a complex chained search for `Observation` resources. It looks for observations where the subject is male, has 'smith' in their name, AND the observation date is greater than or equal to January 31, 2020."
+            },
+            {
+                "name": "Complex Search: Chaining: All observations for Smith",
+                "method": "GET",
+                "endpoint": "https://fhirserver.hl7fundamentals.org/fhir/Observation?subject.name=smith",
+                "explanation": "This is a 'chained' search. It searches for `Observation` resources where the `subject` of the observation (which is a reference to a Patient or other resource) has a `name` containing 'smith'. This allows for more complex queries across linked resources."
+            },
+            {
+                "name": "Complex Search: - include -",
+                "method": "GET",
+                "endpoint": "https://fhirserver.hl7fundamentals.org/fhir/Observation?subject.name=smith&_include=Observation:subject",
+                "explanation": "This request is similar to the chained search but also uses the `_include` parameter. It searches for `Observation` resources where the subject's name is 'smith', and importantly, it also instructs the server to **include the actual Patient resource (the subject) in the search results** alongside the Observation resources. This is useful for getting related information in a single request."
+            }
+        ];
+
+        const stepsContainer = document.getElementById('steps-container');
+
+        // Function to create and append a step card
+        function createStepCard(request, index) {
+            const stepCard = document.createElement('div');
+            stepCard.classList.add('step-card', 'rounded-xl', 'shadow-md', 'mb-6');
+            stepCard.innerHTML = `
+                <div class="step-header flex items-center p-4">
+                    <div class="step-number">${index + 1}</div>
+                    <h2 class="step-title">${request.name}</h2>
+                    <span class="method-badge ${request.method}">${request.method}</span>
+                </div>
+                <div class="step-content p-4">
+                    <p class="mb-2"><strong class="text-blue-600">Request:</strong> <code class="bg-gray-100 text-gray-800 px-1 py-0.5 rounded break-all">${request.endpoint}</code></p>
+                    ${request.contentType ? `<p class="mb-2"><strong class="text-blue-600">Content Type:</strong> <code class="bg-gray-100 text-gray-800 px-1 py-0.5 rounded">${request.contentType}</code></p>` : ''}
+                    <p class="mb-4"><strong class="text-blue-600">Explanation:</strong> ${request.explanation}</p>
+                    ${request.body ? `
+                        <p class="mb-2"><strong class="text-blue-600">Request Body (JSON):</strong></p>
+                        <div class="code-block">
+                            <pre>${JSON.stringify(JSON.parse(request.body), null, 2)}</pre>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+
+            // Add click event listener to toggle content visibility
+            const header = stepCard.querySelector('.step-header');
+            const content = stepCard.querySelector('.step-content');
+            header.addEventListener('click', () => {
+                content.classList.toggle('active');
+            });
+
+            stepsContainer.appendChild(stepCard);
+        }
+
+        // Populate the infographic with data
+        fhirRequests.forEach((request, index) => {
+            createStepCard(request, index);
+        });
+    </script>
+</body>
+
+</html>
