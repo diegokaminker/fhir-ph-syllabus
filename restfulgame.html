@@ -637,6 +637,21 @@
                     "The bundle contains multiple resources",
                     "Think about what HTTP method sends data to the server"
                 ]
+            },
+            {
+                id: 11,
+                title: "Get All Patient Information ($everything)",
+                description: "You need to retrieve ALL information related to patient with ID '22'. This includes the patient's demographics, observations, conditions, medications, immunizations, and any other clinical data associated with this patient. The $everything operation provides a comprehensive view of a patient's complete record.",
+                method: "GET",
+                endpoint: "https://fhirserver.hl7fundamentals.org/fhir/Patient/22/$everything",
+                headers: {},
+                body: null,
+                points: 8,
+                hints: [
+                    "This is a special FHIR operation",
+                    "No request body needed",
+                    "Think about how to access all related resources for a patient"
+                ]
             }
         ];
 
