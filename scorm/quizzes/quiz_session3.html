@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 3 Quiz - HL7 FHIR Public Health Training 2025</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="../js/scorm.js"></script>
+    <style>
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .question {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #3b82f6;
+        }
+        .question h3 {
+            color: #1e40af;
+            margin-bottom: 15px;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .option:hover {
+            border-color: #3b82f6;
+            background: #f8fafc;
+        }
+        .option.selected {
+            border-color: #3b82f6;
+            background: #eff6ff;
+        }
+        .option.correct {
+            border-color: #10b981;
+            background: #f0fdf4;
+        }
+        .option.incorrect {
+            border-color: #ef4444;
+            background: #fef2f2;
+        }
+        .option input[type="radio"] {
+            margin-right: 10px;
+        }
+        .quiz-results {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .score-display {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .score-good {
+            color: #10b981;
+        }
+        .score-poor {
+            color: #ef4444;
+        }
+        .score-average {
+            color: #f59e0b;
+        }
+        .feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background: white;
+        }
+        .feedback h4 {
+            margin-bottom: 10px;
+            color: #1e40af;
+        }
+        .hidden {
+            display: none;
+        }
+        .quiz-controls {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6 0%, #1d4ed8 100%);
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <img src="https://www.hl7.org/assets/systemimages/hl7-logo-header.png" alt="HL7 Logo" class="logo">
+            <h1>Session 3: Foundational FHIR Part 1 - Quiz</h1>
+            <p>Test your knowledge of FHIR resources and specifications</p>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav">
+            <ul class="nav-list">
+                <li class="nav-item"><a href="../overview.html">Overview</a></li>
+                <li class="nav-item"><a href="../session1.html">Session 1</a></li>
+                <li class="nav-item"><a href="../session2.html">Session 2</a></li>
+                <li class="nav-item"><a href="../session3.html">Session 3</a></li>
+                <li class="nav-item"><a href="../session4.html">Session 4</a></li>
+                <li class="nav-item"><a href="../session5.html">Session 5</a></li>
+                <li class="nav-item"><a href="../session6.html">Session 6</a></li>
+                <li class="nav-item"><a href="../session7.html">Session 7</a></li>
+                <li class="nav-item"><a href="../session8.html">Session 8</a></li>
+                <li class="nav-item"><a href="../session9.html">Session 9</a></li>
+                <li class="nav-item"><a href="../session10.html">Session 10</a></li>
+                <li class="nav-item"><a href="../resources.html">Resources</a></li>
+            </ul>
+        </nav>
+
+        <!-- Quiz Container -->
+        <div class="quiz-container">
+            <div class="section">
+                <div class="section-header">
+                    <h2>Session 3: Foundational FHIR Part 1 - Quiz</h2>
+                    <p>Answer all questions to test your understanding</p>
+                </div>
+                <div class="section-content">
+                    <!-- Progress Bar -->
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="quiz-progress" style="width: 0%;"></div>
+                    </div>
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <span id="progress-text">Question 1 of <span id="total-questions">5</span></span>
+                    </div>
+
+                    <!-- Quiz Questions Container -->
+                    <div id="quiz-questions">
+                        <!-- Questions will be loaded here -->
+                    </div>
+
+                    <!-- Quiz Results -->
+                    <div id="quiz-results" class="quiz-results hidden">
+                        <div class="score-display" id="score-display">0%</div>
+                        <h3 id="score-message">Quiz Complete!</h3>
+                        <div class="feedback" id="feedback">
+                            <h4>Session Feedback</h4>
+                            <p id="feedback-text">Thank you for completing this quiz!</p>
+                        </div>
+                        <div style="margin-top: 20px;">
+                            <button class="btn btn-primary" onclick="window.history.back()">
+                                <i class="fas fa-arrow-left"></i>
+                                Return to Session
+                            </button>
+                            <button class="btn btn-secondary" onclick="retakeQuiz()" style="margin-left: 15px;">
+                                <i class="fas fa-redo"></i>
+                                Retake Quiz
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Quiz Controls -->
+                    <div class="quiz-controls" id="quiz-controls">
+                        <button class="btn btn-primary" id="submit-quiz" onclick="submitQuiz()" disabled>
+                            <i class="fas fa-check"></i>
+                            Submit Quiz
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Quiz configuration for Session 3: Foundational FHIR Part 1
+        const quizConfig = {
+            sessionId: 'session3',
+            sessionTitle: 'Session 3: Foundational FHIR Part 1',
+            questions: [
+                {
+                    id: 1,
+                    question: "What is a FHIR Resource?",
+                    options: [
+                        "A web page about healthcare",
+                        "A standardized data structure for healthcare information",
+                        "A type of healthcare software",
+                        "A healthcare organization"
+                    ],
+                    correct: 1,
+                    explanation: "A FHIR Resource is a standardized data structure that represents healthcare information in a consistent format."
+                },
+                {
+                    id: 2,
+                    question: "Which of the following is NOT a core FHIR resource?",
+                    options: [
+                        "Patient",
+                        "Observation",
+                        "Encounter",
+                        "Hospital"
+                    ],
+                    correct: 3,
+                    explanation: "Hospital is not a core FHIR resource. Patient, Observation, and Encounter are all core FHIR resources."
+                },
+                {
+                    id: 3,
+                    question: "What is the purpose of FHIR specifications?",
+                    options: [
+                        "To define how resources are structured and used",
+                        "To create healthcare software",
+                        "To train healthcare professionals",
+                        "To manage healthcare costs"
+                    ],
+                    correct: 0,
+                    explanation: "FHIR specifications define how resources are structured, what data they contain, and how they should be used."
+                },
+                {
+                    id: 4,
+                    question: "How are FHIR resources typically exchanged?",
+                    options: [
+                        "Through email attachments",
+                        "Using REST APIs and JSON/XML",
+                        "Via fax machines",
+                        "Through paper documents"
+                    ],
+                    correct: 1,
+                    explanation: "FHIR resources are typically exchanged using REST APIs and formatted as JSON or XML."
+                },
+                {
+                    id: 5,
+                    question: "What is the relationship between FHIR resources and profiles?",
+                    options: [
+                        "Profiles replace resources",
+                        "Profiles constrain and extend resources for specific use cases",
+                        "Resources and profiles are the same thing",
+                        "Profiles are independent of resources"
+                    ],
+                    correct: 1,
+                    explanation: "Profiles constrain and extend FHIR resources to meet specific use case requirements while maintaining compatibility."
+                }
+            ]
+        };
+
+        let currentQuestion = 0;
+        let userAnswers = [];
+        let quizSubmitted = false;
+
+        // Initialize quiz
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeQuiz();
+        });
+
+        function initializeQuiz() {
+            document.getElementById('total-questions').textContent = quizConfig.questions.length;
+            displayQuestion();
+            updateProgress();
+        }
+
+        function displayQuestion() {
+            const question = quizConfig.questions[currentQuestion];
+            const questionsContainer = document.getElementById('quiz-questions');
+            
+            questionsContainer.innerHTML = `
+                <div class="question">
+                    <h3>Question ${question.id}: ${question.question}</h3>
+                    <div class="options">
+                        ${question.options.map((option, index) => `
+                            <div class="option" onclick="selectOption(${index})">
+                                <input type="radio" name="q${question.id}" value="${index}" id="q${question.id}o${index}">
+                                <label for="q${question.id}o${index}">${option}</label>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            // Restore previous answer if exists
+            if (userAnswers[currentQuestion] !== undefined) {
+                const radio = document.querySelector(`input[name="q${question.id}"][value="${userAnswers[currentQuestion]}"]`);
+                if (radio) {
+                    radio.checked = true;
+                    radio.closest('.option').classList.add('selected');
+                }
+            }
+        }
+
+        function selectOption(optionIndex) {
+            // Remove previous selection
+            const options = document.querySelectorAll('.option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            
+            // Select new option
+            const selectedOption = options[optionIndex];
+            selectedOption.classList.add('selected');
+            selectedOption.querySelector('input').checked = true;
+            
+            // Store answer
+            userAnswers[currentQuestion] = optionIndex;
+            
+            // Enable submit button if all questions are answered
+            const answeredQuestions = userAnswers.filter(answer => answer !== undefined).length;
+            const submitButton = document.getElementById('submit-quiz');
+            submitButton.disabled = answeredQuestions < quizConfig.questions.length;
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / quizConfig.questions.length) * 100;
+            document.getElementById('quiz-progress').style.width = progress + '%';
+            document.getElementById('progress-text').textContent = `Question ${currentQuestion + 1} of ${quizConfig.questions.length}`;
+        }
+
+        function submitQuiz() {
+            if (quizSubmitted) return;
+            
+            quizSubmitted = true;
+            
+            // Calculate score
+            let correctAnswers = 0;
+            quizConfig.questions.forEach((question, index) => {
+                if (userAnswers[index] === question.correct) {
+                    correctAnswers++;
+                }
+            });
+            
+            const score = (correctAnswers / quizConfig.questions.length) * 100;
+            
+            // Display results
+            showResults(score, correctAnswers);
+            
+            // Submit to SCORM
+            submitQuizToScorm(score, correctAnswers);
+        }
+
+        function showResults(score, correctAnswers) {
+            const resultsContainer = document.getElementById('quiz-results');
+            const scoreDisplay = document.getElementById('score-display');
+            const scoreMessage = document.getElementById('score-message');
+            const feedbackText = document.getElementById('feedback-text');
+            
+            scoreDisplay.textContent = Math.round(score) + '%';
+            
+            if (score >= 80) {
+                scoreDisplay.className = 'score-display score-good';
+                scoreMessage.textContent = 'Excellent! You have a strong understanding of FHIR resources and specifications.';
+                feedbackText.textContent = 'You demonstrate excellent comprehension of FHIR foundational concepts. You\'re ready to move on to more advanced topics.';
+            } else if (score >= 60) {
+                scoreDisplay.className = 'score-display score-average';
+                scoreMessage.textContent = 'Good work! You understand most of the FHIR foundational concepts.';
+                feedbackText.textContent = 'You have a good understanding of FHIR resources and specifications. Review the session content to strengthen areas where you had difficulty.';
+            } else {
+                scoreDisplay.className = 'score-display score-poor';
+                scoreMessage.textContent = 'Keep learning! Review the session content and try again.';
+                feedbackText.textContent = 'We recommend reviewing the session materials before retaking the quiz. Focus on understanding FHIR resources, specifications, and basic concepts.';
+            }
+            
+            resultsContainer.classList.remove('hidden');
+            document.getElementById('quiz-controls').classList.add('hidden');
+        }
+
+        function submitQuizToScorm(score, correctAnswers) {
+            // Submit quiz results to SCORM
+            submitQuiz(quizConfig.sessionId, correctAnswers, quizConfig.questions.length);
+            
+            // Set lesson status based on score
+            if (score >= 80) {
+                ScormAPI.setLessonStatus("passed");
+            } else {
+                ScormAPI.setLessonStatus("failed");
+            }
+            
+            ScormAPI.commit();
+        }
+
+        function retakeQuiz() {
+            // Reset quiz state
+            currentQuestion = 0;
+            userAnswers = [];
+            quizSubmitted = false;
+            
+            // Hide results and show quiz
+            document.getElementById('quiz-results').classList.add('hidden');
+            document.getElementById('quiz-controls').classList.remove('hidden');
+            document.getElementById('submit-quiz').disabled = true;
+            
+            // Display first question
+            displayQuestion();
+            updateProgress();
+        }
+    </script>
+</body>
+</html> 

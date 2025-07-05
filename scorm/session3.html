@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 3: Foundational FHIR Part 1 - HL7 FHIR Public Health Training 2025</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="js/scorm.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <img src="https://www.hl7.org/assets/systemimages/hl7-logo-header.png" alt="HL7 Logo" class="logo">
+            <h1>Session 3: Foundational FHIR Part 1</h1>
+            <p>Understanding FHIR resources and specifications</p>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav">
+            <ul class="nav-list">
+                <li class="nav-item"><a href="overview.html">Overview</a></li>
+                <li class="nav-item"><a href="session1.html">Session 1</a></li>
+                <li class="nav-item"><a href="session2.html">Session 2</a></li>
+                <li class="nav-item"><a href="session3.html" class="active">Session 3</a></li>
+                <li class="nav-item"><a href="session4.html">Session 4</a></li>
+                <li class="nav-item"><a href="session5.html">Session 5</a></li>
+                <li class="nav-item"><a href="session6.html">Session 6</a></li>
+                <li class="nav-item"><a href="session7.html">Session 7</a></li>
+                <li class="nav-item"><a href="session8.html">Session 8</a></li>
+                <li class="nav-item"><a href="session9.html">Session 9</a></li>
+                <li class="nav-item"><a href="session10.html">Session 10</a></li>
+                <li class="nav-item"><a href="resources.html">Resources</a></li>
+            </ul>
+        </nav>
+
+        <!-- Session 3 Content -->
+        <section class="section" id="session3-content">
+            <div class="section-header">
+                <h2>Session 3: Foundational FHIR Part 1</h2>
+                <p>Understanding FHIR resources and specifications</p>
+                <div class="completion-status">○ Incomplete</div>
+            </div>
+            <div class="section-content">
+                <div class="session-card">
+                    <h3>Session Overview</h3>
+                    <div class="session-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-clock"></i>
+                            <span>90 minutes</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-presentation"></i>
+                            <span>Presentation + Assignments + Quiz</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Day 1</span>
+                        </div>
+                    </div>
+                    <p>This session introduces the foundational concepts of FHIR, including resources, specifications, and basic data structures. We'll explore how FHIR resources are defined and used in healthcare applications.</p>
+                    
+                    <div class="resource-links">
+                        <a href="presentations/CDC_2025_SESSION_03.pdf" target="_blank" class="resource-link">
+                            <i class="fas fa-file-pdf"></i>
+                            <span>Session 3 Presentation (PDF)</span>
+                        </a>
+                        <a href="assignments/Assignment%20%231%20-%20Navigate%20the%20Resource%20Definition%20_%20Explain%20the%20contents.pdf" target="_blank" class="resource-link">
+                            <i class="fas fa-file-pdf"></i>
+                            <span>Assignment #1: Navigate Resource Definition</span>
+                        </a>
+                        <a href="assignments/Assignment%20%232%20-%20Create%20Immunization%20and%20Patient%20Resource%20based%20on%20a%20Profile.pdf" target="_blank" class="resource-link">
+                            <i class="fas fa-file-pdf"></i>
+                            <span>Assignment #2: Create Immunization and Patient Resources</span>
+                        </a>
+                        <a href="quizzes/quiz_session3.html" target="_blank" class="resource-link">
+                            <i class="fas fa-question-circle"></i>
+                            <span>Session 3 Quiz</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Video Section Placeholder -->
+                <div class="video-section">
+                    <h3 style="margin-bottom: 20px; color: #1e40af;">Session 3 Video</h3>
+                    <div class="video-placeholder">
+                        <h4><i class="fas fa-video"></i> Video Placeholder</h4>
+                        <p>Space reserved for Session 3 video content</p>
+                        <p style="font-size: 0.9rem; margin-top: 10px;">
+                            <strong>Video 1:</strong> Introduction to FHIR Resources<br>
+                            <strong>Video 2:</strong> Understanding FHIR Specifications<br>
+                            <strong>Video 3:</strong> Working with Resource Definitions
+                        </p>
+                    </div>
+                </div>
+
+                <div class="session-card">
+                    <h3>Learning Objectives</h3>
+                    <p>By the end of this session, you will be able to:</p>
+                    <ul style="margin: 15px 0; padding-left: 20px;">
+                        <li>Define and explain FHIR resources</li>
+                        <li>Navigate FHIR specifications</li>
+                        <li>Understand resource definitions and structure</li>
+                        <li>Identify core FHIR resources</li>
+                        <li>Explain the relationship between resources and profiles</li>
+                    </ul>
+                </div>
+
+                <div class="session-card">
+                    <h3>Key Topics Covered</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-top: 15px;">
+                        <div style="padding: 15px; background: #f8fafc; border-radius: 8px; border-left: 4px solid #3b82f6;">
+                            <h4 style="color: #1e40af; margin-bottom: 8px;">FHIR Resources</h4>
+                            <p style="font-size: 0.9rem; color: #64748b;">Understanding what FHIR resources are and how they represent healthcare data</p>
+                        </div>
+                        <div style="padding: 15px; background: #f8fafc; border-radius: 8px; border-left: 4px solid #3b82f6;">
+                            <h4 style="color: #1e40af; margin-bottom: 8px;">Resource Specifications</h4>
+                            <p style="font-size: 0.9rem; color: #64748b;">How to read and understand FHIR resource specifications</p>
+                        </div>
+                        <div style="padding: 15px; background: #f8fafc; border-radius: 8px; border-left: 4px solid #3b82f6;">
+                            <h4 style="color: #1e40af; margin-bottom: 8px;">Core Resources</h4>
+                            <p style="font-size: 0.9rem; color: #64748b;">Introduction to essential FHIR resources like Patient, Observation, and Encounter</p>
+                        </div>
+                        <div style="padding: 15px; background: #f8fafc; border-radius: 8px; border-left: 4px solid #3b82f6;">
+                            <h4 style="color: #1e40af; margin-bottom: 8px;">Resource Structure</h4>
+                            <p style="font-size: 0.9rem; color: #64748b;">Understanding the common elements and structure of FHIR resources</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="session-card">
+                    <h3>Assignments</h3>
+                    <p>This session includes two hands-on assignments:</p>
+                    <div style="margin: 15px 0;">
+                        <div style="padding: 15px; background: #f0f9ff; border-radius: 8px; border-left: 4px solid #0ea5e9; margin-bottom: 15px;">
+                            <h4 style="color: #0369a1; margin-bottom: 8px;">Assignment #1: Navigate Resource Definition</h4>
+                            <p style="font-size: 0.9rem; color: #0c4a6e; margin-bottom: 10px;">Learn how to navigate and understand FHIR resource definitions in the specification.</p>
+                            <a href="assignments/Assignment%20%231%20-%20Navigate%20the%20Resource%20Definition%20_%20Explain%20the%20contents.pdf" target="_blank" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-download"></i>
+                                Download Assignment
+                            </a>
+                        </div>
+                        <div style="padding: 15px; background: #f0f9ff; border-radius: 8px; border-left: 4px solid #0ea5e9;">
+                            <h4 style="color: #0369a1; margin-bottom: 8px;">Assignment #2: Create Resources</h4>
+                            <p style="font-size: 0.9rem; color: #0c4a6e; margin-bottom: 10px;">Practice creating Immunization and Patient resources based on FHIR profiles.</p>
+                            <a href="assignments/Assignment%20%232%20-%20Create%20Immunization%20and%20Patient%20Resource%20based%20on%20a%20Profile.pdf" target="_blank" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-download"></i>
+                                Download Assignment
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="session-card">
+                    <h3>Session Completion</h3>
+                    <p>To complete this session, please:</p>
+                    <ol style="margin: 15px 0; padding-left: 20px;">
+                        <li>Review the presentation materials</li>
+                        <li>Watch the session videos (when available)</li>
+                        <li>Complete the assigned exercises</li>
+                        <li>Take the session quiz</li>
+                        <li>Mark the session as complete</li>
+                    </ol>
+                    
+                    <div style="text-align: center; margin-top: 30px;">
+                        <button class="btn btn-success" onclick="markSectionComplete('session3-content')">
+                            <i class="fas fa-check"></i>
+                            Mark Session 3 Complete
+                        </button>
+                        <a href="session4.html" class="btn btn-primary" style="margin-left: 15px;">
+                            <i class="fas fa-arrow-right"></i>
+                            Continue to Session 4
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Track navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            trackNavigation('session2', 'session3');
+        });
+    </script>
+</body>
+</html> 

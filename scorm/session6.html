@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 6: FHIR Operations & Tech - HL7 FHIR Public Health Training 2025</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="js/scorm.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <img src="https://www.hl7.org/assets/systemimages/hl7-logo-header.png" alt="HL7 Logo" class="logo">
+            <h1>Session 6: FHIR Operations & Tech</h1>
+            <p>Working with FHIR operations and RESTful APIs</p>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav">
+            <ul class="nav-list">
+                <li class="nav-item"><a href="overview.html">Overview</a></li>
+                <li class="nav-item"><a href="session1.html">Session 1</a></li>
+                <li class="nav-item"><a href="session2.html">Session 2</a></li>
+                <li class="nav-item"><a href="session3.html">Session 3</a></li>
+                <li class="nav-item"><a href="session4.html">Session 4</a></li>
+                <li class="nav-item"><a href="session5.html">Session 5</a></li>
+                <li class="nav-item"><a href="session6.html" class="active">Session 6</a></li>
+                <li class="nav-item"><a href="session7.html">Session 7</a></li>
+                <li class="nav-item"><a href="session8.html">Session 8</a></li>
+                <li class="nav-item"><a href="session9.html">Session 9</a></li>
+                <li class="nav-item"><a href="session10.html">Session 10</a></li>
+                <li class="nav-item"><a href="resources.html">Resources</a></li>
+            </ul>
+        </nav>
+
+        <!-- Session 6 Content -->
+        <section class="section" id="session6-content">
+            <div class="section-header">
+                <h2>Session 6: FHIR Operations & Tech</h2>
+                <p>Working with FHIR operations and RESTful APIs</p>
+                <div class="completion-status">○ Incomplete</div>
+            </div>
+            <div class="section-content">
+                <div class="session-card">
+                    <h3>Session Overview</h3>
+                    <div class="session-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-clock"></i>
+                            <span>120 minutes</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-presentation"></i>
+                            <span>Presentation + Hands-on + Quiz</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Day 2</span>
+                        </div>
+                    </div>
+                    <p>This session covers FHIR operations, RESTful APIs, and hands-on practice with FHIR data exchange. We'll explore how to interact with FHIR servers and work with real FHIR resources.</p>
+                    
+                    <div class="resource-links">
+                        <a href="presentations/CDC_2025_SESSION_06.pdf" target="_blank" class="resource-link">
+                            <i class="fas fa-file-pdf"></i>
+                            <span>Session 6 Presentation (PDF)</span>
+                        </a>
+                        <a href="assignments/Assignment%20%235%20-%20FHIR%20Operations.pdf" target="_blank" class="resource-link">
+                            <i class="fas fa-file-pdf"></i>
+                            <span>Assignment #5: FHIR Operations</span>
+                        </a>
+                        <a href="restfulgame.html" target="_blank" class="resource-link">
+                            <i class="fas fa-gamepad"></i>
+                            <span>RESTful Game</span>
+                        </a>
+                        <a href="patient_example.json" target="_blank" class="resource-link">
+                            <i class="fas fa-file-code"></i>
+                            <span>Patient Example (JSON)</span>
+                        </a>
+                        <a href="immunization_example.json" target="_blank" class="resource-link">
+                            <i class="fas fa-file-code"></i>
+                            <span>Immunization Example (JSON)</span>
+                        </a>
+                        <a href="quizzes/quiz_session6.html" target="_blank" class="resource-link">
+                            <i class="fas fa-question-circle"></i>
+                            <span>Session 6 Quiz</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Video Section Placeholder -->
+                <div class="video-section">
+                    <h3 style="margin-bottom: 20px; color: #1e40af;">Session 6 Video</h3>
+                    <div class="video-placeholder">
+                        <h4><i class="fas fa-video"></i> Video Placeholder</h4>
+                        <p>Space reserved for Session 6 video content</p>
+                        <p style="font-size: 0.9rem; margin-top: 10px;">
+                            <strong>Video 1:</strong> Introduction to RESTful APIs<br>
+                            <strong>Video 2:</strong> FHIR Operations Overview<br>
+                            <strong>Video 3:</strong> Hands-on FHIR API Practice
+                        </p>
+                    </div>
+                </div>
+
+                <div class="session-card">
+                    <h3>Learning Objectives</h3>
+                    <p>By the end of this session, you will be able to:</p>
+                    <ul style="margin: 15px 0; padding-left: 20px;">
+                        <li>Understand RESTful API principles</li>
+                        <li>Work with FHIR operations</li>
+                        <li>Interact with FHIR servers</li>
+                        <li>Create and modify FHIR resources</li>
+                        <li>Use FHIR search and query operations</li>
+                    </ul>
+                </div>
+
+                <div class="session-card">
+                    <h3>Key Topics Covered</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-top: 15px;">
+                        <div style="padding: 15px; background: #f8fafc; border-radius: 8px; border-left: 4px solid #3b82f6;">
+                            <h4 style="color: #1e40af; margin-bottom: 8px;">RESTful APIs</h4>
+                            <p style="font-size: 0.9rem; color: #64748b;">Understanding REST principles and HTTP methods</p>
+                        </div>
+                        <div style="padding: 15px; background: #f8fafc; border-radius: 8px; border-left: 4px solid #3b82f6;">
+                            <h4 style="color: #1e40af; margin-bottom: 8px;">FHIR Operations</h4>
+                            <p style="font-size: 0.9rem; color: #64748b;">Common FHIR operations like $validate, $everything</p>
+                        </div>
+                        <div style="padding: 15px; background: #f8fafc; border-radius: 8px; border-left: 4px solid #3b82f6;">
+                            <h4 style="color: #1e40af; margin-bottom: 8px;">Resource Exchange</h4>
+                            <p style="font-size: 0.9rem; color: #64748b;">Creating, reading, updating, and deleting FHIR resources</p>
+                        </div>
+                        <div style="padding: 15px; background: #f8fafc; border-radius: 8px; border-left: 4px solid #3b82f6;">
+                            <h4 style="color: #1e40af; margin-bottom: 8px;">Search & Query</h4>
+                            <p style="font-size: 0.9rem; color: #64748b;">Using FHIR search parameters and queries</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="session-card">
+                    <h3>Interactive Activities</h3>
+                    <p>This session includes hands-on activities:</p>
+                    <div style="margin: 15px 0;">
+                        <div style="padding: 15px; background: #f0f9ff; border-radius: 8px; border-left: 4px solid #0ea5e9; margin-bottom: 15px;">
+                            <h4 style="color: #0369a1; margin-bottom: 8px;">RESTful Game</h4>
+                            <p style="font-size: 0.9rem; color: #0c4a6e; margin-bottom: 10px;">Interactive game to learn RESTful API concepts and FHIR operations.</p>
+                            <a href="restfulgame.html" target="_blank" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-play"></i>
+                                Play Game
+                            </a>
+                        </div>
+                        <div style="padding: 15px; background: #f0f9ff; border-radius: 8px; border-left: 4px solid #0ea5e9;">
+                            <h4 style="color: #0369a1; margin-bottom: 8px;">FHIR Examples</h4>
+                            <p style="font-size: 0.9rem; color: #0c4a6e; margin-bottom: 10px;">Review real FHIR resource examples in JSON format.</p>
+                            <a href="patient_example.json" target="_blank" class="btn btn-sm btn-outline-primary" style="margin-right: 10px;">
+                                <i class="fas fa-user"></i>
+                                Patient Example
+                            </a>
+                            <a href="immunization_example.json" target="_blank" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-syringe"></i>
+                                Immunization Example
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="session-card">
+                    <h3>Session Completion</h3>
+                    <p>To complete this session, please:</p>
+                    <ol style="margin: 15px 0; padding-left: 20px;">
+                        <li>Review the presentation materials</li>
+                        <li>Watch the session videos (when available)</li>
+                        <li>Complete the RESTful game</li>
+                        <li>Review the FHIR examples</li>
+                        <li>Complete the assignment</li>
+                        <li>Take the session quiz</li>
+                        <li>Mark the session as complete</li>
+                    </ol>
+                    
+                    <div style="text-align: center; margin-top: 30px;">
+                        <button class="btn btn-success" onclick="markSectionComplete('session6-content')">
+                            <i class="fas fa-check"></i>
+                            Mark Session 6 Complete
+                        </button>
+                        <a href="session7.html" class="btn btn-primary" style="margin-left: 15px;">
+                            <i class="fas fa-arrow-right"></i>
+                            Continue to Session 7
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Track navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            trackNavigation('session5', 'session6');
+        });
+    </script>
+</body>
+</html> 

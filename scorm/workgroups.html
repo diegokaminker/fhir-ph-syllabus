@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HL7 Workgroups & Accelerators Infographic</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8faff; /* Light blue-grey background */
+        }
+        .card-container {
+            display: grid;
+            gap: 1.5rem; /* Gap between cards */
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Responsive grid */
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 1rem; /* More rounded corners */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Softer shadow */
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            cursor: pointer;
+            border: 1px solid #e2e8f0; /* Light border */
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .modal-overlay {
+            background-color: rgba(0, 0, 0, 0.6); /* Darker overlay */
+            backdrop-filter: blur(5px); /* Frosted glass effect */
+        }
+        .modal-content {
+            background-color: #ffffff;
+            border-radius: 1.5rem; /* Even more rounded corners for modal */
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        .project-link {
+            color: #4c51bf; /* Deeper purple for links */
+            text-decoration: underline;
+            transition: color 0.2s ease-in-out;
+        }
+        .project-link:hover {
+            color: #6d28d9; /* Lighter purple on hover */
+        }
+        .close-button {
+            background-color: #ef4444; /* Red close button */
+            color: white;
+            border-radius: 9999px; /* Fully rounded */
+            padding: 0.5rem 1rem;
+            transition: background-color 0.2s ease-in-out;
+        }
+        .close-button:hover {
+            background-color: #dc2626; /* Darker red on hover */
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-7xl mx-auto py-8">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-center text-gray-900 mb-12">HL7 Ecosystem Overview</h1>
+
+        <section class="mb-16">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-8 text-center">HL7 Workgroups</h2>
+            <div id="workgroups-container" class="card-container">
+                <!-- Workgroup cards will be injected here by JavaScript -->
+            </div>
+        </section>
+
+        <section>
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-8 text-center">HL7 Accelerators</h2>
+            <div id="accelerators-container" class="card-container">
+                <!-- Accelerator cards will be injected here by JavaScript -->
+            </div>
+        </section>
+    </div>
+
+    <!-- Modal Structure -->
+    <div id="info-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden modal-overlay">
+        <div class="modal-content w-full max-w-2xl max-h-[90vh] overflow-y-auto p-8 relative">
+            <button id="close-modal" class="absolute top-4 right-4 text-gray-600 hover:text-gray-900 text-3xl font-bold">&times;</button>
+            <h3 id="modal-title" class="text-3xl font-bold text-gray-900 mb-4"></h3>
+            <p id="modal-description" class="text-gray-700 mb-6 leading-relaxed"></p>
+            <p class="text-gray-800 font-semibold mb-2">Confluence Page:</p>
+            <p id="modal-url" class="mb-6"></p>
+
+            <div id="modal-resources" class="mb-6">
+                <p class="text-gray-800 font-semibold mb-2">FHIR R4 Resources:</p>
+                <ul id="resources-list" class="list-disc list-inside text-gray-700"></ul>
+            </div>
+
+            <div id="modal-projects" class="mb-6">
+                <p class="text-gray-800 font-semibold mb-2">Projects:</p>
+                <ul id="projects-list" class="list-disc list-inside text-gray-700"></ul>
+            </div>
+            
+            <div id="modal-other-info" class="mb-6">
+                <p class="text-gray-800 font-semibold mb-2">Other Information:</p>
+                <p id="other-info-content" class="text-gray-700"></p>
+            </div>
+
+            <div class="text-center">
+                <button id="modal-close-button-bottom" class="close-button mt-4">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data for HL7 Workgroups and Accelerators
+        const workgroupsData = [
+            {
+                name: "Arden Syntax",
+                url: "https://confluence.hl7.org/display/ARD/Arden+Syntax+Work+Group+Home",
+                description: "Develops future versions of the Arden Syntax to facilitate its use in representing procedural medical knowledge and promoting knowledge sharing.",
+                projects: [{name: "Arden Syntax on FHIR", url: "https://confluence.hl7.org/download/attachments/40741751/arden-syntax-IG-R3-2019-09-16-ballot-reconciliation.pdf"}],
+                fhirResources: [],
+                otherInfo: "Arden Syntax is a legacy standard dating from the 1990's. Think of Arden Syntax as a precursor to CQL."
+            },
+            {
+                name: "Biomedical Research and Regulation (BRR)",
+                url: "https://confluence.hl7.org/display/BRR/Biomedical+Research+and+Regulation",
+                description: "Creates and promotes standards to facilitate biomedical research and regulatory evaluation of medical products, ensuring interoperability and compliance.",
+                projects: [
+                    {name: "AE for Clinical Research"}, {name: "AE Reporting for Transfusion and Vaccination"}, 
+                    {name: "BR&R FHIR Resources"}, {name: "BRIDG Model"}, 
+                    {name: "Clinical Research Sponsor Lab Semantics Implementation Guide"}, {name: "Clinical Study Schedule of Activities"}, 
+                    {name: "CRN - FHIR Investigation and Implementation Guide"}, {name: "Eligibility Criteria for Clinical Trials represented in FHIR"}, 
+                    {name: "FHIR to CDISC Joint Mapping Implementation Guide"}, {name: "FHIR to OMOP Mapping"}, 
+                    {name: "Gravitate Health/Vulcan FHIR IG for Electronic Medicinal Product Information (ePI)"}, {name: "Integrated Trial Matching for Cancer Patients & Providers"}, 
+                    {name: "PQ - Pharmaceutical Quality Common Page"}, {name: "Retrieval of Real World Data for Clinical Research"},
+                    {name: "SPL V3 to a FHIR-based submission"}
+                ],
+                fhirResources: ["ResearchStudy", "ResearchSubject"],
+                otherInfo: ""
+            },
+            {
+                name: "Clinical Decision Support (CDS)",
+                url: "https://confluence.hl7.org/display/CDS/WorkGroup+Home",
+                description: "Work on standards for representation and presentation of knowledge in health care, including Decision Support Services, Infobuttons and Order Sets. Maintain an expression language for clinical decision support. Develop a data model specifically tailored for clinical decision support.",
+                projects: [
+                    {name: "CDS Hooks"}, {name: "Clinical Quality Language"}, {name: "CPGonFHIR"}, 
+                    {name: "CRMI - Canonical Resource Management Infrastructure IG"}, {name: "EBMonFHIR"}, 
+                    {name: "PDDI CDS"}, {name: "Documentation Templates & Rules"}, {name: "Infobutton"}
+                ],
+                fhirResources: ["ActivityDefinition", "EffectEvidenceSynthesis", "Evidence", "EvidenceVariable", "GuidanceResponse", "Library", "PlanDefinition", "ResearchDefinition", "ResearchElementDefinition", "RiskAssessment"],
+                otherInfo: ""
+            },
+            {
+                name: "Clinical Genomics",
+                url: "https://confluence.hl7.org/display/CGW",
+                description: "Enables the meaningful exchange of genomic data and family health history to support precision medicine, developing standards for clinical information management.",
+                projects: [
+                    {name: "CDA IG for Genetic Testing Reports"}, {name: "CG Work Group Ballot Health Infractions - March 2022"}, 
+                    {name: "FHIR IG Genomics Reporting"}, {name: "HL7 Clinical Genomics Domain Information Model(s)"}, 
+                    {name: "HL7 V2 Genomics Report Lite"}, {name: "Version 3 Standard Clinical Genomics Pedigree"}
+                ],
+                fhirResources: ["MolecularSequence"],
+                otherInfo: ""
+            },
+            {
+                name: "Clinical Interoperability Council (CIC)",
+                url: "https://confluence.hl7.org/display/CIC/Clinical+Interoperability+Council",
+                description: "A nexus of communication and bridge to the standards development framework, organizational processes and forums for the clinical community to define content, flow and other domain requirements necessary to the development of robust health data standards.",
+                projects: [
+                    {name: "Breast Cancer Imaging and FHIR Profile Development"}, {name: "Health Record Exchange Framework (HReX)"}, 
+                    {name: "Minimal Common Oncology Data Element (mCODE) Project"}, {name: "VANGUARD Project (Venous Access: National Guidelines and Registry Development)"}, 
+                    {name: "Pain Assessment"}, {name: "Advancing Registry Infrastructure for a Modern API-based Health IT Ecosystem"}, 
+                    {name: "CREDS Project Repository"}, {name: "Emergency Medical Services Patient Care Report"}, 
+                    {name: "(ICHOM) Breast Cancer PCOM set FHIR IG"}, {name: "Phenomics Exchange for Research and Diagnostics"}
+                ],
+                fhirResources: [],
+                otherInfo: ""
+            },
+            {
+                name: "Clinical Quality Information (CQI)",
+                url: "https://confluence.hl7.org/display/CQIWC/Clinical+Quality+Information+Home",
+                description: "Create and maintain HL7 standards in support of measuring, evaluating, reporting, and thereby improve the quality of health care.",
+                projects: [
+                    {name: "CDA R2 Based: Quality Reporting Document Architecture Category 1"}, 
+                    {name: "CDA R2 Based: Quality Reporting Document Architecture Category 3"}, 
+                    {name: "FHIR Based: CQL-based HQMF IG R1, STU 4.1"},
+                    {name: "FHIR Based: 2023JAN NIB - Da Vinci Data Exchange for Quality Measure IG"},
+                    {name: "FHIR Based: 2023JAN NIB - Da Vinci Risk Adjustment IG"},
+                    {name: "FHIR Based: 2023JAN NIB - Quality Measure IG (QM IG)"}
+                ],
+                fhirResources: ["Measure", "MeasureReport"],
+                otherInfo: ""
+            },
+            {
+                name: "Community-Based Care and Privacy (CBCP)",
+                url: "https://confluence.hl7.org/display/CBCP",
+                description: "Identifies and validates information system requirements with an emphasis on privacy protection, enhancing community-based care through collaboration. Areas: Behavioral Health, Privacy and Consent, Long Term Care.",
+                projects: [{name: "Consent Implementations", url: "https://confluence.hl7.org/display/CBCP/Consent+Implementations"}],
+                fhirResources: ["Consent"],
+                otherInfo: ""
+            },
+            {
+                name: "Conformance",
+                url: "https://confluence.hl7.org/display/CONF/Conformance",
+                description: "Discuss general implementation guidance, conformance issues including guidance on testing conformance constructs, and to share best practices, success stories, and challenges.",
+                projects: [
+                    {name: "V2 Conformance/Data Type Flavors"}, {name: "FHIR Conformance Review"}, 
+                    {name: "FHIR Conformance"}, {name: "Guidance and Best Practices"}
+                ],
+                fhirResources: [],
+                otherInfo: ""
+            },
+            {
+                name: "Cross-Group Projects",
+                url: "https://confluence.hl7.org/display/CGP/Cross-Group+Projects+Home",
+                description: "Manages projects that span multiple workgroups, providing centralized communication and coordination for initiatives without a single workgroup sponsor.",
+                projects: [
+                    {name: "C-CDA to FHIR and from US Core Mapping"}, 
+                    {name: "CodeX Radiation Therapy"}, {name: "Military Service History and Status FHIR Profiles"}
+                ],
+                fhirResources: [],
+                otherInfo: ""
+            },
+            {
+                name: "Devices",
+                url: "https://confluence.hl7.org/display/HCD/Devices",
+                description: "Facilitate health care device interoperability at the device-to-device, device-to-enterprise, personal health devices, and at the enterprise levels. Harmonize data models with ISO/IEEE 11073. Support point of care device integration.",
+                projects: [
+                    {name: "Gemini Safe, Effective & Secure Medical Device Interoperability"}, 
+                    {name: "FHIR for Device Data Reporting"}, {name: "Personalized Health Navigation"}, 
+                    {name: "Sharing Continuous Glucose Monitoring Data"}, {name: "Device Alerting"}
+                ],
+                fhirResources: [],
+                otherInfo: ""
+            },
+            {
+                name: "Electronic Health Records (EHR)",
+                url: "https://confluence.hl7.org/display/EHR",
+                description: "Focuses on developing standards for electronic health records capabilities or 'Functional Profiles'.",
+                projects: [
+                    {name: "Dental Health Functional Profile"}, {name: "Pediatric HIT"}, 
+                    {name: "Problem Oriented Health Record"}, {name: "Behavioral Health"}, 
+                    {name: "EHR System Usability Functional Profile"}
+                ],
+                fhirResources: [],
+                otherInfo: "Currently working also on a list of 14 AI-related projects: https://confluence.hl7.org/pages/viewpage.action?pageId=101353849"
+            },
+            {
+                name: "Emergency Care",
+                url: "https://confluence.hl7.org/display/EC/Emergency+Care",
+                description: "Brings the unique understandings and perspectives of the emergency health care enterprise to HL7 Standards.",
+                projects: [],
+                fhirResources: [],
+                otherInfo: ""
+            },
+            {
+                name: "FHIR Infrastructure (FHIR-I)",
+                url: "https://confluence.hl7.org/pages/viewpage.action?pageId=40743450",
+                description: "Maintains and advance the core components and exchange paradigms of the FHIR specification.",
+                projects: [
+                    {name: "Structured Data Capture"}, {name: "Workflow"}, {name: "FSH Shorthand"}, 
+                    {name: "Methodology/Data Types"}, {name: "Subscription BackPort IG"}, 
+                    {name: "Exchange with/without Intermediaries"}, {name: "Bulk Data"}, 
+                    {name: "Subscriptions"}, {name: "Smart V2"}, {name: "IG Authoring"}, {name: "Capability Features IG"}
+                ],
+                fhirResources: ["Basic", "Binary", "Bundle", "CapabilityStatement", "GraphDefinition", "ImplementationGuide", "NamingSystem", "OperationDefinition", "OperationOutcome", "Questionnaire", "QuestionnaireResponse", "SearchParameter", "StructureDefinition", "StructureMap", "Subscription", "TestReport", "TestScript"],
+                otherInfo: "THE HEART OF FHIR!"
+            },
+            {
+                name: "Financial Management (FM)",
+                url: "https://confluence.hl7.org/display/FM/Financial+Management+Home",
+                description: "Financial aspects of healthcare exchange, including billing, coverage, contracts, and claims processing.",
+                projects: [
+                    {name: "Anaesthesia Billing Support"}, {name: "Coverage: Concept/Nomenclature Definitions"}, 
+                    {name: "DaVinci Postable Remittance"}, {name: "Statements, Payments, and Accumulators"}, 
+                    {name: "Uniform Structure and Coding of Elements for Prior Authorization"}, 
+                    {name: "US CORE and Considerations for Extensions and Clinical Resources"}
+                ],
+                fhirResources: ["Claim", "ClaimResponse", "Contract", "Coverage", "CoverageEligibilityRequest", "CoverageEligibilityResponse", "EnrollmentRequest", "EnrollmentResponse", "ExplanationOfBenefit", "PaymentNotice", "PaymentReconciliation", "VisionPrescription"],
+                otherInfo: "Everything is about money…contracts, claims, eligibility, coverage."
+            },
+            {
+                name: "Human and Social Services (HSS)",
+                url: "https://confluence.hl7.org/display/HSS/Human+and+Social+Services+Home",
+                description: "Requirements and artifacts for interoperable human services data exchange, focusing on social determinants of health.",
+                projects: [{name: "FHIR IG for Human Services Directory", url: "https://hl7.org/fhir/us/hsds/STU1/"}],
+                fhirResources: [],
+                otherInfo: ""
+            },
+            {
+                name: "Imaging Integration (II)",
+                url: "https://confluence.hl7.org/display/IMIN/Imaging+Integration+Home",
+                description: "Develops standards for the integration of imaging systems and associated information systems. Focus on the relationship with DICOM objects: how to represent them and link to them.",
+                projects: [
+                    {name: "Imaging Service Request Profile Implementation Guide"}, 
+                    {name: "DICOM SR to FHIR Resource Mapping IG"}, 
+                    {name: "Radiation Dose Summary for Diagnostic Procedures on FHIR"}
+                ],
+                fhirResources: ["ImagingStudy"],
+                otherInfo: ""
+            },
+            {
+                name: "Implementable Technology Specifications (ITS)",
+                url: "https://confluence.hl7.org/display/ITS",
+                description: "Maintains implementable technology specifications and messaging protocol guidelines to support interoperability in healthcare.",
+                projects: [{name: "RDF/FHIF", url: "http://rdfplayground.dcc.uchile.cl/"}],
+                fhirResources: [],
+                otherInfo: ""
+            },
+            {
+                name: "Infrastructure and Messaging (INM)",
+                url: "http://confluence.hl7.org/display/INM/Infrastructure+And+Messaging+Work+Group",
+                description: "Provides support for systems to exchange domain content as specified by HL7 standards other than FHIR.",
+                projects: [{name: "FHIR CAST (Context Synchronization in FHIR)", url: "https://confluence.hl7.org/display/ASD/FHIRcast%3A+Application+Context+Synchronization+in+FHIR"}],
+                fhirResources: [],
+                otherInfo: ""
+            },
+            {
+                name: "Learning Health Systems (LHS)",
+                url: "https://confluence.hl7.org/display/LHS/Learning+Health+Systems",
+                description: "Support the Learning Health System (LHS virtuous cycle) and to develop a DAM for Learning Health Systems as related to the adaptive systems. Make use of real time data and analytics and making such information available to everyone, including patients.",
+                projects: [
+                    {name: "Patient Centered Care Team (DAM)"}, 
+                    {name: "The Learning Health System"}
+                ],
+                fhirResources: [],
+                otherInfo: ""
+            },
+            {
+                name: "Mobile Health (MH)",
+                url: "https://confluence.hl7.org/display/MH/Mobile+Health",
+                description: "Definitions for mobile health interoperability, security, functional models, and profile(s).",
+                projects: [
+                    {name: "Consumer Mobile Healthcare Application Functional Framework (cMHAFF)"}, 
+                    {name: "Unique Mobile Health Application Identifier (UMHAI) Project"}, 
+                    {name: "School Healthcare Information Framework utilizing Technology (SHIFT)"}, 
+                    {name: "Mobile Framework for Healthcare Adoption of Short-Messaging Technologies (mFHAST)"}, 
+                    {name: "Mobile Health Data App Data Exchange Project"}
+                ],
+                fhirResources: [],
+                otherInfo: ""
+            },
+            {
+                name: "Orchestration, Services, and Architecture (SOA)",
+                url: "https://confluence.hl7.org/display/SOA/Orchestration%2C+Services%2C+and+Architecture",
+                description: "Develops standards for service-oriented architecture to improve interoperability and data exchange in healthcare.",
+                projects: [
+                    {name: "OSA Blueprint"}, {name: "Coordination with BPM+ Health"}, {name: "FHIR for FAIR (FHIR4FAIR)"}, 
+                    {name: "Common Terminology Service Release 2 (CTS2)"}, {name: "Consent Management Service Project"}, 
+                    {name: "HL7 Universal Communication Service (UCS) Normative Publication Request"}, 
+                    {name: "HL7 Pub/Sub Service Publication Request"}, {name: "Health Services Reference Architecture (HL7-HSRA)"}, 
+                    {name: "Model-Based Transformation Service"}, {name: "Health Services Platform (HL7-HSP) Marketplace"}, 
+                    {name: "HL7 Cloud Planning Guide"}
+                ],
+                fhirResources: [],
+                otherInfo: ""
+            },
+            {
+                name: "Orders & Observations (O&O)",
+                url: "https://confluence.hl7.org/display/OO",
+                description: "Focuses on orders and observations for diagnostics and clinical lab, vitals, including specimens, devices, results, etc. One of the most prolific and broad WGs.",
+                projects: [
+                    {name: "Device Resource Harmonization"}, {name: "Loinc In In-Vitro Diagnostics IG"}, {name: "V2-To-FHIR"}, 
+                    {name: "Simple FHIR Based Product Catalog for LMIC Countries"}, {name: "Post Acute Orders"}, {name: "eDOS/LOI/LRI"}, 
+                    {name: "Healthcare Product: Devices+Nutrition+Vision+Biological Derived"}, {name: "ServiceRequest: Reflex/Follow-Up/Add-On"}, 
+                    {name: "Diagnostic Module - R6 Updates"}, {name: "OO Families/Household/Workplace/Event"}, {name: "Lab Interoperability"},
+                    {name: "Vital Signs Profile Revisions R6"}, {name: "HL7 Domain Analysis Model: Specimen, Release 2"}, {name: "Nutrition"}, 
+                    {name: "UDI Pattern R2 Project"}, {name: "At-Home In-Vitro Test Report"}, {name: "Multiple Specimen Use Cases"}, 
+                    {name: "FHIR Clinical Order Workflow - Universal"}, {name: "Vital Signs Profiles"}, {name: "OpenCDx"}, 
+                    {name: "Device FHIR Resource Proposal"}, {name: "Diagnostic Report-Composition Work"}
+                ],
+                fhirResources: ["BodyStructure", "Device", "DeviceDefinition", "DeviceRequest", "DeviceUseStatement", "DiagnosticReport", "Media", "NutritionOrder", "Observation", "ObservationDefinition", "ServiceRequest", "Specimen", "SpecimenDefinition", "Substance", "SupplyDelivery", "SupplyRequest", "Task"],
+                otherInfo: ""
+            },
+            {
+                name: "Patient Administration (PA)",
+                url: "https://confluence.hl7.org/display/PA",
+                description: "Patient administration including the definitions and workflow for the healthcare administrative processes and the involved entities and registries: Patients, Appointments, Organizations, Locations, Practitioners and Encounters.",
+                projects: [
+                    {name: "Da Vinci Alerts project"}, {name: "FHIR R6 Plan"}, {name: "Patient Merge and Link"}, 
+                    {name: "Validated Healthcare Directories"}, {name: "National Healthcare Directory"}, 
+                    {name: "Using FHIR Identifiers"}, {name: "Interoperable Digital Identity and Patient Matching"}, 
+                    {name: "Appointment Scheduling - Industry Divergence"}, {name: "RTLS on FHIR"}, 
+                    {name: "Accounts (Perpetual and Episodic)"}, {name: "Endpoint Payload"}, 
+                    {name: "Normative Breaking Changes"}, {name: "$merge for Encounter"}, 
+                    {name: "Personal Relationships and Households"}, {name: "Location Service"}
+                ],
+                fhirResources: ["Account", "Appointment", "AppointmentResponse", "ChargeItem", "ChargeItemDefinition", "Encounter", "EpisodeOfCare", "HealthcareService", "Location", "Organization", "OrganizationAffiliation", "Patient", "Person", "Practitioner", "PractitionerRole", "RelatedPerson", "Schedule", "Slot", "VerificationResult"],
+                otherInfo: ""
+            },
+            {
+                name: "Patient Care (PC)",
+                url: "https://confluence.hl7.org/display/PC/Patient+Care",
+                description: "Define the requirements and design and validate standards, specifications, and implementation guides for the capture, communication, and use of information related to the management, execution and quality of care provision.",
+                projects: [
+                    {name: "Adverse Event Topic"}, {name: "Care Plan Projects"}, {name: "Clinicians on FHIR"}, 
+                    {name: "Child Health & Obstetrics International Collaboration and Exploration"}, {name: "Clinical Assessment"}, 
+                    {name: "Concern vs Condition/Problem"}, {name: "Clinical Status, disease course topics - context and perspectives"}, 
+                    {name: "Essential Information for Children with Special Health Care Needs"}, {name: "The Gravity Project Home"}, 
+                    {name: "PACIO Project"}, {name: "International Patient Summary"}, {name: "International Patient Access"},
+                    {name: "Eyes on FHIR - FHIR for Ophthalmology"}, {name: "Procedure Analysis"}, 
+                    {name: "Vital Signs Assessment - Definition and Scope"}, 
+                    {name: "Cross-Paradigm Implementation Guidance for Medical Device Data Sharing"}, 
+                    {name: "CMS Data Element Library (DEL)"}, {name: "Physical Activity"}
+                ],
+                fhirResources: ["AdverseEvent", "AllergyIntolerance", "CarePlan", "CareTeam", "ClinicalImpression", "Communication", "CommunicationRequest", "Condition", "FamilyMemberHistory", "Flag", "Goal"],
+                otherInfo: ""
+            },
+            {
+                name: "Patient Empowerment (PE)",
+                url: "https://confluence.hl7.org/display/PE/Patient+Empowerment+Home",
+                description: "Focuses on empowering patients in their healthcare decisions: intervening in their own record and auditing it.",
+                projects: [
+                    {name: "Advance Directives Interoperability (ADI) - FHIR IG"}, {name: "Consumer Outreach Subgroup"}, 
+                    {name: "Patient Contributed Data"}, {name: "Patient Requests for Corrections"}, 
+                    {name: "Personalized Health Navigation"}, {name: "Standard Personal Health Record FHIR IG"}
+                ],
+                fhirResources: [],
+                otherInfo: ""
+            },
+            {
+                name: "Payer/Provider Information Exchange (PIE)",
+                url: "https://confluence.hl7.org/pages/viewpage.action?pageId=34440389",
+                description: "Produce normative and informative standards for administrative and clinical records/data sharing between healthcare entities to support payer/provider processes.",
+                projects: [
+                    {name: "Dental Summary Exchange Project"}, {name: "Dental Attachment Implementation Guide"}, 
+                    {name: "Orthodontic Attachment Implementation Guide"}, {name: "HL7 Attachments Supplemental Guide"}, 
+                    {name: "Da Vinci/Carin Use Cases: HL7 FHIR - CARIN IG Digital Insurance Card"}, 
+                    {name: "Da Vinci/Carin Use Cases: HL7 FHIR DA Vinci Clinical Document Exchange 2.0.0 (CDEX)"}
+                ],
+                fhirResources: [],
+                otherInfo: ""
+            },
+            {
+                name: "Pharmacy (PHAR)",
+                url: "https://confluence.hl7.org/display/PHAR/Pharmacy?src=spacemenu",
+                description: "Develops standards for pharmacy-related data exchange including the definition of the medications and their prescription, dispense and administration.",
+                projects: [
+                    {name: "CARIN Consumer-facing Real-time Pharmacy Benefit Check"}, 
+                    {name: "CodeX Medication REMS FHIR IG"}, {name: "daVinci Formulary Project"}, 
+                    {name: "NHSN Inpatient Medication Report"}, {name: "Patient Medication List Guidance"}, 
+                    {name: "Standardized Medication Profile"}, 
+                    {name: "US Prescription Drug Monitoring Program (PDMP) FHIR Implementation Guide"}
+                ],
+                fhirResources: ["Medication", "MedicationAdministration", "MedicationDispense", "MedicationKnowledge", "MedicationRequest", "MedicationStatement"],
+                otherInfo: ""
+            },
+            {
+                name: "Public Health (PHWG)",
+                url: "https://confluence.hl7.org/display/PHWG/Public+Health+Work+Group",
+                description: "Public health data exchange and reporting.",
+                projects: [
+                    {name: "Birth and Fetal Death FHIR IG"}, {name: "Birth Defects DAM and FHIR IG"}, 
+                    {name: "Development and Maintenance of Immunization-related FHIR Resources"}, 
+                    {name: "FHIR IG for Immunization Forecasting"}, {name: "FHIR Lab Results"}, 
+                    {name: "HL7 FHIR® Implementation Guide: Electronic Case Reporting (eCR)"},
+                    {name: "NHSN Healthcare Associated Infection (HAI) Reports for Long Term Care Facilities (CDA & FHIR)"},
+                    {name: "ODH in HL7 v2 and FHIR"}, {name: "Vital Records Death Reporting FHIR IG"}
+                ],
+                fhirResources: ["Immunization", "ImmunizationEvaluation", "ImmunizationRecommendation"],
+                otherInfo: "Only 30% of the projects are FHIR related. Most are HL7 V2.x or CDA."
+            },
+            {
+                name: "Security (SEC)",
+                url: "https://confluence.hl7.org/display/SEC/Security+Work+Group",
+                description: "Security and privacy policy, role, and privilege management, access control, auditing to support surveillance and privacy use cases.",
+                projects: [
+                    {name: "Share with Protections White Paper Project"}, {name: "HL7 Privacy and Security Information Model"}, 
+                    {name: "Privacy and Security Architecture Framework Project (PSAF)"}, {name: "Basic Provenance Implementation Guide"}, 
+                    {name: "Data Segmentation For Privacy (DS4P)"}, {name: "Composite Security and Privacy DAM"}, 
+                    {name: "FHIR - GDP"}
+                ],
+                fhirResources: ["AuditEvent", "Provenance"],
+                otherInfo: ""
+            },
+            {
+                name: "Structured Documents (SD)",
+                url: "https://confluence.hl7.org/display/SD/Structured+Documents",
+                description: "Exchange and creation of structured documents.",
+                projects: [
+                    {name: "Consolidated CDA (C-CDA) Project"}, {name: "C-CDA Companion Guide"}, {name: "CCDA-on-FHIR"}, 
+                    {name: "C-CDA Rubric Criteria Project Page"}, {name: "CDA IG Quality Criteria Project"}, 
+                    {name: "CDA Questionnaire Form and Response"}, {name: "Healthcare Associated Infection Reports"}, 
+                    {name: "Occupational Data for Health"}, 
+                    {name: "Advance Directives Templates, Release 1 STU2 - US Realm"}, 
+                    {name: "Personal Advanced Care Plan (PACP)"}, {name: "Pharmacist Care Plan"}, 
+                    {name: "US FHIR Core STU Update"}, {name: "PHMR"}, {name: "POLST CDA IG"}, 
+                    {name: "SDWG Administrative Activities"}
+                ],
+                fhirResources: ["Composition", "DocumentManifest", "DocumentReference"],
+                otherInfo: ""
+            },
+            {
+                name: "Terminology Infrastructure / Vocabulary (VOC)",
+                url: "https://confluence.hl7.org/pages/viewpage.action?pageId=5998679",
+                description: "Terminology and vocabulary to support consistent semantic data exchange.",
+                projects: [
+                    {name: "The Gender Harmony Project"}, 
+                    {name: "Guidelines for a Standardized Terminology Knowledge base Project"}, 
+                    {name: "Vocabulary Pilot Feedback"}
+                ],
+                fhirResources: ["CodeSystem", "ConceptMap", "TerminologyCapabilities", "ValueSet"],
+                otherInfo: ""
+            }
+        ];
+
+        const acceleratorsData = [
+            {
+                name: "Argonaut Project",
+                url: "https://confluence.hl7.org/display/FA", // General Accelerator URL
+                description: "An implementation community comprising leading technology vendors and provider organizations to accelerate the use of FHIR and OAuth in health care information exchange.",
+                projects: [
+                    {name: "SMART App Launch"}, {name: "US Core 7 design for USCDI v4"}, {name: "CDS Hooks"}, 
+                    {name: "User Access Brands and Endpoints"}, {name: "Bulk Data Access"}, 
+                    {name: "Reporting Changes (_lastUpdated)"}, {name: "Subscriptions"}, 
+                    {name: "US Core 8 design for USCDI v5"}, {name: "Clinical Notes"}, 
+                    {name: "FHIR Write - CGM"}, {name: "International Patient Access"}, 
+                    {name: "Bulk Optimize"}, {name: "USCDI => US Core"}, {name: "EHI Export API"}
+                ],
+                otherInfo: "-"
+            },
+            {
+                name: "CARIN Alliance",
+                url: "https://confluence.hl7.org/display/FA", // General Accelerator URL
+                description: "A multi-sector collaborative working to advance consumer-directed (including authorized care givers) exchange of health information.",
+                projects: [
+                    {name: "Consumer Directed Payer Data Exchange (CARIN IG for Blue Button®)"}, 
+                    {name: "CARIN IG for Digital Insurance Card"}, 
+                    {name: "CARIN Patient-facing Real time Pharmacy Benefit Check (RTPBC)"}
+                ],
+                otherInfo: "Lots of references in CMS rules: Recommended moving to STU2, which would enable compliance with oral and vision claims requirements via Patient Access API (for Blue Button); Support for SHL and SHC (for Digital Insurance Card); Piloting v1.0.0 with 7+ orgs as several states have passed requirements (CA, TX) and others considering (for RTPBC); Highlight Reel, Project Focus in 2024."
+            },
+            {
+                name: "CodeX",
+                url: "https://confluence.hl7.org/display/FA", // General Accelerator URL
+                description: "Member-driven community accelerating interoperable data modeling and implementation around HL7 FHIR standards, such as mCODE, leading to improvements in health care and research in cancer, cardiovascular health, genomics, and beyond.",
+                projects: [
+                    {name: "mCODE"}, {name: "Genomics Operations"}, {name: "EHR Endpoints for Cancer Clinical Trials"}, 
+                    {name: "Quality Measures for Cancer"}, 
+                    {name: "Integrated Trial Matching for Cancer Patients and Providers"}, 
+                    {name: "Risk Evaluation and Mitigation Strategies (REMS) for key medications"}, 
+                    {name: "Cancer Registry Reporting"}, {name: "Cardiac Implantable Electronic Devices"}, 
+                    {name: "Radiation Therapy Data for Cancer"}, {name: "Prior Authorization in Oncology"}, 
+                    {name: "Genomics Data Exchange"}, {name: "CardX Hypertension Management"}
+                ],
+                otherInfo: "-"
+            },
+            {
+                name: "Da Vinci",
+                url: "https://confluence.hl7.org/display/FA", // General Accelerator URL
+                description: "Industry leaders and health IT technical experts who are working together to accelerate the adoption of HL7® FHIR® as the standard to support and integrate value-based care data exchange across communities.",
+                projects: [
+                    {name: "Clinical Data Exchange (Payer Coverage Decision Exchange, Clinical Data Exchange (CDex), Payer Data Exchange (PDex))"}, 
+                    {name: "Coverage, Transparency & Burden Reduction (Coverage Requirements Discovery (CRD), Documentation Templates and Rules (DTR), Prior-Authorization Support (PAS))"}, 
+                    {name: "Foundational Assets (Member Attribution List, Notifications, Health Record Exchange (HReX), Postable Remittance)"}, 
+                    {name: "Quality & Risk (Value Based Performance Reporting (VBPR), Data Exchange for Quality Measures/Gaps in Care (DEQM/GIC), Risk Adjustment (RA))"}
+                ],
+                otherInfo: "-"
+            },
+            {
+                name: "FAST",
+                url: "https://confluence.hl7.org/display/FA", // General Accelerator URL
+                description: "A community that identifies FHIR scalability gaps, defines solutions to address current barriers, and identifies needed infrastructure for scalable FHIR solutions.",
+                projects: [
+                    {name: "Identity (STU2 development: Identity level requirements in patient credentials, Matching and expanding text on Use Cases, Adoption in TEFCA!)"}, 
+                    {name: "Security (STU2 development beginning, Post ballot - transitioning vocabulary content to terminology.hl7.org)"}, 
+                    {name: "Directory"}, {name: "Consent (Defining project scope)"}, 
+                    {name: "Testing and Versioning (Community discussions)"}
+                ],
+                otherInfo: "-"
+            },
+            {
+                name: "Gravity Project",
+                url: "https://confluence.hl7.org/display/FA", // General Accelerator URL
+                description: "A collaborative initiative with the goal to develop consensus-driven data standards to support the collection, use, and exchange of data to address the social determinants of health.",
+                projects: [
+                    {name: "Terminology work stream (Curated ValueSets of social risk concepts, New consensus domains: Utility Insecurity, Digital Access, Digital Literacy, Program classification terminology, STU2.2 includes: Updated terminology, Clarifying narrative, Explanations re Support for Assessment Instruments)"}, 
+                    {name: "Technical work stream (FHIR IG)"}, 
+                    {name: "Implementation work stream (Testing, pilots, adoption, Social care co-design activities, Developing implementer-focus resources, Technical assistance to 4 pilots, including NY State for 1115 waiver)"}
+                ],
+                otherInfo: "-"
+            },
+            {
+                name: "Vulcan",
+                url: "https://confluence.hl7.org/display/FA", // General Accelerator URL
+                description: "Serving the needs of the clinical and translational research communities through the implementation of HL7 FHIR standardized data exchange.",
+                projects: [
+                    {name: "Electronic Medicinal Product Information (ePI)"}, 
+                    {name: "Phenomics Exchange for Research and Diagnostic"}, 
+                    {name: "Retrieval of Real World Data for Clinical Research"}, 
+                    {name: "FHIR to OMOP"}, {name: "Clinical Study Schedule of Activities"}, 
+                    {name: "Implementation Bridge: connecting multiple guides"}, {name: "Adverse Events"}, 
+                    {name: "Utilizing the Digital Protocol"}, {name: "Sample data"}
+                ],
+                otherInfo: "-"
+            },
+            {
+                name: "Helios",
+                url: "https://confluence.hl7.org/display/PHWG/Public+Health+Work+Group", // Public Health WG, but mentioned under Public Health Accelerator
+                description: "Helping public health to align with and benefit from the widespread standardization and transformation that is happening around digital health data.",
+                projects: [
+                    {name: "Make data in public health systems accessible in Bulk (Bulk patient matching, Advance testing to real world pilots, Deliver aggregate information to public health)"}, 
+                    {name: "Public health query and response (leveraging FHIR APIs) (Test initial use cases (via QHIN/HIE), Case notifications, Patient matching, Query for STI clinical data, Query for NBS data, Query for Cancer data)"}
+                ],
+                otherInfo: "-"
+            }
+        ];
+
+        const workgroupsContainer = document.getElementById('workgroups-container');
+        const acceleratorsContainer = document.getElementById('accelerators-container');
+        const infoModal = document.getElementById('info-modal');
+        const closeModalButtons = [document.getElementById('close-modal'), document.getElementById('modal-close-button-bottom')];
+        const modalTitle = document.getElementById('modal-title');
+        const modalDescription = document.getElementById('modal-description');
+        const modalUrl = document.getElementById('modal-url');
+        const modalResources = document.getElementById('modal-resources');
+        const resourcesList = document.getElementById('resources-list');
+        const modalProjects = document.getElementById('modal-projects');
+        const projectsList = document.getElementById('projects-list');
+        const modalOtherInfo = document.getElementById('modal-other-info');
+        const otherInfoContent = document.getElementById('other-info-content');
+
+        // Function to create a card
+        function createCard(item, type) {
+            const card = document.createElement('div');
+            card.className = 'card p-6 flex flex-col items-center text-center';
+            card.innerHTML = `
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">
+                    <a href="${item.url}" target="_blank" rel="noopener noreferrer" class="project-link">${item.name}</a>
+                </h3>
+                <p class="text-sm text-gray-600">${item.description}</p>
+            `;
+            card.addEventListener('click', () => openModal(item, type));
+            return card;
+        }
+
+        // Function to populate and open the modal
+        function openModal(item, type) {
+            modalTitle.textContent = item.name;
+            modalDescription.textContent = item.description;
+            modalUrl.innerHTML = `<a href="${item.url}" target="_blank" rel="noopener noreferrer" class="project-link">${item.url}</a>`;
+
+            // Clear previous lists
+            resourcesList.innerHTML = '';
+            projectsList.innerHTML = '';
+            otherInfoContent.textContent = '';
+
+            // Populate FHIR R4 Resources (only for Workgroups)
+            if (type === 'workgroup' && item.fhirResources && item.fhirResources.length > 0) {
+                modalResources.classList.remove('hidden');
+                item.fhirResources.forEach(resource => {
+                    const li = document.createElement('li');
+                    li.textContent = resource;
+                    resourcesList.appendChild(li);
+                });
+            } else {
+                modalResources.classList.add('hidden');
+            }
+
+            // Populate Projects
+            if (item.projects && item.projects.length > 0) {
+                modalProjects.classList.remove('hidden');
+                item.projects.forEach(project => {
+                    const li = document.createElement('li');
+                    if (project.url) {
+                        li.innerHTML = `<a href="${project.url}" target="_blank" rel="noopener noreferrer" class="project-link">${project.name}</a>`;
+                    } else {
+                        li.textContent = project.name;
+                    }
+                    projectsList.appendChild(li);
+                });
+            } else {
+                modalProjects.classList.add('hidden');
+            }
+
+            // Populate Other Info
+            if (item.otherInfo) {
+                modalOtherInfo.classList.remove('hidden');
+                otherInfoContent.textContent = item.otherInfo;
+            } else {
+                modalOtherInfo.classList.add('hidden');
+            }
+
+            infoModal.classList.remove('hidden');
+        }
+
+        // Function to close the modal
+        function closeModal() {
+            infoModal.classList.add('hidden');
+        }
+
+        // Event listeners for closing the modal
+        closeModalButtons.forEach(button => {
+            button.addEventListener('click', closeModal);
+        });
+
+        // Close modal when clicking outside
+        infoModal.addEventListener('click', (event) => {
+            if (event.target === infoModal) {
+                closeModal();
+            }
+        });
+
+        // Initialize cards
+        workgroupsData.forEach(wg => {
+            workgroupsContainer.appendChild(createCard(wg, 'workgroup'));
+        });
+
+        acceleratorsData.forEach(accel => {
+            acceleratorsContainer.appendChild(createCard(accel, 'accelerator'));
+        });
+    </script>
+</body>
+</html>

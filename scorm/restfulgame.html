@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FHIR API Carnival Game (beta)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            color: #334155;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1.5rem;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .challenge-card {
+            background-color: #ffffff;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .challenge-card:hover {
+            border-color: #3b82f6;
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.1);
+        }
+        .challenge-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .challenge-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 9999px;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+        }
+        .challenge-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            flex-grow: 1;
+        }
+        .challenge-points {
+            background-color: #fbbf24;
+            color: #1f2937;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        .challenge-content {
+            padding: 2rem;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #374151;
+        }
+        .form-select, .form-input, .form-textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            transition: border-color 0.2s ease;
+        }
+        .form-select:focus, .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        .form-textarea {
+            min-height: 120px;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            resize: vertical;
+        }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.875rem;
+        }
+        .btn-primary {
+            background-color: #3b82f6;
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #2563eb;
+            transform: translateY(-1px);
+        }
+        .btn-success {
+            background-color: #10b981;
+            color: white;
+        }
+        .btn-success:hover {
+            background-color: #059669;
+        }
+        .btn-warning {
+            background-color: #f59e0b;
+            color: white;
+        }
+        .btn-warning:hover {
+            background-color: #d97706;
+        }
+        .result-message {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-weight: 600;
+        }
+        .result-success {
+            background-color: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+        .result-error {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+        .score-display {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: #1f2937;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 2rem;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+        .hint-box {
+            background-color: #fef3c7;
+            border: 1px solid #f59e0b;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        .hint-title {
+            font-weight: 600;
+            color: #92400e;
+            margin-bottom: 0.5rem;
+        }
+        .hint-text {
+            color: #78350f;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-4xl font-bold text-center text-blue-700 mb-4">FHIR API Carnival (beta)</h1>
+        <p class="text-lg text-center text-gray-600 mb-2">
+            The FHIR API CARNIVAL is a game that tests your FHIR API knowledge.
+            
+        </p>
+        <p class="text-lg text-center text-gray-600 mb-2">
+            Select the correct method, headers, and write the request/body to earn points.
+            
+        </p>
+        <p class="text-sm text-center text-gray-500 mb-8">
+            Created by Diego Kaminker (HL7 DCSIO diego@hl7.org) and Benji Graham (Bellese bgrahame@bellese.io)
+        </p>
+
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-8">
+            <div class="flex items-center">
+                <svg class="w-6 h-6 text-blue-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <div>
+                    <h3 class="font-semibold text-blue-800">FHIR Server Endpoint</h3>
+                    <p class="text-blue-700 text-sm">All API calls will be tested against: <code class="bg-blue-100 px-2 py-1 rounded">https://fhirserver.hl7fundamentals.org/fhir/</code></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="score-display">
+            <span>Total Score: </span>
+            <span id="total-score">0</span>
+            <span> points</span>
+        </div>
+
+        <div id="challenges-container">
+            <!-- Challenges will be dynamically loaded here -->
+        </div>
+    </div>
+
+    <script>
+        let totalScore = 0;
+        let solvedChallenges = new Set(); // Track which challenges have had solutions shown
+        const challenges = [
+            {
+                id: 1,
+                title: "Get Server Information",
+                description: "You need to retrieve the server's capability statement to understand what resources and operations this FHIR server supports. This is essential for understanding how to interact with the server.",
+                method: "GET",
+                endpoint: "https://fhirserver.hl7fundamentals.org/fhir/metadata",
+                headers: {},
+                body: null,
+                points: 5,
+                hints: [
+                    "This is a simple read operation",
+                    "No request body is needed"
+                ]
+            },
+            {
+                id: 2,
+                title: "Create a New Patient",
+                description: "A new patient, Steven A Smith, needs to be added to the system. He was born on May 24, 1965, is male, and has the email steven.a.smith@espn.org. His wife's name is Mrs. Smith with phone 555-123-4567.",
+                method: "POST",
+                endpoint: "https://fhirserver.hl7fundamentals.org/fhir/Patient",
+                headers: {
+                    "Content-Type": "application/fhir+json"
+                },
+                body: `{
+  "resourceType": "Patient",
+  "id": "Sample",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\\"http://www.w3.org/1999/xhtml\\">Steven A Smith</div>"
+  },
+  "identifier": [
+    {
+      "use": "official",
+      "system": "http://fhirintermediatecourse.org/NI",
+      "value": "343558"
+    }
+  ],
+  "name": [
+    {
+      "use": "official",
+      "text": "Steven A Smith",
+      "family": "Smith",
+      "given": [
+        "Steven",
+        "A"
+      ]
+    }
+  ],
+  "telecom": [
+    {
+      "system": "email",
+      "value": "steven.a.smith@espn.org"
+    }
+  ],
+  "gender": "male",
+  "birthDate": "1965-05-24",
+  "contact": [
+    {
+      "relationship": [
+        {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "127850001",
+              "display": "Wife"
+            }
+          ]
+        }
+      ],
+      "name": {
+        "use": "usual",
+        "text": "Mrs. Smith"
+      },
+      "telecom": [
+        {
+          "system": "phone",
+          "value": "555-123-4567",
+          "use": "home"
+        }
+      ]
+    }
+  ]
+}`,
+                points: 10,
+                hints: [
+                    "The body should contain all patient information",
+                    "Think about what HTTP method creates new resources"
+                ]
+            },
+            {
+                id: 3,
+                title: "Read Patient Information",
+                description: "You need to retrieve the complete information for patient with ID '22'. This will give you all the demographic and contact information for this specific patient.",
+                method: "GET",
+                endpoint: "https://fhirserver.hl7fundamentals.org/fhir/Patient/22",
+                headers: {},
+                body: null,
+                points: 5,
+                hints: [
+                    "This is a direct read operation",
+                    "No request body needed"
+                ]
+            },
+            {
+                id: 4,
+                title: "Update Patient Information",
+                description: "Patient with ID '31750' needs their information updated. The patient is Steven A Smith with the same details as before, but some information has been modified.",
+                method: "PUT",
+                endpoint: "https://fhirserver.hl7fundamentals.org/fhir/Patient",
+                headers: {
+                    "Content-Type": "application/fhir+json"
+                },
+                body: `{
+  "resourceType": "Patient",
+  "id": "31750",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\\"http://www.w3.org/1999/xhtml\\">Steven A Smith</div>"
+  },
+  "identifier": [
+    {
+      "use": "official",
+      "system": "http://fhirintermediatecourse.org/NI",
+      "value": "343558"
+    }
+  ],
+  "name": [
+    {
+      "use": "official",
+      "text": "Steven A Smith",
+      "family": "Smith",
+      "given": [
+        "Steven",
+        "A"
+      ]
+    }
+  ],
+  "telecom": [
+    {
+      "system": "email",
+      "value": "steven.a.smith@espn.org"
+    }
+  ],
+  "gender": "male",
+  "birthDate": "1965-05-24",
+  "contact": [
+    {
+      "relationship": [
+        {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "127850001",
+              "display": "Wife"
+            }
+          ]
+        }
+      ],
+      "name": {
+        "use": "usual",
+        "text": "Mrs. Smith"
+      },
+      "telecom": [
+        {
+          "system": "phone",
+          "value": "555-123-4567",
+          "use": "home"
+        }
+      ]
+    }
+  ]
+}`,
+                points: 10,
+                hints: [
+                    "Include the resource ID in the body",
+                    "Think about what HTTP method updates existing resources"
+                ]
+            },
+            {
+                id: 5,
+                title: "Search for Male Patients",
+                description: "You need to find all patients in the system who are male. This will help you identify a specific subset of patients based on their gender.",
+                method: "GET",
+                endpoint: "https://fhirserver.hl7fundamentals.org/fhir/Patient?gender=male",
+                headers: {},
+                body: null,
+                points: 5,
+                hints: [
+                    "This is a search operation",
+                    "Use query parameters in the URL"
+                ]
+            },
+            {
+                id: 6,
+                title: "Search Patients by Identifier",
+                description: "You need to find a specific patient using their identifier. The patient has an identifier with system 'http://fhirintermediatecourse.org/NI' and value '343558'. This demonstrates how to search using the identifier parameter with system|value syntax.",
+                method: "GET",
+                endpoint: "https://fhirserver.hl7fundamentals.org/fhir/Patient?identifier=http://fhirintermediatecourse.org/NI%7C343558",
+                headers: {},
+                body: null,
+                points: 5,
+                hints: [
+                    "This searches for a specific identifier",
+                    "Use the system|value format",
+                    "No request body needed"
+                ]
+            },
+            {
+                id: 7,
+                title: "Search Patients by Given Name",
+                description: "You need to find all patients whose given name contains 'Steven'. This will help you identify patients with a specific first name using the name search parameter.",
+                method: "GET",
+                endpoint: "https://fhirserver.hl7fundamentals.org/fhir/Patient?name.given=Steven",
+                headers: {},
+                body: null,
+                points: 5,
+                hints: [
+                    "This searches by given name",
+                    "Use the name.given parameter",
+                    "No request body needed"
+                ]
+            },
+            {
+                id: 8,
+                title: "Get Patient Version History",
+                description: "You need to retrieve the complete version history for patient with ID '22'. This will show you all the different versions of this patient's record that have been created over time.",
+                method: "GET",
+                endpoint: "https://fhirserver.hl7fundamentals.org/fhir/Patient/22/_history",
+                headers: {},
+                body: null,
+                points: 5,
+                hints: [
+                    "This retrieves all versions of a resource",
+                    "No request body needed",
+                    "Think about how to access version history"
+                ]
+            },
+            {
+                id: 9,
+                title: "Get Specific Patient Version",
+                description: "You need to retrieve a specific version (version 10) of the patient with ID '22'. This allows you to see exactly what the patient record looked like at that particular point in time.",
+                method: "GET",
+                endpoint: "https://fhirserver.hl7fundamentals.org/fhir/Patient/22/_history/10",
+                headers: {},
+                body: null,
+                points: 5,
+                hints: [
+                    "This retrieves a specific version of a resource",
+                    "No request body needed",
+                    "The version number goes at the end of the URL"
+                ]
+            },
+            {
+                id: 10,
+                title: "Complex Transaction Bundle",
+                description: "You need to create a comprehensive immunization record for patient AD445566 (PARK SUNG H) who received a Td vaccine on September 20, 2022. The vaccine was administered by practitioner 9876543210 (Garcia Maria) at lot CD9012. This requires creating multiple related resources in a single transaction.",
+                method: "POST",
+                endpoint: "https://fhirserver.hl7fundamentals.org/fhir/",
+                headers: {
+                    "Content-Type": "application/fhir+json"
+                },
+                body: `{
+  "resourceType": "Bundle",
+  "type": "transaction",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:25131980-1b95-4548-a01d-94786b40e4c6",
+      "request": {
+        "method": "PUT",
+        "url": "Patient?identifier=http://imm-messages.gov/MyEMR-DE-000004/patients|AD445566"
+      },
+      "resource": {
+        "resourceType": "Patient",
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns='http://www.w3.org/1999/xhtml'>Patient Record for AD445566 PARK SUNG H</div>"
+        },
+        "identifier": [
+          {
+            "system": "http://imm-messages.gov/MyEMR-DE-000004/patients",
+            "value": "AD445566"
+          }
+        ],
+        "name": [
+          {
+            "family": "PARK",
+            "given": [
+              "SUNG",
+              "H"
+            ]
+          }
+        ],
+        "birthDate": "1975-10-03",
+        "gender": "male",
+        "address": [
+          {
+            "line": [
+              "101 ELM ST"
+            ],
+            "city": "BOSTON",
+            "state": "MA",
+            "postalCode": "02108"
+          }
+        ],
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "MA-02108",
+            "use": "home"
+          }
+        ],
+        "communication": [
+          {
+            "language": {
+              "coding": [
+                {
+                  "system": "urn:ietf:bcp:47",
+                  "code": "en",
+                  "display": "English"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:265bbcbd-b9f0-4e0a-88f0-3d251216fcc7",
+      "request": {
+        "method": "PUT",
+        "url": "Practitioner?identifier=http://hl7.org/fhir/sid/us-npi|9876543210"
+      },
+      "resource": {
+        "resourceType": "Practitioner",
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns='http://www.w3.org/1999/xhtml'>Practitioner Record for 9876543210 Garcia Maria</div>"
+        },
+        "identifier": [
+          {
+            "system": "http://hl7.org/fhir/sid/us-npi",
+            "value": "9876543210"
+          }
+        ],
+        "name": [
+          {
+            "family": "Garcia",
+            "given": [
+              "Maria"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:cb06275e-1f3e-44d4-a2a5-ebc1a7f97fa5",
+      "request": {
+        "method": "PUT",
+        "url": "Immunization?identifier=http://imm-messages.gov/MyEMR-DE-000004|CA0004"
+      },
+      "resource": {
+        "resourceType": "Immunization",
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns='http://www.w3.org/1999/xhtml'>Immunization Record for AD445566: 113 Td (adult), 5 Lf tetanus toxoid, preservative free, adsorbed</div>"
+        },
+        "identifier": [
+          {
+            "system": "http://imm-messages.gov/MyEMR-DE-000004",
+            "value": "CA0004"
+          }
+        ],
+        "status": "completed",
+        "vaccineCode": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/cvx",
+              "code": "113",
+              "display": "Td (adult), 5 Lf tetanus toxoid, preservative free, adsorbed"
+            }
+          ]
+        },
+        "patient": {
+          "reference": "urn:uuid:25131980-1b95-4548-a01d-94786b40e4c6"
+        },
+        "performer": [
+          {
+            "actor": {
+              "reference": "urn:uuid:265bbcbd-b9f0-4e0a-88f0-3d251216fcc7"
+            }
+          }
+        ],
+        "occurrenceDateTime": "2022-09-20",
+        "primarySource": true,
+        "lotNumber": "CD9012",
+        "expirationDate": "2025-11-30",
+        "site": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ActSite",
+              "code": "LA",
+              "display": "LEFT ARM"
+            }
+          ]
+        },
+        "route": {
+          "coding": [
+            {
+              "system": "http://ncimeta.nci.nih.gov/ncimb/",
+              "code": "C28161",
+              "display": "INTRAMUSCULAR"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}`,
+                points: 20,
+                hints: [
+                    "This is a complex transaction bundle",
+                    "The bundle contains multiple resources",
+                    "Think about what HTTP method sends data to the server"
+                ]
+            },
+            {
+                id: 11,
+                title: "Get All Patient Information ($everything)",
+                description: "You need to retrieve ALL information related to patient with ID '22'. This includes the patient's demographics, observations, conditions, medications, immunizations, and any other clinical data associated with this patient. The $everything operation provides a comprehensive view of a patient's complete record.",
+                method: "GET",
+                endpoint: "https://fhirserver.hl7fundamentals.org/fhir/Patient/22/$everything",
+                headers: {},
+                body: null,
+                points: 8,
+                hints: [
+                    "This is a special FHIR operation",
+                    "No request body needed",
+                    "Think about how to access all related resources for a patient"
+                ]
+            }
+        ];
+
+        const challengesContainer = document.getElementById('challenges-container');
+
+        function createChallengeCard(challenge) {
+            const challengeCard = document.createElement('div');
+            challengeCard.classList.add('challenge-card');
+            challengeCard.innerHTML = `
+                <div class="challenge-header">
+                    <div class="flex items-center">
+                        <div class="challenge-number">${challenge.id}</div>
+                        <div class="challenge-title">${challenge.title}</div>
+                    </div>
+                    <div class="challenge-points">${challenge.points} points</div>
+                </div>
+                <div class="challenge-content">
+                    <p class="mb-4 text-gray-700">${challenge.description}</p>
+                    
+                    <div class="hint-box">
+                        <div class="hint-title">💡 Hints:</div>
+                        <div class="hint-text">
+                            ${challenge.hints.map(hint => `• ${hint}`).join('<br>')}
+                        </div>
+                    </div>
+
+                    <form id="challenge-${challenge.id}-form">
+                        <div class="form-group">
+                            <label class="form-label">HTTP Method:</label>
+                            <select class="form-select" id="method-${challenge.id}" required>
+                                <option value="">Select method...</option>
+                                <option value="GET">GET</option>
+                                <option value="POST">POST</option>
+                                <option value="PUT">PUT</option>
+                                <option value="DELETE">DELETE</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Request URL:</label>
+                            <input type="text" class="form-input" id="endpoint-${challenge.id}" 
+                                   placeholder="Enter the complete URL..." required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Headers (JSON format):</label>
+                            <textarea class="form-textarea" id="headers-${challenge.id}" 
+                                      placeholder='{"Content-Type": "application/fhir+json"}' 
+                                      ${Object.keys(challenge.headers).length === 0 ? 'readonly' : ''}>${Object.keys(challenge.headers).length === 0 ? '{}' : ''}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Request Body (JSON format):</label>
+                            <textarea class="form-textarea" id="body-${challenge.id}" 
+                                      placeholder="Enter JSON body or leave empty if not needed..."
+                                      ${challenge.body === null ? 'readonly' : ''}>${challenge.body === null ? '' : ''}</textarea>
+                        </div>
+
+                        <div class="flex gap-4">
+                            <button type="button" class="btn btn-primary" onclick="testChallenge(${challenge.id})">
+                                🧪 Test API Call
+                            </button>
+                            <button type="button" class="btn btn-warning" onclick="scoreChallenge(${challenge.id})">
+                                🏆 Score Challenge
+                            </button>
+                            <button type="button" class="btn btn-success" onclick="showSolution(${challenge.id})">
+                                💡 Show Solution
+                            </button>
+                        </div>
+
+                        <div id="result-${challenge.id}" class="mt-4"></div>
+                        <div id="api-response-${challenge.id}" class="mt-4"></div>
+                    </form>
+                </div>
+            `;
+
+            challengesContainer.appendChild(challengeCard);
+        }
+
+        function testChallenge(challengeId) {
+            const challenge = challenges.find(c => c.id === challengeId);
+            const method = document.getElementById(`method-${challengeId}`).value;
+            const endpoint = document.getElementById(`endpoint-${challengeId}`).value;
+            const headersText = document.getElementById(`headers-${challengeId}`).value;
+            const bodyText = document.getElementById(`body-${challengeId}`).value;
+
+            // Validate inputs
+            if (!method || !endpoint) {
+                showApiResponse(challengeId, "❌ Please fill in the method and endpoint before testing.");
+                return;
+            }
+
+            let headers = {};
+            try {
+                if (headersText.trim()) {
+                    headers = JSON.parse(headersText);
+                }
+            } catch (e) {
+                showApiResponse(challengeId, "❌ Invalid JSON in headers");
+                return;
+            }
+
+            let body = null;
+            if (bodyText.trim()) {
+                try {
+                    body = JSON.parse(bodyText);
+                } catch (e) {
+                    showApiResponse(challengeId, "❌ Invalid JSON in body");
+                    return;
+                }
+            }
+
+            // Make actual API call
+            makeApiCall(challengeId, method, endpoint, headers, body);
+        }
+
+        function makeApiCall(challengeId, method, endpoint, headers, body) {
+            const responseDiv = document.getElementById(`api-response-${challengeId}`);
+            responseDiv.innerHTML = '<div class="result-message result-error">🔄 Making API call...</div>';
+
+            const requestOptions = {
+                method: method,
+                headers: {
+                    'Accept': 'application/fhir+json',
+                    ...headers
+                }
+            };
+
+            if (body && method !== 'GET') {
+                requestOptions.body = JSON.stringify(body);
+            }
+
+            fetch(endpoint, requestOptions)
+                .then(response => {
+                    return response.text().then(text => {
+                        return {
+                            status: response.status,
+                            statusText: response.statusText,
+                            body: text,
+                            ok: response.ok
+                        };
+                    });
+                })
+                .then(data => {
+                    let responseHtml = `
+                        <div class="result-message ${data.ok ? 'result-success' : 'result-error'}">
+                            <strong>Status: ${data.status} ${data.statusText}</strong>
+                        </div>
+                        <div class="mt-2">
+                            <strong>Response Body:</strong>
+                            <div class="code-block mt-2">
+                                <pre>${data.body}</pre>
+                            </div>
+                        </div>
+                    `;
+                    responseDiv.innerHTML = responseHtml;
+                })
+                .catch(error => {
+                    responseDiv.innerHTML = `
+                        <div class="result-message result-error">
+                            ❌ API Call Failed: ${error.message}
+                        </div>
+                    `;
+                });
+        }
+
+        function scoreChallenge(challengeId) {
+            const challenge = challenges.find(c => c.id === challengeId);
+            const method = document.getElementById(`method-${challengeId}`).value;
+            const endpoint = document.getElementById(`endpoint-${challengeId}`).value;
+            const headersText = document.getElementById(`headers-${challengeId}`).value;
+            const bodyText = document.getElementById(`body-${challengeId}`).value;
+
+            let headers = {};
+            try {
+                if (headersText.trim()) {
+                    headers = JSON.parse(headersText);
+                }
+            } catch (e) {
+                showResult(challengeId, false, "Invalid JSON in headers");
+                return;
+            }
+
+            let body = null;
+            if (bodyText.trim()) {
+                try {
+                    body = JSON.parse(bodyText);
+                } catch (e) {
+                    showResult(challengeId, false, "Invalid JSON in body");
+                    return;
+                }
+            }
+
+            // Check if answers are correct
+            const methodCorrect = method === challenge.method;
+            const endpointCorrect = endpoint.trim() === challenge.endpoint;
+            const headersCorrect = JSON.stringify(headers) === JSON.stringify(challenge.headers);
+            const bodyCorrect = challenge.body === null ? bodyText.trim() === '' : 
+                               JSON.stringify(body) === JSON.stringify(JSON.parse(challenge.body));
+
+            const allCorrect = methodCorrect && endpointCorrect && headersCorrect && bodyCorrect;
+
+            if (allCorrect) {
+                // Check if solution was shown for this challenge
+                if (solvedChallenges.has(challengeId)) {
+                    showResult(challengeId, true, `🎉 Correct! But no points earned because you used the solution.`);
+                } else {
+                    showResult(challengeId, true, `🎉 Correct! You earned ${challenge.points} points!`);
+                    totalScore += challenge.points;
+                    updateScore();
+                }
+            } else {
+                let errorMsg = "❌ Incorrect. Check: ";
+                if (!methodCorrect) errorMsg += "HTTP method, ";
+                if (!endpointCorrect) errorMsg += "URL, ";
+                if (!headersCorrect) errorMsg += "headers, ";
+                if (!bodyCorrect) errorMsg += "body";
+                errorMsg = errorMsg.replace(/,\s*$/, '');
+                showResult(challengeId, false, errorMsg);
+            }
+        }
+
+        function showSolution(challengeId) {
+            const challenge = challenges.find(c => c.id === challengeId);
+            
+            // Mark this challenge as solved
+            solvedChallenges.add(challengeId);
+            
+            document.getElementById(`method-${challengeId}`).value = challenge.method;
+            document.getElementById(`endpoint-${challengeId}`).value = challenge.endpoint;
+            document.getElementById(`headers-${challengeId}`).value = JSON.stringify(challenge.headers, null, 2);
+            document.getElementById(`body-${challengeId}`).value = challenge.body || '';
+
+            showResult(challengeId, false, "💡 Solution displayed. No points will be awarded for this challenge now.");
+        }
+
+        function showResult(challengeId, success, message) {
+            const resultDiv = document.getElementById(`result-${challengeId}`);
+            resultDiv.className = `result-message ${success ? 'result-success' : 'result-error'}`;
+            resultDiv.innerHTML = message;
+        }
+
+        function updateScore() {
+            document.getElementById('total-score').textContent = totalScore;
+        }
+
+        function showApiResponse(challengeId, message) {
+            const responseDiv = document.getElementById(`api-response-${challengeId}`);
+            responseDiv.innerHTML = `<div class="result-message result-error">${message}</div>`;
+        }
+
+        // Initialize the game
+        challenges.forEach(challenge => {
+            createChallengeCard(challenge);
+        });
+    </script>
+</body>
+</html>

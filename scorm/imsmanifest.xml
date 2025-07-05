@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest identifier="FHIR_PUBLIC_HEALTH_2025" version="1.0" 
+           xmlns="http://www.imsproject.org/xsd/imscp_rootv1p1p2" 
+           xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_rootv1p2" 
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+           xsi:schemaLocation="http://www.imsproject.org/xsd/imscp_rootv1p1p2 imscp_rootv1p1p2.xsd 
+                                http://www.imsglobal.org/xsd/imsmd_rootv1p2p1 imsmd_rootv1p2p1.xsd 
+                                http://www.adlnet.org/xsd/adlcp_rootv1p2 adlcp_rootv1p2.xsd">
+    
+    <metadata>
+        <schema>ADL SCORM</schema>
+        <schemaversion>1.2</schemaversion>
+        <adlcp:location>metadata.xml</adlcp:location>
+    </metadata>
+    
+    <organizations default="TOC1">
+        <organization identifier="TOC1">
+            <title>HL7 FHIR Public Health Training 2025</title>
+            <item identifier="ITEM_1" identifierref="RESOURCE_1">
+                <title>Course Overview</title>
+                <adlcp:completionThreshold>1</adlcp:completionThreshold>
+            </item>
+            <item identifier="ITEM_2" identifierref="RESOURCE_2">
+                <title>Session 1: Context</title>
+                <adlcp:completionThreshold>1</adlcp:completionThreshold>
+            </item>
+            <item identifier="ITEM_3" identifierref="RESOURCE_3">
+                <title>Session 2: Landscape</title>
+                <adlcp:completionThreshold>1</adlcp:completionThreshold>
+            </item>
+            <item identifier="ITEM_4" identifierref="RESOURCE_4">
+                <title>Session 3: Foundational FHIR Part 1</title>
+                <adlcp:completionThreshold>1</adlcp:completionThreshold>
+            </item>
+            <item identifier="ITEM_5" identifierref="RESOURCE_5">
+                <title>Session 4: Foundational FHIR Part 2</title>
+                <adlcp:completionThreshold>1</adlcp:completionThreshold>
+            </item>
+            <item identifier="ITEM_6" identifierref="RESOURCE_6">
+                <title>Session 5: Day 1 Wrap Up</title>
+                <adlcp:completionThreshold>1</adlcp:completionThreshold>
+            </item>
+            <item identifier="ITEM_7" identifierref="RESOURCE_7">
+                <title>Session 6: FHIR Operations & Tech</title>
+                <adlcp:completionThreshold>1</adlcp:completionThreshold>
+            </item>
+            <item identifier="ITEM_8" identifierref="RESOURCE_8">
+                <title>Session 7: Implementation Guides</title>
+                <adlcp:completionThreshold>1</adlcp:completionThreshold>
+            </item>
+            <item identifier="ITEM_9" identifierref="RESOURCE_9">
+                <title>Session 8: HL7 Processes</title>
+                <adlcp:completionThreshold>1</adlcp:completionThreshold>
+            </item>
+            <item identifier="ITEM_10" identifierref="RESOURCE_10">
+                <title>Session 9: Next Steps</title>
+                <adlcp:completionThreshold>1</adlcp:completionThreshold>
+            </item>
+            <item identifier="ITEM_11" identifierref="RESOURCE_11">
+                <title>Session 10: Wrap Up & Feedback</title>
+                <adlcp:completionThreshold>1</adlcp:completionThreshold>
+            </item>
+            <item identifier="ITEM_12" identifierref="RESOURCE_12">
+                <title>Course Resources</title>
+                <adlcp:completionThreshold>1</adlcp:completionThreshold>
+            </item>
+        </organization>
+    </organizations>
+    
+    <resources>
+        <resource identifier="RESOURCE_1" type="webcontent" adlcp:scormtype="sco" href="overview.html">
+            <file href="overview.html"/>
+            <file href="css/styles.css"/>
+            <file href="js/scorm.js"/>
+            <file href="images/hl7-logo.png"/>
+        </resource>
+        <resource identifier="RESOURCE_2" type="webcontent" adlcp:scormtype="sco" href="session1.html">
+            <file href="session1.html"/>
+            <file href="css/styles.css"/>
+            <file href="js/scorm.js"/>
+            <file href="presentations/CDC_2025_SESSION_02.pdf"/>
+            <file href="quizzes/quiz_session2.html"/>
+        </resource>
+        <resource identifier="RESOURCE_3" type="webcontent" adlcp:scormtype="sco" href="session2.html">
+            <file href="session2.html"/>
+            <file href="css/styles.css"/>
+            <file href="js/scorm.js"/>
+            <file href="presentations/CDC_2025_SESSION_02.pdf"/>
+            <file href="quizzes/quiz_session2.html"/>
+        </resource>
+        <resource identifier="RESOURCE_4" type="webcontent" adlcp:scormtype="sco" href="session3.html">
+            <file href="session3.html"/>
+            <file href="css/styles.css"/>
+            <file href="js/scorm.js"/>
+            <file href="presentations/CDC_2025_SESSION_03.pdf"/>
+            <file href="assignments/Assignment%20%231%20-%20Navigate%20the%20Resource%20Definition%20_%20Explain%20the%20contents.pdf"/>
+            <file href="assignments/Assignment%20%232%20-%20Create%20Immunization%20and%20Patient%20Resource%20based%20on%20a%20Profile.pdf"/>
+            <file href="quizzes/quiz_session3.html"/>
+        </resource>
+        <resource identifier="RESOURCE_5" type="webcontent" adlcp:scormtype="sco" href="session4.html">
+            <file href="session4.html"/>
+            <file href="css/styles.css"/>
+            <file href="js/scorm.js"/>
+            <file href="presentations/CDC_2025_SESSION_04.pdf"/>
+            <file href="assignments/Assignment%20%233%20-%20Manage%20different%20FHIR%20reference%20types.pdf"/>
+            <file href="assignments/Assignment%20%234%20-%20HL7%20V2.5%20TO%20FHIR%20Mapping.pdf"/>
+        </resource>
+        <resource identifier="RESOURCE_6" type="webcontent" adlcp:scormtype="sco" href="session5.html">
+            <file href="session5.html"/>
+            <file href="css/styles.css"/>
+            <file href="js/scorm.js"/>
+            <file href="presentations/CDC_2025_SESSION_05.pdf"/>
+        </resource>
+        <resource identifier="RESOURCE_7" type="webcontent" adlcp:scormtype="sco" href="session6.html">
+            <file href="session6.html"/>
+            <file href="css/styles.css"/>
+            <file href="js/scorm.js"/>
+            <file href="presentations/CDC_2025_SESSION_06.pdf"/>
+            <file href="assignments/Assignment%20%235%20-%20FHIR%20Operations.pdf"/>
+            <file href="restfulgame.html"/>
+            <file href="patient_example.json"/>
+            <file href="immunization_example.json"/>
+            <file href="quizzes/quiz_session6.html"/>
+        </resource>
+        <resource identifier="RESOURCE_8" type="webcontent" adlcp:scormtype="sco" href="session7.html">
+            <file href="session7.html"/>
+            <file href="css/styles.css"/>
+            <file href="js/scorm.js"/>
+            <file href="presentations/CDC_2025_SESSION_07_A.pdf"/>
+            <file href="presentations/CDC_2025_SESSION_07_B.pdf"/>
+            <file href="presentations/CDC_2025_SESSION_07_C.pdf"/>
+            <file href="assignments/Assignment%20%236%20-%20P%20H%20Implementation%20Guides.pdf"/>
+        </resource>
+        <resource identifier="RESOURCE_9" type="webcontent" adlcp:scormtype="sco" href="session8.html">
+            <file href="session8.html"/>
+            <file href="css/styles.css"/>
+            <file href="js/scorm.js"/>
+            <file href="presentations/CDC_2025_SESSION_08.pdf"/>
+            <file href="assignments/Assignment%20%237%20-%20HL7%20Process%2C%20Activities%20and%20Resources.pdf"/>
+            <file href="workgroups.html"/>
+            <file href="quizzes/quiz_session8.html"/>
+        </resource>
+        <resource identifier="RESOURCE_10" type="webcontent" adlcp:scormtype="sco" href="session9.html">
+            <file href="session9.html"/>
+            <file href="css/styles.css"/>
+            <file href="js/scorm.js"/>
+            <file href="presentations/CDC_2025_SESSION_09.pdf"/>
+            <file href="assignments/Workshop_%20Developing%20a%20FHIR%20Based%20Healthcare%20Interoperability%20Solution.pdf"/>
+            <file href="assignments/FHIR%20Workshop%20-%20Proposed%20Solution.pdf"/>
+        </resource>
+        <resource identifier="RESOURCE_11" type="webcontent" adlcp:scormtype="sco" href="session10.html">
+            <file href="session10.html"/>
+            <file href="css/styles.css"/>
+            <file href="js/scorm.js"/>
+            <file href="presentations/CDC_2025_SESSION_10.pdf"/>
+        </resource>
+        <resource identifier="RESOURCE_12" type="webcontent" adlcp:scormtype="sco" href="resources.html">
+            <file href="resources.html"/>
+            <file href="css/styles.css"/>
+            <file href="js/scorm.js"/>
+            <file href="fhirteam.html"/>
+            <file href="workgroups.html"/>
+            <file href="restful.html"/>
+        </resource>
+    </resources>
+</manifest> 
