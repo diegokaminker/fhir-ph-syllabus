@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Test Scores</title>
+    <script src="js/fhir-utils.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .test-scores {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+        .score-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            margin: 5px 0;
+            background: white;
+            border-radius: 5px;
+            border: 1px solid #e9ecef;
+        }
+        .initials {
+            font-weight: bold;
+            color: #495057;
+        }
+        .score {
+            font-weight: bold;
+            color: #28a745;
+        }
+        .status {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            color: white;
+        }
+        .status.pending {
+            background: #ffc107;
+            color: #212529;
+        }
+        .status.success {
+            background: #28a745;
+        }
+        .status.error {
+            background: #dc3545;
+        }
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        .btn:hover {
+            background: #0056b3;
+        }
+        .btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+        .progress {
+            margin: 20px 0;
+            padding: 15px;
+            background: #e9ecef;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .summary {
+            margin-top: 20px;
+            padding: 15px;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 5px;
+            color: #155724;
+        }
+        .error-summary {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Generate Test Scores</h1>
+        <p>This page will generate 20 random scores (8-100 points) with random initials and submit them to the FHIR server for testing the high scores screen.</p>
+        
+        <button class="btn" onclick="generateAndSubmitScores()" id="generate-btn">🚀 Generate & Submit 20 Scores</button>
+        <button class="btn" onclick="clearResults()">🗑️ Clear Results</button>
+        
+        <div class="progress" id="progress" style="display: none;">
+            <div id="progress-text">Generating scores...</div>
+        </div>
+        
+        <div class="test-scores" id="test-scores" style="display: none;">
+            <h3>Generated Scores:</h3>
+            <div id="scores-list"></div>
+        </div>
+        
+        <div class="summary" id="summary" style="display: none;"></div>
+    </div>
+
+    <script>
+        // Random initials generator
+        function generateRandomInitials() {
+            const consonants = 'BCDFGHJKLMNPQRSTVWXYZ';
+            const vowels = 'AEIOU';
+            let initials = '';
+            
+            // Generate 2-4 random initials
+            const length = Math.floor(Math.random() * 3) + 2; // 2-4 characters
+            
+            for (let i = 0; i < length; i++) {
+                if (i % 2 === 0) {
+                    // Even positions: consonants
+                    initials += consonants.charAt(Math.floor(Math.random() * consonants.length));
+                } else {
+                    // Odd positions: vowels
+                    initials += vowels.charAt(Math.floor(Math.random() * vowels.length));
+                }
+            }
+            
+            return initials;
+        }
+
+        // Generate random score between 8 and 100
+        function generateRandomScore() {
+            return Math.floor(Math.random() * 93) + 8; // 8 to 100
+        }
+
+        // Generate test scores
+        function generateTestScores() {
+            const scores = [];
+            for (let i = 0; i < 20; i++) {
+                scores.push({
+                    initials: generateRandomInitials(),
+                    score: generateRandomScore(),
+                    status: 'pending'
+                });
+            }
+            return scores;
+        }
+
+        // Display scores
+        function displayScores(scores) {
+            const scoresList = document.getElementById('scores-list');
+            scoresList.innerHTML = '';
+            
+            scores.forEach((score, index) => {
+                const scoreItem = document.createElement('div');
+                scoreItem.className = 'score-item';
+                scoreItem.innerHTML = `
+                    <span class="initials">${score.initials}</span>
+                    <span class="score">${score.score} points</span>
+                    <span class="status ${score.status}">${score.status.toUpperCase()}</span>
+                `;
+                scoresList.appendChild(scoreItem);
+            });
+        }
+
+        // Submit a single score
+        async function submitScore(score) {
+            try {
+                const result = await fhirUtils.submitScore(score.initials, score.score);
+                return result.success;
+            } catch (error) {
+                console.error('Error submitting score:', error);
+                return false;
+            }
+        }
+
+        // Generate and submit all scores
+        async function generateAndSubmitScores() {
+            const generateBtn = document.getElementById('generate-btn');
+            const progress = document.getElementById('progress');
+            const testScores = document.getElementById('test-scores');
+            const summary = document.getElementById('summary');
+            
+            // Disable button and show progress
+            generateBtn.disabled = true;
+            progress.style.display = 'block';
+            testScores.style.display = 'block';
+            summary.style.display = 'none';
+            
+            // Generate scores
+            const scores = generateTestScores();
+            displayScores(scores);
+            
+            let successCount = 0;
+            let errorCount = 0;
+            
+            // Submit scores one by one
+            for (let i = 0; i < scores.length; i++) {
+                const score = scores[i];
+                
+                // Update progress
+                document.getElementById('progress-text').textContent = 
+                    `Submitting score ${i + 1} of ${scores.length}: ${score.initials} (${score.score} points)`;
+                
+                // Submit score
+                const success = await submitScore(score);
+                
+                // Update status
+                if (success) {
+                    score.status = 'success';
+                    successCount++;
+                } else {
+                    score.status = 'error';
+                    errorCount++;
+                }
+                
+                // Update display
+                displayScores(scores);
+                
+                // Small delay to avoid overwhelming the server
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+            
+            // Show summary
+            const summaryDiv = document.getElementById('summary');
+            summaryDiv.style.display = 'block';
+            
+            if (errorCount === 0) {
+                summaryDiv.className = 'summary';
+                summaryDiv.innerHTML = `
+                    <strong>✅ Success!</strong> All ${successCount} scores were submitted successfully.
+                    <br><br>
+                    <a href="highscores.html" style="color: #155724; font-weight: bold;">🏆 View High Scores</a>
+                `;
+            } else {
+                summaryDiv.className = 'summary error-summary';
+                summaryDiv.innerHTML = `
+                    <strong>⚠️ Partial Success:</strong> ${successCount} scores submitted successfully, ${errorCount} failed.
+                    <br><br>
+                    <a href="highscores.html" style="color: #721c24; font-weight: bold;">🏆 View High Scores</a>
+                `;
+            }
+            
+            // Re-enable button
+            generateBtn.disabled = false;
+            document.getElementById('progress-text').textContent = 'Complete!';
+        }
+
+        // Clear results
+        function clearResults() {
+            document.getElementById('test-scores').style.display = 'none';
+            document.getElementById('summary').style.display = 'none';
+            document.getElementById('progress').style.display = 'none';
+        }
+    </script>
+</body>
+</html> 

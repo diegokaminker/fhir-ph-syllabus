@@ -257,20 +257,29 @@
             <span>Total Score: </span>
             <span id="total-score">0</span>
             <span> points</span>
-        </div>
-
-        <!-- Submit Score Section (only shown when surname parameter is present) -->
-        <div id="submit-score-section" class="submit-score-section" style="display: none;">
-            <h4>📊 Submit Score to FHIR Server</h4>
-            <p>Your game score will be submitted as a FHIR Observation resource for tracking purposes.</p>
-            <div id="score-submission-message" class="alert" style="display: none;"></div>
-            <button id="submit-score-btn" class="btn-submit-score" onclick="submitScoreToFHIR()">
-                📤 Submit Score
-            </button>
+            <div style="margin-top: 10px;">
+                <a href="defender-hall-of-fhir.html" style="color: #1e40af; text-decoration: none; font-size: 14px; font-weight: 600; background: #dbeafe; padding: 8px 16px; border-radius: 6px; border: 2px solid #3b82f6;">
+                    🏆 View Today's High Scores
+                </a>
+            </div>
         </div>
 
         <div id="challenges-container">
             <!-- Challenges will be dynamically loaded here -->
+        </div>
+
+        <!-- Submit Score Section (only shown when surname parameter is present) -->
+        <div id="submit-score-section" class="submit-score-section" style="display: none; margin-top: 40px;">
+            <h4>📊 Submit Score to FHIR Server</h4>
+            <p>Your game score will be submitted as a FHIR Observation resource for tracking purposes.</p>
+            <div style="margin: 20px 0; text-align: center;">
+                <label for="initials-input" style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Initials:</label>
+                <input type="text" id="initials-input" class="form-input" style="width: 120px; text-align: center; font-weight: 600; text-transform: uppercase;" maxlength="10" placeholder="ABC" autocomplete="off">
+            </div>
+            <div id="score-submission-message" class="alert" style="display: none;"></div>
+            <button id="submit-score-btn" class="btn-submit-score" onclick="submitScoreToFHIR()">
+                📤 Submit Score
+            </button>
         </div>
     </div>
 
@@ -978,6 +987,18 @@
             const submitBtn = document.getElementById('submit-score-btn');
             const originalText = submitBtn.innerHTML;
             
+            // Get initials from input field
+            const initials = document.getElementById('initials-input').value.trim();
+            
+            // Validate that initials are provided
+            if (!initials) {
+                fhirUtils.showSubmissionMessage({
+                    success: false,
+                    message: 'Please enter your initials before submitting your score.'
+                });
+                return;
+            }
+            
             // Disable button and show loading state
             submitBtn.disabled = true;
             submitBtn.innerHTML = '🔄 Submitting...';
@@ -986,11 +1007,8 @@
                 // Get current score
                 const score = totalScore;
                 
-                // Get surname from URL parameter
-                const surname = fhirUtils.getSurname();
-                
-                // Submit score to FHIR server (using 'restfulgame' as session ID)
-                const result = await fhirUtils.submitScore(surname, score, 'restfulgame');
+                // Submit score to FHIR server
+                const result = await fhirUtils.submitScore(initials, score);
                 
                 // Show result message
                 fhirUtils.showSubmissionMessage(result);
@@ -1022,12 +1040,30 @@
             createChallengeCard(challenge);
         });
 
-        // Check for surname parameter on page load
+        // Show submit score section on page load
         document.addEventListener('DOMContentLoaded', function() {
-            if (fhirUtils && fhirUtils.hasSurnameParameter()) {
-                document.getElementById('submit-score-section').style.display = 'block';
-            }
+            document.getElementById('submit-score-section').style.display = 'block';
         });
+
+        // Enforce max 3 bytes for initials input
+        function enforceInitialsMaxBytes() {
+            const input = document.getElementById('initials-input');
+            let value = input.value;
+            let bytes = new TextEncoder().encode(value);
+            if (bytes.length > 3) {
+                // Trim to first 3 bytes (may cut off a multi-byte char)
+                let trimmed = '';
+                let total = 0;
+                for (const char of value) {
+                    const charBytes = new TextEncoder().encode(char);
+                    if (total + charBytes.length > 3) break;
+                    trimmed += char;
+                    total += charBytes.length;
+                }
+                input.value = trimmed;
+            }
+        }
+        document.getElementById('initials-input').addEventListener('input', enforceInitialsMaxBytes);
     </script>
 </body>
 </html>

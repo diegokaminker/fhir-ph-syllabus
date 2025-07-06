@@ -24,29 +24,12 @@ class FHIRUtils {
     }
 
     // Create FHIR Observation resource for quiz score
-    createScoreObservation(surname, score, sessionId) {
+    createScoreObservation(initials, score) {
         const now = new Date().toISOString();
         
         return {
             resourceType: "Observation",
-            identifier: [
-                {
-                    system: "http://hl7fundamentals.com/quiz-scores",
-                    value: surname
-                }
-            ],
             status: "final",
-            category: [
-                {
-                    coding: [
-                        {
-                            system: "http://terminology.hl7.org/CodeSystem/observation-category",
-                            code: "survey",
-                            display: "Survey"
-                        }
-                    ]
-                }
-            ],
             code: {
                 coding: [
                     {
@@ -58,8 +41,7 @@ class FHIRUtils {
                 text: "Quiz Score"
             },
             subject: {
-                reference: `Patient/${surname}`,
-                display: surname
+                display: initials
             },
             effectiveDateTime: now,
             issued: now,
@@ -67,29 +49,15 @@ class FHIRUtils {
                 value: score,
                 unit: "points",
                 system: "http://unitsofmeasure.org",
-                code: "points"
-            },
-            component: [
-                {
-                    code: {
-                        coding: [
-                            {
-                                system: "http://hl7fundamentals.com/quiz-scores",
-                                code: "SESSION",
-                                display: "Session ID"
-                            }
-                        ]
-                    },
-                    valueString: sessionId
-                }
-            ]
+                code: "1"
+            }
         };
     }
 
     // Submit score to FHIR server
-    async submitScore(surname, score, sessionId) {
+    async submitScore(initials, score) {
         try {
-            const observation = this.createScoreObservation(surname, score, sessionId);
+            const observation = this.createScoreObservation(initials, score);
             
             const response = await fetch(`${this.fhirServer}/Observation`, {
                 method: 'POST',
