@@ -283,10 +283,6 @@
 async function submitScore(initials, score) {
     const observation = {
         resourceType: "Observation",
-        identifier: [{
-            system: "http://hl7fundamentals.com/quiz-scores",
-            value: initials
-        }],
         status: "final",
         code: {
             coding: [{
@@ -302,7 +298,7 @@ async function submitScore(initials, score) {
             value: score,
             unit: "points",
             system: "http://unitsofmeasure.org",
-            code: "points"
+            code: "1"
         }
     };
 
@@ -452,7 +448,7 @@ async function loadHighScores() {
 
         <div class="highlight">
             <h4>💡 Key Takeaway</h4>
-            <p>This implementation demonstrates FHIR's versatility beyond traditional healthcare applications. By using FHIR Observations for game scores, we showcase how FHIR's standardized approach can be applied to various data storage and retrieval needs while maintaining interoperability and extensibility.</p>
+            <p>This implementation demonstrates FHIR's versatility beyond traditional healthcare applications. Do not do it, unless it is your only option :)</p>
         </div>
     </div>
 </body>
