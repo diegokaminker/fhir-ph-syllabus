@@ -1048,9 +1048,18 @@
             createChallengeCard(challenge);
         });
 
-        // Show submit score section on page load
+        // Show submit score section on page load and populate initials if surname is present
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('submit-score-section').style.display = 'block';
+            
+            // Populate initials with first 3 letters of surname if present
+            if (fhirUtils && fhirUtils.hasSurnameParameter()) {
+                const surname = fhirUtils.getSurname();
+                if (surname) {
+                    const initials = surname.substring(0, 3).toUpperCase();
+                    document.getElementById('initials-input').value = initials;
+                }
+            }
         });
 
         // Copy FHIR URL to clipboard
