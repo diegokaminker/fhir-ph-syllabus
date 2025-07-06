@@ -10,16 +10,106 @@
         
         body {
             margin: 0;
-            padding: 0;
+            padding: 20px;
             background: #000;
             color: #00ff00;
             font-family: 'Orbitron', monospace;
-            overflow: hidden;
-            height: 100vh;
+            min-height: 100vh;
+            position: relative;
             display: flex;
             justify-content: center;
             align-items: center;
-            position: relative;
+        }
+
+        @media (max-height: 800px) {
+            body {
+                padding: 10px;
+                align-items: flex-start;
+            }
+            
+            .defender-container {
+                padding: 20px;
+                margin: 20px 0;
+            }
+            
+            .defender-title {
+                font-size: 28px;
+                margin-bottom: 8px;
+            }
+            
+            .hall-of-fhir-title {
+                font-size: 22px;
+                margin-bottom: 20px;
+            }
+            
+            .scores-table th {
+                padding: 10px 8px;
+                font-size: 14px;
+            }
+            
+            .scores-table td {
+                padding: 8px;
+                font-size: 12px;
+            }
+            
+            .refresh-btn, .info-btn {
+                padding: 12px 24px;
+                font-size: 12px;
+                margin-top: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .defender-container {
+                width: 95%;
+                padding: 20px;
+            }
+            
+            .defender-title {
+                font-size: 24px;
+                letter-spacing: 2px;
+            }
+            
+            .hall-of-fhir-title {
+                font-size: 18px;
+                letter-spacing: 2px;
+            }
+            
+            .scores-table th {
+                padding: 8px 6px;
+                font-size: 12px;
+            }
+            
+            .scores-table td {
+                padding: 6px;
+                font-size: 11px;
+            }
+            
+            .rank {
+                width: 60px;
+            }
+            
+            .player {
+                width: 180px;
+            }
+            
+            .score {
+                width: 80px;
+            }
+            
+            .refresh-btn, .info-btn {
+                padding: 10px 20px;
+                font-size: 11px;
+                margin-top: 15px;
+            }
+            
+            .info-btn {
+                margin-left: 10px;
+            }
         }
 
         /* Starfield background effect */
@@ -70,6 +160,8 @@
                 0 0 20px #00ff00,
                 inset 0 0 20px rgba(0, 255, 0, 0.1);
             animation: scanline 4s linear infinite;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         @keyframes scanline {
@@ -342,7 +434,7 @@
         </table>
         
         <button class="refresh-btn" onclick="loadHighScores()">REFRESH SCAN</button>
-        <a href="fhir-implementation-guide.html" class="info-btn">ℹ️ HOW IT WORKS</a>
+        <a href="fhir-implementation.html" class="info-btn">ℹ️ HOW IT WORKS</a>
     </div>
 
     <script>
