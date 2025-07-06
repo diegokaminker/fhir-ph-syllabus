@@ -188,12 +188,12 @@
 </head>
 <body>
     <div class="container">
-        <h1>🏥 FHIR Implementation Guide</h1>
+        <h1>🏥 FHIR Implementation Details</h1>
         <h2>Score Keeping with FHIR Observations</h2>
 
         <div class="overview">
             <h3>📋 Overview</h3>
-            <p>This implementation demonstrates how to use FHIR (Fast Healthcare Interoperability Resources) for a non-traditional use case: video game score tracking. We leverage FHIR Observation resources to store and retrieve player scores, showcasing FHIR's flexibility beyond traditional healthcare applications.</p>
+            <p>This implementation demonstrates how to use FHIR (Fast Healthcare Interoperability Resources) for a non-traditional use case: video game score tracking. We leverage FHIR Observation resources to store and retrieve player scores</p>
         </div>
 
         <h2>🎯 Why FHIR Observations for Scores?</h2>
@@ -212,24 +212,7 @@
         <div class="code-block">
 <pre>{
   "resourceType": "Observation",
-  "identifier": [
-    {
-      "system": "http://hl7fundamentals.com/quiz-scores",
-      "value": "SMI"  // Player initials
-    }
-  ],
   "status": "final",
-  "category": [
-    {
-      "coding": [
-        {
-          "system": "http://terminology.hl7.org/CodeSystem/observation-category",
-          "code": "survey",
-          "display": "Survey"
-        }
-      ]
-    }
-  ],
   "code": {
     "coding": [
       {
@@ -249,7 +232,7 @@
     "value": 85,
     "unit": "points",
     "system": "http://unitsofmeasure.org",
-    "code": "points"
+    "code": "1"
   }
 }</pre>
         </div>
@@ -426,11 +409,12 @@ async function loadHighScores() {
         <p>This implementation can be extended in several ways:</p>
         
         <ul>
-            <li><strong>Multiple Game Types:</strong> Different observation codes for different games</li>
+            <li><strong>Multiple Game Types:</strong> Different observation/category codes for different games</li>
             <li><strong>Player Profiles:</strong> Link to Patient/Person resources for full player information</li>
             <li><strong>Historical Analysis:</strong> Track performance over time</li>
             <li><strong>Multi-player Features:</strong> Real-time score updates and notifications</li>
             <li><strong>Analytics:</strong> Use FHIR analytics capabilities for score analysis</li>
+            <li><strong>Security/Authentication</strong>Include authentication for improved security</li>
         </ul>
 
         <h2>📚 Technical Resources</h2>
