@@ -303,14 +303,14 @@ async function submitScore(initials, score) {
         <p>To retrieve today's high scores, we use FHIR search parameters:</p>
 
         <div class="endpoint">
-            <strong>GET</strong> /Observation?_lastUpdated=2025-07-06&code=SCORE&_sort=-value-quantity&_count=15&_elements=subject,value
+            <strong>GET</strong> /Observation?date=2025-07-06&code=SCORE&_sort=-value-quantity&_count=10&_elements=subject,value
         </div>
 
         <div class="code-block">
 <pre>// Retrieve high scores
 async function loadHighScores() {
     const today = new Date().toISOString().split('T')[0];
-    const url = `${fhirServer}/Observation?_lastUpdated=${today}&code=SCORE&_sort=-value-quantity&_count=15&_elements=subject,value`;
+    const url = `${fhirServer}/Observation?date=${today}&code=SCORE&_sort=-value-quantity&_count=10&_elements=subject,value`;
     
     const response = await fetch(url, {
         headers: { 'Accept': 'application/fhir+json' }
