@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FHIR Architecture Components Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .quiz-container {
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            max-width: 800px;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .category-section {
+            margin-bottom: 40px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+        .question-card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+        .question-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #2c5282; /* Darker blue for question */
+            font-size: 1.125rem; /* text-lg */
+        }
+        .option-label {
+            display: block;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            background-color: #f0f2f5;
+        }
+        .option-label:hover {
+            background-color: #e2e8f0;
+            border-color: #90cdf4;
+        }
+        .option-label.selected {
+            background-color: #bfdbfe; /* blue-200 */
+            border-color: #60a5fa; /* blue-400 */
+        }
+        .option-label.correct {
+            background-color: #d1fae5; /* green-100 */
+            border-color: #34d399; /* green-500 */
+            font-weight: bold;
+        }
+        .option-label.incorrect {
+            background-color: #fee2e2; /* red-100 */
+            border-color: #ef4444; /* red-500 */
+            font-weight: bold;
+        }
+        input[type="radio"] {
+            margin-right: 10px;
+            accent-color: #4299e1; /* blue-500 */
+            /* Ensure consistent sizing */
+            width: 1rem; /* h-4 */
+            height: 1rem; /* w-4 */
+        }
+        .submit-btn {
+            background-color: #4299e1; /* blue-500 */
+            color: white;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+            display: block;
+            width: fit-content;
+        }
+        .submit-btn:hover {
+            background-color: #3182ce; /* blue-600 */
+        }
+        .category-submit-btn {
+            background-color: #60a5fa; /* blue-400 */
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            margin-top: 15px;
+            display: block;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .category-submit-btn:hover {
+            background-color: #3b82f6; /* blue-500 */
+        }
+        .score-section {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c5282;
+            padding: 15px;
+            border: 2px dashed #4299e1;
+            border-radius: 10px;
+        }
+        .category-score-section {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #4299e1;
+            padding: 10px;
+            border: 1px solid #90cdf4;
+            border-radius: 8px;
+            background-color: #ebf8ff; /* blue-50 */
+        }
+        .feedback {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #555;
+        }
+        .feedback.correct-text {
+            color: #065f46; /* green-800 */
+        }
+        .feedback.incorrect-text {
+            color: #991b1b; /* red-800 */
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1 class="text-3xl font-extrabold text-center mb-8 text-blue-700">FHIR Architecture Quiz</h1>
+
+        <div id="quiz-content"></div>
+
+        <button id="submit-all" class="submit-btn mx-auto">Submit All Answers</button>
+
+        <div id="total-score" class="score-section hidden">
+            Your Total Score: <span id="score-value">0</span> / <span id="total-questions">0</span>
+        </div>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                category: "Clinical Data Stores",
+                questions: [
+                    {
+                        question: "Which type of clinical data store is primarily used for storing, searching, and accessing clinical documents, often relying on a 'document registry' for metadata?",
+                        options: [
+                            { text: "Granular Data Store (GDS)", isCorrect: false },
+                            { text: "Document Store (DS)", isCorrect: true },
+                            { text: "Imaging Repository (IR)", isCorrect: false },
+                            { text: "Clinical Data Repository (CDR)", isCorrect: false }
+                        ],
+                        feedback: "Document Stores are designed for clinical documents, with registries managing metadata and repositories holding the actual documents."
+                    },
+                    {
+                        question: "A Clinical Data Repository (CDR) that consolidates clinical data from various sources into a centralized, patient-centric view, often storing information in FHIR resource format, is known as a:",
+                        options: [
+                            { text: "Document Store (DS)", isCorrect: false },
+                            { text: "Imaging Repository (IR)", isCorrect: false },
+                            { text: "Granular Data Store (GDS)", isCorrect: true },
+                            { text: "Audit Log (AL)", isCorrect: false }
+                        ],
+                        feedback: "A Granular Data Store (GDS) or Clinical Data Repository (CDR) provides a patient-centric view by consolidating data, often in FHIR format."
+                    },
+                    {
+                        question: "Why are medical images typically stored in a separate Imaging Repository (IR) rather than the same clinical data repository as other discrete data?",
+                        options: [
+                            { text: "Images are less critical for patient care.", isCorrect: false },
+                            { text: "Images are smaller in size and easier to manage separately.", isCorrect: false },
+                            { text: "Images are larger (MB or TB), complex to store, retrieve, and distribute, and DICOM is the prevailing standard.", isCorrect: true },
+                            { text: "Imaging repositories offer better compression algorithms.", isCorrect: false }
+                        ],
+                        feedback: "Medical images are stored separately due to their large size, complexity, and the dominance of the DICOM standard for imaging data."
+                    },
+                    {
+                        question: "Which of the following is a common issue faced by Clinical Data Stores?",
+                        options: [
+                            { text: "Lack of data standardization", isCorrect: false },
+                            { text: "Scalability, Partitioning, and Multi-Tenancy", isCorrect: true },
+                            { text: "Limited access to patient information", isCorrect: false },
+                            { text: "Inability to integrate with FHIR APIs", isCorrect: false }
+                        ],
+                        feedback: "Scalability, partitioning, and multi-tenancy are significant challenges for clinical data stores, especially with large volumes of healthcare data."
+                    },
+                    {
+                        question: "What is a 'façade' in the context of Clinical Data Stores?",
+                        options: [
+                            { text: "A physical security layer for data centers.", isCorrect: false },
+                            { text: "A non-FHIR native server that stores information internally as FHIR Resources.", isCorrect: false },
+                            { text: "A FHIR-enabled read and write access API to an existing non-FHIR clinical data store.", isCorrect: true },
+                            { text: "A tool for converting FHIR resources to other formats.", isCorrect: false }
+                        ],
+                        feedback: "A 'façade' allows FHIR-enabled access to a clinical data store that doesn't natively store data in FHIR format."
+                    }
+                ]
+            },
+            {
+                category: "Infrastructure",
+                questions: [
+                    {
+                        question: "Which infrastructure component ensures that a user is who they claim to be, often involving mechanisms like OAuth 2.0 or OpenID Connect?",
+                        options: [
+                            { text: "Authorization (AUTHO)", isCorrect: false },
+                            { text: "Authentication (AUTHE)", isCorrect: true },
+                            { text: "Consent Management (CONS)", isCorrect: false },
+                            { text: "API Gateway (AG)", isCorrect: false }
+                        ],
+                        feedback: "Authentication verifies the user's identity credentials."
+                    },
+                    {
+                        question: "The process of checking if a user's role allows access (read or write) to requested data, often defined by 'scopes' in FHIR, is handled by which component?",
+                        options: [
+                            { text: "Authentication (AUTHE)", isCorrect: false },
+                            { text: "Authorization (AUTHO)", isCorrect: true },
+                            { text: "Audit Log (AL)", isCorrect: false },
+                            { text: "Digital Signature (DS)", isCorrect: false }
+                        ],
+                        feedback: "Authorization determines what a verified user is permitted to do with specific data."
+                    },
+                    {
+                        question: "Which component is central to a scalable consent architecture, addressing whether a payer/provider has authority to view specific healthcare data about a patient?",
+                        options: [
+                            { text: "API Gateway (AG)", isCorrect: false },
+                            { text: "Audit Log (AL)", isCorrect: false },
+                            { text: "Consent Management (CONS)", isCorrect: true },
+                            { text: "Digital Signature (DS)", isCorrect: false }
+                        ],
+                        feedback: "Consent Management is crucial for defining and enforcing patient permissions for data access and use."
+                    },
+                    {
+                        question: "All systems must ensure that records are created and maintained about when, from where, and who accessed information. This is handled by the:",
+                        options: [
+                            { text: "Authentication (AUTHE)", isCorrect: false },
+                            { text: "Authorization (AUTHO)", isCorrect: false },
+                            { text: "Audit Log (AL)", isCorrect: true },
+                            { text: "Consent Management (CONS)", isCorrect: false }
+                        ],
+                        feedback: "Audit Logs are essential for maintaining records of data access for security and compliance."
+                    },
+                    {
+                        question: "A centralized entry point for managing interactions between clients and backend services, often performing tasks like load balancing and request routing, is known as an:",
+                        options: [
+                            { text: "Authentication Server", isCorrect: false },
+                            { text: "API Gateway (AG)", isCorrect: true },
+                            { text: "Messaging Queue (MQ)", isCorrect: false },
+                            { text: "Digital Signature Service (DS)", isCorrect: false }
+                        ],
+                        feedback: "An API Gateway acts as a reverse proxy and centralized management point for backend services."
+                    }
+                ]
+            },
+            {
+                category: "Registries",
+                questions: [
+                    {
+                        question: "Which registry component maintains unique identifiers and demographic information for all patients, linking their records across different systems and facilities?",
+                        options: [
+                            { text: "Provider Directory (PRI)", isCorrect: false },
+                            { text: "Endpoint Directory (END)", isCorrect: false },
+                            { text: "Patient Identity (MPI)", isCorrect: true },
+                            { text: "Device Directory (DEV)", isCorrect: false }
+                        ],
+                        feedback: "The Patient Identity (MPI) or Master Patient Index is the single source of truth for patient identification."
+                    },
+                    {
+                        question: "A directory that involves identification for organizations, professionals working for them, and facilities or locations where care is delivered is called a:",
+                        options: [
+                            { text: "Patient Identity (MPI)", isCorrect: false },
+                            { text: "Provider Directory (PRI)", isCorrect: true },
+                            { text: "Device Directory (DEV)", isCorrect: false },
+                            { text: "Endpoint Directory (END)", isCorrect: false }
+                        ],
+                        feedback: "A Provider Directory identifies healthcare organizations, practitioners, and their locations."
+                    },
+                    {
+                        question: "Which registry component addresses the problem of finding a FHIR server or any other server, often including attributes like payload type, status, and protocol?",
+                        options: [
+                            { text: "Patient Identity (MPI)", isCorrect: false },
+                            { text: "Provider Directory (PRI)", isCorrect: false },
+                            { text: "Endpoint Directory (END)", isCorrect: true },
+                            { text: "Device Directory (DEV)", isCorrect: false }
+                        ],
+                        feedback: "An Endpoint Directory helps discover and manage server endpoints for various functionalities."
+                    },
+                    {
+                        question: "A database with unique identification and attributes for all devices used in an organization, such as imaging devices, laboratory analyzers, and implantable devices, is a:",
+                        options: [
+                            { text: "Patient Identity (MPI)", isCorrect: false },
+                            { text: "Provider Directory (PRI)", isCorrect: false },
+                            { text: "Endpoint Directory (END)", isCorrect: false },
+                            { text: "Device Directory (DEV)", isCorrect: true }
+                        ],
+                        feedback: "A Device Directory catalogs and manages all medical devices within an organization."
+                    },
+                    {
+                        question: "Why are registries considered 'Master Files' in digital health?",
+                        options: [
+                            { text: "They contain highly sensitive patient data.", isCorrect: false },
+                            { text: "They are the only components that can store FHIR resources.", isCorrect: false },
+                            { text: "No system in digital health is possible without proper identification of entities like patients, providers, and locations.", isCorrect: true },
+                            { text: "They are the oldest components in FHIR architecture.", isCorrect: false }
+                        ],
+                        feedback: "Registries are foundational because accurate identification of key entities is essential for any digital health system."
+                    }
+                ]
+            },
+            {
+                category: "Integration",
+                questions: [
+                    {
+                        question: "Which service performs transformations from one data syntax (e.g., HL7 V2.x, JSON, XML) to another, often with FHIR as the target syntax?",
+                        options: [
+                            { text: "CDS HOOKS SERVICE (CDS)", isCorrect: false },
+                            { text: "Artifact Transformation Engine (ENG)", isCorrect: true },
+                            { text: "Messaging Queue (MQ)", isCorrect: false },
+                            { text: "FHIR RESTful API (FHIR)", isCorrect: false }
+                        ],
+                        feedback: "An Artifact Transformation Engine handles data format conversions between different syntaxes."
+                    },
+                    {
+                        question: "A service that uses patient clinical information and context to provide guidelines around next steps for patient care, often using FHIR Resources and 'cards' for output, is a:",
+                        options: [
+                            { text: "SMART-on-FHIR App (SMART)", isCorrect: false },
+                            { text: "FHIR Bulk Import Service (FHIR-IMP)", isCorrect: false },
+                            { text: "CDS HOOKS SERVICE (CDS)", isCorrect: true },
+                            { text: "CQL Engine (CQL)", isCorrect: false }
+                        ],
+                        feedback: "CDS Hooks Service provides clinical decision support at the point of care."
+                    },
+                    {
+                        question: "What is the primary purpose of SMART-on-FHIR Apps?",
+                        options: [
+                            { text: "To replace existing EHR systems entirely.", isCorrect: false },
+                            { text: "To integrate an app or website with an existing EHR, allowing data access through FHIR Resources.", isCorrect: true },
+                            { text: "To perform bulk data export from FHIR servers.", isCorrect: false },
+                            { text: "To manage patient consent for data sharing.", isCorrect: false }
+                        ],
+                        feedback: "SMART-on-FHIR Apps enable seamless integration of external applications with EHRs using FHIR."
+                    },
+                    {
+                        question: "Which service provides a way to incorporate several thousands of records into an existing FHIR Store, useful for initial loads or migrations?",
+                        options: [
+                            { text: "FHIR RESTful API (FHIR)", isCorrect: false },
+                            { text: "Messaging Queue (MQ)", isCorrect: false },
+                            { text: "FHIR Bulk Import Service (FHIR-IMP)", isCorrect: true },
+                            { text: "IPS Generator (IPS)", isCorrect: false }
+                        ],
+                        feedback: "FHIR Bulk Import Service is designed for efficiently loading large datasets into a FHIR store."
+                    },
+                    {
+                        question: "This service allows asynchronous communication between components by acting as a temporary storage for messages, enabling event-driven architectures.",
+                        options: [
+                            { text: "FHIR RESTful API (FHIR)", isCorrect: false },
+                            { text: "Messaging Queue (MQ)", isCorrect: true },
+                            { text: "Subscription Services (SUB)", isCorrect: false },
+                            { text: "Artifact Transformation Engine (ENG)", isCorrect: false }
+                        ],
+                        feedback: "Messaging Queues facilitate asynchronous communication and are fundamental to event-driven architectures."
+                    }
+                ]
+            },
+            {
+                category: "Secondary Use",
+                questions: [
+                    {
+                        question: "Which service accepts a '$export' operation to extract massive clinical and financial healthcare data from a FHIR Store into NDJSON files?",
+                        options: [
+                            { text: "De-Identification Services (DID)", isCorrect: false },
+                            { text: "FHIR-to-OMOP Transformer (FHIR-OMOP)", isCorrect: false },
+                            { text: "FHIR Bulk Export (FHIR-EXP)", isCorrect: true },
+                            { text: "SQL-on-FHIR Engine (FHIR-SQL)", isCorrect: false }
+                        ],
+                        feedback: "FHIR Bulk Export is a standard operation for extracting large volumes of data from FHIR servers."
+                    },
+                    {
+                        question: "The service responsible for applying algorithms to remove or mask patient demographics (identifiers, locations, names) to ensure confidentiality is:",
+                        options: [
+                            { text: "FHIR Bulk Export (FHIR-EXP)", isCorrect: false },
+                            { text: "De-Identification Services (DID)", isCorrect: true },
+                            { text: "FHIR-to-Parquet (PARQ)", isCorrect: false },
+                            { text: "CQL Engine (CQL)", isCorrect: false }
+                        ],
+                        feedback: "De-Identification Services are crucial for protecting patient privacy in secondary data use."
+                    },
+                    {
+                        question: "Which service transforms FHIR resources into the OMOP SQL format, primarily for population health analysis and measures?",
+                        options: [
+                            { text: "SQL-on-FHIR Engine (FHIR-SQL)", isCorrect: false },
+                            { text: "FHIR-to-Parquet (PARQ)", isCorrect: false },
+                            { text: "FHIR-to-OMOP Transformer (FHIR-OMOP)", isCorrect: true },
+                            { text: "FHIR Bulk Import Service (FHIR-IMP)", isCorrect: false }
+                        ],
+                        feedback: "The FHIR-to-OMOP Transformer converts FHIR data into the OMOP common data model for analytics."
+                    },
+                    {
+                        question: "This service provides a standardized data layer to access any FHIR Store using plain SQL, simplifying complex FHIR structures for querying:",
+                        options: [
+                            { text: "FHIR-to-OMOP Transformer (FHIR-OMOP)", isCorrect: false },
+                            { text: "FHIR-to-Parquet (PARQ)", isCorrect: false },
+                            { text: "SQL-on-FHIR Engine (FHIR-SQL)", isCorrect: true },
+                            { text: "FHIR Bulk Export (FHIR-EXP)", isCorrect: false }
+                        ],
+                        feedback: "SQL-on-FHIR Engine allows direct SQL queries against FHIR data, abstracting its complex structure."
+                    },
+                    {
+                        question: "Which service converts FHIR resources into Parquet format, widely used for ingesting data for analytics and machine learning?",
+                        options: [
+                            { text: "FHIR-to-OMOP Transformer (FHIR-OMOP)", isCorrect: false },
+                            { text: "FHIR-to-Parquet (PARQ)", isCorrect: true },
+                            { text: "De-Identification Services (DID)", isCorrect: false },
+                            { text: "CQL Engine (CQL)", isCorrect: false }
+                        ],
+                        feedback: "FHIR-to-Parquet converts FHIR data into a columnar storage format optimized for analytical queries."
+                    }
+                ]
+            },
+            {
+                category: "Validation",
+                questions: [
+                    {
+                        question: "Which service performs validation of FHIR resources at schema, schematron, and structure definition levels, including terminology checks?",
+                        options: [
+                            { text: "Terminology Access (TERM)", isCorrect: false },
+                            { text: "Resource Validation (VAL)", isCorrect: true },
+                            { text: "Business Rules, Workflow and Validation (BRW)", isCorrect: false },
+                            { text: "Questionnaire, Medication and Measure Definitions (CRM)", isCorrect: false }
+                        ],
+                        feedback: "Resource Validation ensures FHIR resources conform to defined schemas, relationships, and profiles."
+                    },
+                    {
+                        question: "This service provides standardized access to terminology, allowing applications to validate codes against value sets, and map codes between systems:",
+                        options: [
+                            { text: "Resource Validation (VAL)", isCorrect: false },
+                            { text: "Terminology Access (TERM)", isCorrect: true },
+                            { text: "Terminology Authoring and Distribution (TERM-AD)", isCorrect: false },
+                            { text: "Medication Definitions", isCorrect: false }
+                        ],
+                        feedback: "Terminology Access provides APIs for validating and mapping medical codes."
+                    },
+                    {
+                        question: "Which service allows the creation and maintenance of ValueSets, Code Systems, and Concept Maps, and facilitates terminology import/export and distribution?",
+                        options: [
+                            { text: "Terminology Access (TERM)", isCorrect: false },
+                            { text: "Terminology Authoring and Distribution (TERM-AD)", isCorrect: true },
+                            { text: "Resource Validation (VAL)", isCorrect: false },
+                            { text: "Business Rules, Workflow and Validation (BRW)", isCorrect: false }
+                        ],
+                        feedback: "Terminology Authoring and Distribution manages the lifecycle of terminology artifacts."
+                    },
+                    {
+                        question: "This component allows defining and implementing local business rules for processing, workflow, or validation, often using scripts, rules engines, or BPMN+ diagrams:",
+                        options: [
+                            { text: "Resource Validation (VAL)", isCorrect: false },
+                            { text: "Terminology Access (TERM)", isCorrect: false },
+                            { text: "Business Rules, Workflow and Validation (BRW)", isCorrect: true },
+                            { text: "Questionnaire, Medication and Measure Definitions (CRM)", isCorrect: false }
+                        ],
+                        feedback: "Business Rules, Workflow and Validation components implement custom logic for processes and data validation."
+                    },
+                    {
+                        question: "Which service allows the authoring and access to 'Knowledge Representation Resources' or 'Canonical Resources' like library, medication, guideline, and questionnaire definitions?",
+                        options: [
+                            { text: "Resource Validation (VAL)", isCorrect: false },
+                            { text: "Business Rules, Workflow and Validation (BRW)", isCorrect: false },
+                            { text: "Questionnaire, Medication and Measure Definitions (CRM)", isCorrect: true },
+                            { text: "Terminology Access (TERM)", isCorrect: false }
+                        ],
+                        feedback: "CRM services manage the definitions of various knowledge artifacts used in healthcare."
+                    }
+                ]
+            },
+            {
+                category: "Artificial Intelligence",
+                questions: [
+                    {
+                        question: "Which AI service allows ingesting and processing datasets (including FHIR NDJSON or Parquet) to create, develop, and train models?",
+                        options: [
+                            { text: "Image Recognition (CV)", isCorrect: false },
+                            { text: "Natural Language Processor (NLP)", isCorrect: false },
+                            { text: "Machine Learning Training (MLT)", isCorrect: true },
+                            { text: "Generative AI (GenAI)", isCorrect: false }
+                        ],
+                        feedback: "Machine Learning Training focuses on the development and training of AI models using various datasets."
+                    },
+                    {
+                        question: "This AI service interprets and analyzes visual data from digital images or videos, with applications in medical image analysis and disease detection:",
+                        options: [
+                            { text: "Natural Language Processor (NLP)", isCorrect: false },
+                            { text: "Image Recognition (CV)", isCorrect: true },
+                            { text: "Language Translator (LT)", isCorrect: false },
+                            { text: "Chatbot and Agents (CHAT)", isCorrect: false }
+                        ],
+                        feedback: "Image Recognition (Computer Vision) is used for interpreting visual data in healthcare."
+                    },
+                    {
+                        question: "A service that understands, interprets, and generates human language, with applications in extracting information from text, chatbots, and 'ambient' systems:",
+                        options: [
+                            { text: "Language Translator (LT)", isCorrect: false },
+                            { text: "Generative AI (GenAI)", isCorrect: false },
+                            { text: "Natural Language Processor (NLP)", isCorrect: true },
+                            { text: "MCP Server (MCPS)", isCorrect: false }
+                        ],
+                        feedback: "Natural Language Processing (NLP) deals with the understanding and generation of human language."
+                    },
+                    {
+                        question: "Which AI service is a 'special case' of an NLP, recognizing the meaning of a natural language fragment and outputting it in a different natural language?",
+                        options: [
+                            { text: "Natural Language Processor (NLP)", isCorrect: false },
+                            { text: "Generative AI (GenAI)", isCorrect: false },
+                            { text: "Language Translator (LT)", isCorrect: true },
+                            { text: "Chatbot and Agents (CHAT)", isCorrect: false }
+                        ],
+                        feedback: "Language Translator services specifically handle conversion between different natural languages."
+                    },
+                    {
+                        question: "This AI service can create text, images, or videos based on its training on large datasets, often supplemented with specific information to avoid 'hallucinations':",
+                        options: [
+                            { text: "Machine Learning Training (MLT)", isCorrect: false },
+                            { text: "Natural Language Processor (NLP)", isCorrect: false },
+                            { text: "Generative AI (GenAI)", isCorrect: true },
+                            { text: "Image Recognition (CV)", isCorrect: false }
+                        ],
+                        feedback: "Generative AI models are capable of creating new content like text, images, or videos."
+                    }
+                ]
+            },
+            {
+                category: "Notification Services",
+                questions: [
+                    {
+                        question: "Which notification service sends alerts or notifications via email, facing challenges like sender/receiver email addresses, volume, and consent management?",
+                        options: [
+                            { text: "EHR Push Notification", isCorrect: false },
+                            { text: "Messaging Integration", isCorrect: false },
+                            { text: "E-Mail Notification", isCorrect: true },
+                            { text: "SMS Gateway", isCorrect: false }
+                        ],
+                        feedback: "E-Mail Notification is a common method but comes with specific challenges related to email delivery and management."
+                    },
+                    {
+                        question: "This notification component sends alerts or notifications directly to the EHR or patient portal, leveraging existing security and privacy measures:",
+                        options: [
+                            { text: "E-Mail Notification", isCorrect: false },
+                            { text: "Messaging Integration", isCorrect: false },
+                            { text: "EHR Push Notification", isCorrect: true },
+                            { text: "Pub/Sub Service", isCorrect: false }
+                        ],
+                        feedback: "EHR Push Notifications integrate directly with existing EHR or patient portal systems for secure delivery."
+                    },
+                    {
+                        question: "Which component integrates with messaging services like WhatsApp, Signal, or Telegram for faster alerts, often combined with bots for follow-up actions?",
+                        options: [
+                            { text: "E-Mail Notification", isCorrect: false },
+                            { text: "EHR Push Notification", isCorrect: false },
+                            { text: "Messaging Integration", isCorrect: true },
+                            { text: "SMS Gateway", isCorrect: false }
+                        ],
+                        feedback: "Messaging Integration leverages popular messaging platforms for rapid communication and interactive follow-ups."
+                    },
+                    {
+                        question: "What is a primary advantage of EHR Push Notifications?",
+                        options: [
+                            { text: "They can send messages to any phone number without internet access.", isCorrect: false },
+                            { text: "They are always free to implement and use.", isCorrect: false },
+                            { text: "Security, encryption, and privacy issues are often already handled by the EHR or patient portal.", isCorrect: true },
+                            { text: "They do not require any clinician or patient interaction.", isCorrect: false }
+                        ],
+                        feedback: "A key benefit of EHR Push Notifications is that they can leverage the inherent security and privacy frameworks of the EHR/portal."
+                    },
+                    {
+                        question: "Which of the following is NOT explicitly mentioned as a component category in the 'Notification Services' aisle?",
+                        options: [
+                            { text: "E-Mail Notification", isCorrect: false },
+                            { text: "EHR Push Notifications", isCorrect: false },
+                            { text: "Messaging Integration", isCorrect: false },
+                            { text: "SMS Gateway", isCorrect: true }
+                        ],
+                        feedback: "While SMS gateways might be used, the document specifically lists E-Mail Notification, EHR Push Notifications, and Messaging Integration as components within the Notification Services category."
+                    }
+                ]
+            }
+        ];
+
+        let userAnswers = {};
+        let totalScore = 0;
+        let totalQuestionsCount = 0;
+
+        function renderQuiz() {
+            const quizContent = document.getElementById('quiz-content');
+            quizContent.innerHTML = '';
+            totalQuestionsCount = 0;
+
+            quizData.forEach((categoryData, categoryIndex) => {
+                const categorySection = document.createElement('div');
+                categorySection.className = 'category-section';
+                categorySection.innerHTML = `<h2 class="text-2xl font-bold mb-6 text-blue-600">${categoryData.category}</h2>`;
+
+                categoryData.questions.forEach((q, qIndex) => {
+                    totalQuestionsCount++;
+                    const questionCard = document.createElement('div');
+                    questionCard.className = 'question-card';
+                    questionCard.innerHTML = `<p class="question-title">Q${qIndex + 1}: ${q.question}</p>`;
+
+                    q.options.forEach((option, oIndex) => {
+                        const uniqueId = `q${categoryIndex}-${qIndex}-option${oIndex}`;
+                        const label = document.createElement('label');
+                        label.className = 'option-label flex items-center rounded-lg';
+                        label.setAttribute('for', uniqueId);
+                        label.innerHTML = `
+                            <input type="radio" id="${uniqueId}" name="question-${categoryIndex}-${qIndex}" value="${oIndex}" class="h-4 w-4 text-blue-600 transition duration-150 ease-in-out">
+                            <span>${option.text}</span>
+                        `;
+                        questionCard.appendChild(label);
+
+                        label.addEventListener('click', () => {
+                            // Deselect all other options in the same question
+                            const existingSelected = questionCard.querySelector('.option-label.selected');
+                            if (existingSelected) {
+                                existingSelected.classList.remove('selected');
+                            }
+                            // Select the current option
+                            label.classList.add('selected');
+                            userAnswers[`q${categoryIndex}-${qIndex}`] = oIndex;
+                        });
+                    });
+                    categorySection.appendChild(questionCard);
+                });
+
+                // Add category submit button
+                const categorySubmitBtn = document.createElement('button');
+                categorySubmitBtn.id = `submit-category-${categoryIndex}`;
+                categorySubmitBtn.className = 'category-submit-btn';
+                categorySubmitBtn.textContent = `Submit ${categoryData.category} Section`;
+                categorySubmitBtn.addEventListener('click', () => submitCategory(categoryIndex));
+                categorySection.appendChild(categorySubmitBtn);
+
+                // Add category score display element
+                const categoryScoreDisplay = document.createElement('div');
+                categoryScoreDisplay.id = `category-score-${categoryIndex}`;
+                categoryScoreDisplay.className = 'category-score-section hidden mt-4 text-center text-lg font-semibold text-blue-500';
+                categorySection.appendChild(categoryScoreDisplay);
+
+                quizContent.appendChild(categorySection);
+            });
+
+            document.getElementById('total-questions').textContent = totalQuestionsCount;
+        }
+
+        function submitCategory(categoryIndex) {
+            const categoryData = quizData[categoryIndex];
+            let currentCategoryScore = 0;
+            let currentCategoryQuestionCount = 0;
+
+            categoryData.questions.forEach((q, qIndex) => {
+                const questionId = `q${categoryIndex}-${qIndex}`;
+                const selectedOptionIndex = userAnswers[questionId];
+                const questionElement = document.querySelector(`input[name="question-${categoryIndex}-${qIndex}"]`).closest('.question-card');
+                const feedbackElementId = `feedback-${questionId}`;
+                let feedbackElement = document.getElementById(feedbackElementId);
+
+                if (!feedbackElement) {
+                    feedbackElement = document.createElement('p');
+                    feedbackElement.id = feedbackElementId;
+                    feedbackElement.className = 'feedback';
+                    questionElement.appendChild(feedbackElement);
+                }
+
+                // Reset classes for this question
+                questionElement.querySelectorAll('.option-label').forEach(label => {
+                    label.classList.remove('correct', 'incorrect', 'selected');
+                });
+
+                currentCategoryQuestionCount++;
+
+                if (selectedOptionIndex !== undefined) {
+                    const selectedOptionLabel = questionElement.querySelector(`input[value="${selectedOptionIndex}"]`).closest('.option-label');
+                    const isCorrect = q.options[selectedOptionIndex].isCorrect;
+
+                    if (isCorrect) {
+                        currentCategoryScore++;
+                        selectedOptionLabel.classList.add('correct');
+                        feedbackElement.textContent = `Correct! ${q.feedback}`;
+                        feedbackElement.classList.remove('incorrect-text');
+                        feedbackElement.classList.add('correct-text');
+                    } else {
+                        selectedOptionLabel.classList.add('incorrect');
+                        feedbackElement.textContent = `Incorrect. The correct answer was: ${q.options.find(opt => opt.isCorrect).text}. ${q.feedback}`;
+                        feedbackElement.classList.remove('correct-text');
+                        feedbackElement.classList.add('incorrect-text');
+                    }
+                } else {
+                    feedbackElement.textContent = `You didn't answer this question. The correct answer was: ${q.options.find(opt => opt.isCorrect).text}. ${q.feedback}`;
+                    feedbackElement.classList.remove('correct-text');
+                    feedbackElement.classList.add('incorrect-text');
+                }
+
+                // Highlight the correct answer
+                q.options.forEach((option, oIndex) => {
+                    if (option.isCorrect) {
+                        const correctOptionLabel = questionElement.querySelector(`input[value="${oIndex}"]`).closest('.option-label');
+                        correctOptionLabel.classList.add('correct');
+                    }
+                });
+            });
+
+            // Display category score
+            const categoryScoreElement = document.getElementById(`category-score-${categoryIndex}`);
+            if (categoryScoreElement) {
+                categoryScoreElement.textContent = `Score for ${categoryData.category}: ${currentCategoryScore} / ${currentCategoryQuestionCount}`;
+                categoryScoreElement.classList.remove('hidden');
+            }
+        }
+
+        function submitAllQuiz() {
+            totalScore = 0;
+            quizData.forEach((categoryData, categoryIndex) => {
+                // Submit each category individually first
+                submitCategory(categoryIndex);
+                // Sum up scores for total
+                const categoryId = `category-${categoryIndex}`;
+                const categoryScoreElement = document.getElementById(`category-score-${categoryIndex}`);
+                if (categoryScoreElement && !categoryScoreElement.classList.contains('hidden')) {
+                    const scoreText = categoryScoreElement.textContent;
+                    const match = scoreText.match(/Score for .*?: (\d+) \/ (\d+)/);
+                    if (match) {
+                        totalScore += parseInt(match[1]);
+                    }
+                }
+            });
+
+            document.getElementById('score-value').textContent = totalScore;
+            document.getElementById('total-score').classList.remove('hidden');
+        }
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderQuiz();
+            document.getElementById('submit-all').addEventListener('click', submitAllQuiz);
+        });
+    </script>
+</body>
+</html>
