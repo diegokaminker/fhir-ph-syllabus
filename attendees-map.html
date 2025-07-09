@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FHIR Public Health Training Attendees Map</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        #map {
+            height: 600px;
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .attendee-count {
+            background: #3b82f6;
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 12px;
+            border: 3px solid white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+        .location-card {
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 12px;
+            border-left: 4px solid #3b82f6;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #3b82f6;
+        }
+        .stat-label {
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-900 mb-4">FHIR Public Health Training</h1>
+            <h2 class="text-2xl font-semibold text-gray-700 mb-2">Attendees Distribution Map</h2>
+            <p class="text-gray-600">Geographic distribution of participants across the United States</p>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="stats-grid mb-8">
+            <div class="stat-card">
+                <div class="stat-number" id="total-attendees">0</div>
+                <div class="stat-label">Total Attendees</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="unique-cities">0</div>
+                <div class="stat-label">Unique Cities</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="unique-states">0</div>
+                <div class="stat-label">States Represented</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="top-state">-</div>
+                <div class="stat-label">Most Represented State</div>
+            </div>
+        </div>
+
+        <!-- Map Container -->
+        <div class="bg-white p-6 rounded-12 shadow-lg mb-8">
+            <div id="map"></div>
+        </div>
+
+        <!-- Location Details -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="bg-white p-6 rounded-12 shadow-lg">
+                <h3 class="text-xl font-semibold text-gray-900 mb-4">Attendees by Location</h3>
+                <div id="location-list" class="space-y-3 max-h-96 overflow-y-auto">
+                    <!-- Location cards will be populated here -->
+                </div>
+            </div>
+            
+            <div class="bg-white p-6 rounded-12 shadow-lg">
+                <h3 class="text-xl font-semibold text-gray-900 mb-4">State Distribution</h3>
+                <div id="state-list" class="space-y-3 max-h-96 overflow-y-auto">
+                    <!-- State cards will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Attendees data
+        const attendeesData = [
+            { city: "Albany", state: "NY" },
+            { city: "Albany", state: "NY" },
+            { city: "albany", state: "NY" },
+            { city: "Albany", state: "NY" },
+            { city: "Ann Arbor", state: "MI" },
+            { city: "Chicago", state: "IL" },
+            { city: "Chicago", state: "IL" },
+            { city: "Chicago", state: "IL" },
+            { city: "F", state: "VA" },
+            { city: "Fairfax", state: "VA" },
+            { city: "Farmington Hills", state: "MI" },
+            { city: "Harrisburg", state: "PA" },
+            { city: "Houston", state: "TX" },
+            { city: "Houston", state: "TX" },
+            { city: "Houston", state: "TX" },
+            { city: "Jefferson City", state: "MO" },
+            { city: "lacey", state: "WA" },
+            { city: "Lansing", state: "MI" },
+            { city: "Lansing", state: "MI" },
+            { city: "Longview", state: "WA" },
+            { city: "Los Angeles", state: "CA" },
+            { city: "Los Angeles", state: "CA" },
+            { city: "Majuro", state: "GU" },
+            { city: "North Wales", state: "PA" },
+            { city: "O'FALLON", state: "MO" },
+            { city: "Oklahoma City", state: "OK" },
+            { city: "Oklahoma City", state: "OK" },
+            { city: "Olympia", state: "WA" },
+            { city: "Providence", state: "RI" },
+            { city: "Seattle", state: "WA" },
+            { city: "Seattle", state: "WA" },
+            { city: "Seattle", state: "WA" },
+            { city: "St Paul", state: "MN" },
+            { city: "St. Paul", state: "MN" },
+            { city: "Tulsa", state: "OK" },
+            { city: "Tumwater", state: "WA" },
+            { city: "Tumwater", state: "WA" },
+            { city: "Tumwater", state: "WA" },
+            { city: "Washington", state: "DC" },
+            { city: "Charleston", state: "WV" },
+            { city: "Dallas", state: "TX" },
+            { city: "Ellensburg", state: "WA" },
+            { city: "Indianapolis", state: "IN" },
+            { city: "Los Angeles", state: "CA" },
+            { city: "Philadelphia", state: "PA" },
+            { city: "Scotts", state: "MI" },
+            { city: "Tumwater", state: "WA" },
+            { city: "Zeeland", state: "MI" },
+            { city: "Ellenwood", state: "GA" },
+            { city: "Kalamazoo", state: "MI" },
+            { city: "Las Vegas", state: "NV" },
+            { city: "Nashville", state: "TN" },
+            { city: "New York", state: "NY" },
+            { city: "Salt Lake City", state: "UT" },
+            { city: "San Juan", state: "XX" },
+            { city: "Tumwater", state: "WA" },
+            { city: "Washington", state: "DC" },
+            { city: "Chicago", state: "IL" },
+            { city: "Lansing", state: "MI" },
+            { city: "Lansing", state: "MI" }
+        ];
+
+        // City coordinates (approximate)
+        const cityCoordinates = {
+            "Albany, NY": [42.6526, -73.7562],
+            "Ann Arbor, MI": [42.2808, -83.7430],
+            "Chicago, IL": [41.8781, -87.6298],
+            "Fairfax, VA": [38.8462, -77.3064],
+            "Farmington Hills, MI": [42.4989, -83.3677],
+            "Harrisburg, PA": [40.2732, -76.8867],
+            "Houston, TX": [29.7604, -95.3698],
+            "Jefferson City, MO": [38.5767, -92.1735],
+            "Lacey, WA": [47.0343, -122.8232],
+            "Lansing, MI": [42.7325, -84.5555],
+            "Longview, WA": [46.1382, -122.9382],
+            "Los Angeles, CA": [34.0522, -118.2437],
+            "Majuro, GU": [7.0897, 171.3803],
+            "North Wales, PA": [40.2109, -75.2777],
+            "O'Fallon, MO": [38.8106, -90.6998],
+            "Oklahoma City, OK": [35.4676, -97.5164],
+            "Olympia, WA": [47.0379, -122.9007],
+            "Providence, RI": [41.8240, -71.4128],
+            "Seattle, WA": [47.6062, -122.3321],
+            "St. Paul, MN": [44.9537, -93.0900],
+            "Tulsa, OK": [36.1540, -95.9928],
+            "Tumwater, WA": [47.0073, -122.9093],
+            "Washington, DC": [38.9072, -77.0369],
+            "Charleston, WV": [38.3498, -81.6326],
+            "Dallas, TX": [32.7767, -96.7970],
+            "Ellensburg, WA": [46.9971, -120.5478],
+            "Indianapolis, IN": [39.7684, -86.1581],
+            "Philadelphia, PA": [39.9526, -75.1652],
+            "Scotts, MI": [42.4334, -85.4150],
+            "Zeeland, MI": [42.8125, -86.0189],
+            "Ellenwood, GA": [33.6126, -84.2885],
+            "Kalamazoo, MI": [42.2917, -85.5872],
+            "Las Vegas, NV": [36.1699, -115.1398],
+            "Nashville, TN": [36.1627, -86.7816],
+            "New York, NY": [40.7128, -74.0060],
+            "Salt Lake City, UT": [40.7608, -111.8910],
+            "San Juan, XX": [18.4655, -66.1057]
+        };
+
+        // Process data
+        function processData() {
+            const locationCounts = {};
+            const stateCounts = {};
+            
+            attendeesData.forEach(attendee => {
+                const city = attendee.city.charAt(0).toUpperCase() + attendee.city.slice(1).toLowerCase();
+                const state = attendee.state;
+                const location = `${city}, ${state}`;
+                
+                // Count by location
+                locationCounts[location] = (locationCounts[location] || 0) + 1;
+                
+                // Count by state
+                stateCounts[state] = (stateCounts[state] || 0) + 1;
+            });
+            
+            return { locationCounts, stateCounts };
+        }
+
+        // Initialize map
+        function initializeMap() {
+            const map = L.map('map').setView([39.8283, -98.5795], 4);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+            
+            return map;
+        }
+
+        // Add markers to map
+        function addMarkers(map, locationCounts) {
+            Object.entries(locationCounts).forEach(([location, count]) => {
+                const coords = cityCoordinates[location];
+                if (coords) {
+                    const marker = L.marker(coords).addTo(map);
+                    const popupContent = `
+                        <div class="text-center">
+                            <h3 class="font-bold text-lg">${location}</h3>
+                            <p class="text-blue-600 font-semibold">${count} attendee${count > 1 ? 's' : ''}</p>
+                        </div>
+                    `;
+                    marker.bindPopup(popupContent);
+                }
+            });
+        }
+
+        // Update statistics
+        function updateStats(locationCounts, stateCounts) {
+            const totalAttendees = attendeesData.length;
+            const uniqueCities = Object.keys(locationCounts).length;
+            const uniqueStates = Object.keys(stateCounts).length;
+            
+            const topState = Object.entries(stateCounts)
+                .sort(([,a], [,b]) => b - a)[0];
+            
+            document.getElementById('total-attendees').textContent = totalAttendees;
+            document.getElementById('unique-cities').textContent = uniqueCities;
+            document.getElementById('unique-states').textContent = uniqueStates;
+            document.getElementById('top-state').textContent = topState ? `${topState[0]} (${topState[1]})` : '-';
+        }
+
+        // Populate location list
+        function populateLocationList(locationCounts) {
+            const locationList = document.getElementById('location-list');
+            const sortedLocations = Object.entries(locationCounts)
+                .sort(([,a], [,b]) => b - a);
+            
+            locationList.innerHTML = sortedLocations.map(([location, count]) => `
+                <div class="location-card">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h4 class="font-semibold text-gray-900">${location}</h4>
+                            <p class="text-sm text-gray-600">${count} attendee${count > 1 ? 's' : ''}</p>
+                        </div>
+                        <div class="attendee-count">${count}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Populate state list
+        function populateStateList(stateCounts) {
+            const stateList = document.getElementById('state-list');
+            const sortedStates = Object.entries(stateCounts)
+                .sort(([,a], [,b]) => b - a);
+            
+            stateList.innerHTML = sortedStates.map(([state, count]) => `
+                <div class="location-card">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h4 class="font-semibold text-gray-900">${state}</h4>
+                            <p class="text-sm text-gray-600">${count} attendee${count > 1 ? 's' : ''}</p>
+                        </div>
+                        <div class="attendee-count">${count}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', function() {
+            const { locationCounts, stateCounts } = processData();
+            const map = initializeMap();
+            
+            addMarkers(map, locationCounts);
+            updateStats(locationCounts, stateCounts);
+            populateLocationList(locationCounts);
+            populateStateList(stateCounts);
+        });
+    </script>
+</body>
+</html> 
