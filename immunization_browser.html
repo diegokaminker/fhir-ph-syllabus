@@ -452,8 +452,9 @@
             <div class="server-config">
                 <h3>🔧 FHIR Server Configuration</h3>
                 <div class="server-input">
-                    <input type="url" id="fhirServerUrl" placeholder="Enter FHIR server base URL (e.g., https://hapi.fhir.org/baseR4)" value="https://hapi.fhir.org/baseR4">
+                    <input type="url" id="fhirServerUrl" placeholder="Enter FHIR server base URL (e.g., https://fhirserver.hl7fundamentals.org/fhir)" value="https://fhirserver.hl7fundamentals.org/fhir">
                     <button onclick="testServerConnection()">Test Connection</button>
+                    <button onclick="testPatientImmunizations()" style="background: #dc3545;">Debug Patient 1352</button>
                 </div>
                 <div id="serverStatus"></div>
             </div>
@@ -505,7 +506,7 @@
     </div>
 
     <script>
-        let currentServerUrl = 'https://hapi.fhir.org/baseR4';
+        let currentServerUrl = 'https://fhirserver.hl7fundamentals.org/fhir';
         let selectedPatient = null;
 
         // Initialize the page
@@ -515,9 +516,11 @@
 
         function updateServerUrl() {
             currentServerUrl = document.getElementById('fhirServerUrl').value.trim();
+            // Ensure the URL ends with a slash for proper concatenation
             if (!currentServerUrl.endsWith('/')) {
                 currentServerUrl += '/';
             }
+            console.log('Updated server URL:', currentServerUrl);
         }
 
         async function testServerConnection() {
@@ -641,13 +644,18 @@
             immunizationStats.innerHTML = '';
 
             try {
-                const response = await fetch(`${currentServerUrl}Immunization?patient=${patientId}&_count=50`);
+                const searchUrl = `${currentServerUrl}Immunization?patient=${patientId}&_count=50`;
+                console.log('Loading immunizations from:', searchUrl);
+                
+                const response = await fetch(searchUrl);
+                console.log('Response status:', response.status);
                 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
                 const data = await response.json();
+                console.log('Immunization data:', data);
                 
                 if (data.entry && data.entry.length > 0) {
                     displayImmunizations(data.entry);
@@ -656,6 +664,7 @@
                     immunizationList.innerHTML = '<div class="no-results">No immunization records found for this patient.</div>';
                 }
             } catch (error) {
+                console.error('Error loading immunizations:', error);
                 immunizationList.innerHTML = '<div class="error">Error loading immunizations: ' + error.message + '</div>';
             }
         }
@@ -761,6 +770,41 @@
         window.addEventListener('load', function() {
             setTimeout(testServerConnection, 1000);
         });
+
+        // Debug function to test specific patient
+        async function testPatientImmunizations() {
+            updateServerUrl();
+            const patientId = '1352';
+            console.log('Testing immunizations for patient:', patientId);
+            
+            try {
+                const searchUrl = `${currentServerUrl}Immunization?patient=${patientId}`;
+                console.log('Testing URL:', searchUrl);
+                
+                const response = await fetch(searchUrl);
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Error response:', errorText);
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('Patient immunization data:', data);
+                
+                if (data.entry && data.entry.length > 0) {
+                    console.log('Found', data.entry.length, 'immunizations');
+                    displayImmunizations(data.entry);
+                    displayImmunizationStats(data.entry);
+                } else {
+                    console.log('No immunizations found');
+                }
+            } catch (error) {
+                console.error('Test error:', error);
+            }
+        }
     </script>
 </body>
 </html> 
