@@ -777,6 +777,15 @@
             const patientId = '1352';
             console.log('Testing immunizations for patient:', patientId);
             
+            // Show the immunizations section
+            const immunizationsSection = document.getElementById('immunizationsSection');
+            const immunizationList = document.getElementById('immunizationList');
+            const immunizationStats = document.getElementById('immunizationStats');
+            
+            immunizationList.innerHTML = '<div class="loading">Testing immunizations for patient 1352...</div>';
+            immunizationsSection.style.display = 'block';
+            immunizationStats.innerHTML = '';
+            
             try {
                 const searchUrl = `${currentServerUrl}Immunization?patient=${patientId}`;
                 console.log('Testing URL:', searchUrl);
@@ -800,9 +809,11 @@
                     displayImmunizationStats(data.entry);
                 } else {
                     console.log('No immunizations found');
+                    immunizationList.innerHTML = '<div class="no-results">No immunization records found for patient 1352.</div>';
                 }
             } catch (error) {
                 console.error('Test error:', error);
+                immunizationList.innerHTML = '<div class="error">Error testing immunizations: ' + error.message + '</div>';
             }
         }
     </script>
