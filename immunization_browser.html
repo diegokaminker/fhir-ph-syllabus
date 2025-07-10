@@ -639,8 +639,22 @@
             const immunizationList = document.getElementById('immunizationList');
             const immunizationStats = document.getElementById('immunizationStats');
             
+            // Check if elements exist
+            if (!immunizationsSection) {
+                console.error('immunizationsSection element not found');
+                return;
+            }
+            if (!immunizationList) {
+                console.error('immunizationList element not found');
+                return;
+            }
+            if (!immunizationStats) {
+                console.error('immunizationStats element not found');
+                return;
+            }
+            
             immunizationList.innerHTML = '<div class="loading">Loading immunizations...</div>';
-            immunizationSection.style.display = 'block';
+            immunizationsSection.style.display = 'block';
             immunizationStats.innerHTML = '';
 
             try {
@@ -781,6 +795,20 @@
             const immunizationsSection = document.getElementById('immunizationsSection');
             const immunizationList = document.getElementById('immunizationList');
             const immunizationStats = document.getElementById('immunizationStats');
+            
+            // Check if elements exist
+            if (!immunizationsSection) {
+                console.error('immunizationsSection element not found');
+                return;
+            }
+            if (!immunizationList) {
+                console.error('immunizationList element not found');
+                return;
+            }
+            if (!immunizationStats) {
+                console.error('immunizationStats element not found');
+                return;
+            }
             
             immunizationList.innerHTML = '<div class="loading">Testing immunizations for patient 1352...</div>';
             immunizationsSection.style.display = 'block';
