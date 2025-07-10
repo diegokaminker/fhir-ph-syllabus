@@ -457,7 +457,6 @@
                 <div class="server-input">
                     <input type="url" id="fhirServerUrl" placeholder="Enter FHIR server base URL (e.g., https://fhirserver.hl7fundamentals.org/fhir)" value="https://fhirserver.hl7fundamentals.org/fhir">
                     <button onclick="testServerConnection()">Test Connection</button>
-                    <button onclick="testPatientImmunizations()" style="background: #dc3545;">Debug Patient 1352</button>
                 </div>
                 <div id="serverStatus"></div>
             </div>
@@ -789,65 +788,7 @@
             setTimeout(testServerConnection, 1000);
         });
 
-        // Debug function to test specific patient
-        async function testPatientImmunizations() {
-            updateServerUrl();
-            const patientId = '1352';
-            console.log('Testing immunizations for patient:', patientId);
-            
-            // Show the immunizations section
-            const immunizationsSection = document.getElementById('immunizationsSection');
-            const immunizationList = document.getElementById('immunizationList');
-            const immunizationStats = document.getElementById('immunizationStats');
-            
-            // Check if elements exist
-            if (!immunizationsSection) {
-                console.error('immunizationsSection element not found');
-                return;
-            }
-            if (!immunizationList) {
-                console.error('immunizationList element not found');
-                return;
-            }
-            if (!immunizationStats) {
-                console.error('immunizationStats element not found');
-                return;
-            }
-            
-            immunizationList.innerHTML = '<div class="loading">Testing immunizations for patient 1352...</div>';
-            immunizationsSection.style.display = 'block';
-            immunizationStats.innerHTML = '';
-            
-            try {
-                const searchUrl = `${currentServerUrl}Immunization?patient=${patientId}`;
-                console.log('Testing URL:', searchUrl);
-                
-                const response = await fetch(searchUrl);
-                console.log('Response status:', response.status);
-                console.log('Response headers:', response.headers);
-                
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error('Error response:', errorText);
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
 
-                const data = await response.json();
-                console.log('Patient immunization data:', data);
-                
-                if (data.entry && data.entry.length > 0) {
-                    console.log('Found', data.entry.length, 'immunizations');
-                    displayImmunizations(data.entry);
-                    displayImmunizationStats(data.entry);
-                } else {
-                    console.log('No immunizations found');
-                    immunizationList.innerHTML = '<div class="no-results">No immunization records found for patient 1352.</div>';
-                }
-            } catch (error) {
-                console.error('Test error:', error);
-                immunizationList.innerHTML = '<div class="error">Error testing immunizations: ' + error.message + '</div>';
-            }
-        }
     </script>
 </body>
 </html> 
