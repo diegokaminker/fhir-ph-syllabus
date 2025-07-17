@@ -1,0 +1,73 @@
+// Assignment #1 Quiz - FHIR Resource Definition and Immunization Resource
+// GIFT Format for Moodle Import
+// Based on: Assignment #1 - Navigate the Resource Definition & Explain the contents
+
+::3-1-1 Resource Definition::What is the primary purpose of navigating a FHIR Resource Definition?{
+=To understand the structure and requirements of a specific FHIR resource
+~To learn about FHIR history and development
+~To understand how to create FHIR profiles
+~To learn about FHIR exchange mechanisms
+}
+
+::3-1-2 Sections::When examining a FHIR Resource Definition, which section would you look at first to understand what the resource represents?{
+=Scope and Usage Notes
+~Search Parameters
+~Examples
+~Formal Definitions
+}
+
+::3-1-3 status Element::In the FHIR Immunization resource, which element indicates whether the immunization was actually given or not?{
+=status
+~vaccineCode
+~patient
+~occurrenceDateTime
+}
+
+::3-1-4 statusReason element::What does the "statusReason" element in the Immunization resource represent?{
+=The reason why an immunization was not given
+~The type of vaccine administered
+~The patient's medical history
+~The healthcare provider who administered the vaccine
+}
+
+::3-1-5 Example::In the provided Immunization resource example, what was the result of the immunization procedure?{
+=The immunization was not given due to medical precaution
+~The immunization was successfully administered
+~The immunization was scheduled but not yet given
+~The immunization was refused by the patient
+}
+
+::3-1-6 Coding::Which coding system is used for the vaccine code in the provided Immunization resource example?{
+=CVX (http://hl7.org/fhir/sid/cvx)
+~SNOMED CT
+~LOINC
+~ICD-10
+}
+
+::3-1-7 Source::What does the "primarySource" element in the Immunization resource indicate?{
+=Whether the information came directly from the person who administered the vaccine
+~Whether this is the first immunization in a series
+~Whether the vaccine was given at a primary care facility
+~Whether the patient is the primary source of the information
+}
+
+::3-1-8 Example 2::In the provided Immunization resource example, what disease was the vaccine for?{
+=DTP (Diphtheria, Tetanus, Pertussis)
+~Influenza
+~COVID-19
+~Hepatitis B
+}
+
+::3-1-9 Date Format::What is the date format used for the "occurrenceDateTime" element in FHIR resources?{
+=ISO 8601 format (YYYY-MM-DD)
+~MM/DD/YYYY format
+~DD/MM/YYYY format
+~Unix timestamp format
+}
+
+::3-1-10 Validation::When validating a FHIR resource against its definition, what should you check first?{
+=Whether all mandatory elements are present
+~Whether the resource has a narrative text
+~Whether the resource uses the latest FHIR version
+~Whether the resource follows naming conventions
+} 

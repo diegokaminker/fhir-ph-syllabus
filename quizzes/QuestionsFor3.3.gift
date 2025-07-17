@@ -1,0 +1,91 @@
+::3-3-1. ImmDS IG - Purpose::
+What is the primary purpose of the Immunization Decision Support Forecast (ImmDS) Implementation Guide?
+{
+    ~To define patient demographics standards
+    =To define minimum conformance requirements for immunization decision support implementations
+    ~To establish FHIR R4 core resources
+    ~To create new immunization codes
+}
+
+::3-3-2. ImmDS IG - FHIR Version::
+Which FHIR version does the ImmDS Implementation Guide (v1.0.0: STU 1) use as its foundation?
+{
+    ~FHIR R3
+    =FHIR R4
+    ~FHIR R5
+    ~FHIR STU2
+}
+
+
+::3-3-3. ImmDS IG - Actors::
+Who are the primary actors defined in the ImmDS Implementation Guide?
+{
+    ~Provider and Patient
+    =Immunization Decision Support Engine and Immunization Information System
+    ~Electronic Health Record and Pharmacy System
+    ~Public Health Department and CDC
+}
+
+::3-3-4. ImmDS IG - Dependencies::
+Which other Implementation Guide and version does the ImmDS Implementation Guide depend on?
+{
+    ~US Core STU3
+    =US Core STU4
+    ~US Core R4
+    ~US Core R5
+}
+
+::3-3-5. ImmDS IG - Code Systems - First::
+Which of the following is one of the code systems defined by the ImmDS Implementation Guide?
+{
+    ~LOINC
+    =ImmDS Evaluation Status
+    ~SNOMED CT
+    ~ICD-10
+}
+
+::3-3-6. ImmDS IG - Code Systems - Second::
+Which is another code system defined by the ImmDS Implementation Guide?
+{
+    ~RxNorm
+    =ImmDS Recommendation Status
+    ~CPT
+    ~HCPCS
+}
+
+::3-3-7. ImmDS IG - Resources - Evaluation vs Recommendation::
+What is the key difference between the Evaluation and Recommendation resources in the ImmDS Implementation Guide?
+{
+    ~Evaluation is for adults, Recommendation is for children
+    =Evaluation represents the assessment of immunization status, while Recommendation represents the forecast of needed immunizations
+    ~Evaluation is required, Recommendation is optional
+    ~Evaluation uses R4, Recommendation uses R5
+}
+
+::3-3-8. ImmDS IG - Operation Parameters::
+What are the required parameters for invoking the ImmDS operation?
+{
+    ~Patient ID and Date of Birth
+    =Patient resource and Immunization resources
+    ~Provider ID and Location
+    ~Insurance information and Medical history
+}
+
+::3-3-9. ImmDS IG - Operation Name::
+What is the name of the operation defined in the ImmDS Implementation Guide?
+{
+    ~$forecast
+    =$evaluate-immunization-forecast
+    ~$get-immunization-status
+    ~$calculate-immunization-needs
+}
+
+::3-3-10. ImmDS IG - Resource Types::
+Which FHIR resource types are primarily used in the ImmDS Implementation Guide?
+{
+    ~Patient and Encounter
+    =Patient and Immunization
+    ~Observation and Condition
+    ~MedicationRequest and Medication
+}
+

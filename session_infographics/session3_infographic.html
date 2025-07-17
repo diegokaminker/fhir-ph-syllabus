@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FHIR Public Health Training Session 3 - Quick Insights</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+            padding: 30px;
+            border-radius: 15px;
+            background: #f8f9fa;
+            border-left: 5px solid #3498db;
+        }
+
+        .section h2 {
+            color: #2c3e50;
+            font-size: 2em;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section h2::before {
+            content: '';
+            width: 40px;
+            height: 40px;
+            background: #3498db;
+            border-radius: 50%;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .section:nth-child(1) h2::before { content: '1'; }
+        .section:nth-child(2) h2::before { content: '2'; }
+        .section:nth-child(3) h2::before { content: '3'; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-top: 4px solid #e74c3c;
+        }
+
+        .card h3 {
+            color: #2c3e50;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .card h3::before {
+            content: '🔗';
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+
+        .card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .card li {
+            padding: 8px 0;
+            border-bottom: 1px solid #ecf0f1;
+            display: flex;
+            align-items: center;
+        }
+
+        .card li::before {
+            content: '✓';
+            color: #27ae60;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .card li:last-child {
+            border-bottom: none;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .highlight-box h3 {
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        .flow-diagram {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .flow-step {
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            flex: 1;
+            margin: 10px;
+            min-width: 200px;
+        }
+
+        .flow-step h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .flow-arrow {
+            font-size: 2em;
+            color: #3498db;
+            margin: 0 10px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .tools-section {
+            background: #2c3e50;
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .tool-card {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+
+        .tool-card h4 {
+            margin-bottom: 10px;
+            color: #3498db;
+        }
+
+        .footer {
+            background: #34495e;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .footer p {
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .flow-diagram {
+                flex-direction: column;
+            }
+            
+            .flow-arrow {
+                transform: rotate(90deg);
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>FHIR Training Session 3</h1>
+            <p>Navigating FHIR 4.0.1 Specification • Profiling & Extensions • Immunization Use Cases</p>
+        </div>
+
+        <div class="content">
+            <!-- Block 1: FHIR Foundations -->
+            <div class="section">
+                <h2>FHIR Foundations</h2>
+                
+                <div class="highlight-box">
+                    <h3>FHIR: Fast Healthcare Interoperability Resources</h3>
+                    <p>FHIR is the web for healthcare - using modern web technologies to enable healthcare interoperability.</p>
+                </div>
+
+                <div class="grid">
+                    <div class="card">
+                        <h3>Core Principles</h3>
+                        <ul>
+                            <li>Implementer Focus</li>
+                            <li>Target the 80% (common scenarios)</li>
+                            <li>Use today's web technologies</li>
+                            <li>Support human readability</li>
+                            <li>Paradigm & architecturally agnostic</li>
+                            <li>Open Source</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h3>Exchange Mechanisms</h3>
+                        <ul>
+                            <li>RESTful API (Primary)</li>
+                            <li>Documents (CDA-like)</li>
+                            <li>Messages (HL7 V2/V3-like)</li>
+                            <li>Services (Operations)</li>
+                            <li>Bulk Transfer</li>
+                            <li>Subscriptions</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h3>Security Checklist</h3>
+                        <ul>
+                            <li>Patient Consent</li>
+                            <li>Accounting of Disclosure</li>
+                            <li>Basic Context (Clock Sync, DNS)</li>
+                            <li>Communications (HTTPS, TLS)</li>
+                            <li>Integrity (Validation, Provenance)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="flow-diagram">
+                    <div class="flow-step">
+                        <h4>Request</h4>
+                        <p>System A sends request</p>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <h4>API</h4>
+                        <p>FHIR API processes</p>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <h4>Response</h4>
+                        <p>System B receives response</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Block 2: Profiling & Extensions -->
+            <div class="section">
+                <h2>Profiling & Extensions</h2>
+
+                <div class="highlight-box">
+                    <h3>Why Profiling?</h3>
+                    <p>Profiling allows FHIR to be adapted for specific use cases while maintaining interoperability. Everybody knows what to expect, where to find it, and how to get it.</p>
+                </div>
+
+                <div class="grid">
+                    <div class="card">
+                        <h3>Conformance Resources</h3>
+                        <ul>
+                            <li>StructureDefinition</li>
+                            <li>CapabilityStatement</li>
+                            <li>SearchParameter</li>
+                            <li>OperationDefinition</li>
+                            <li>ValueSet</li>
+                            <li>CodeSystem</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h3>Validation Levels</h3>
+                        <ul>
+                            <li>Schema Based (Basic)</li>
+                            <li>Schematron (Relationships)</li>
+                            <li>Structure Definition (Full)</li>
+                            <li>$validate Operation</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h3>Extensions</h3>
+                        <ul>
+                            <li>Resources</li>
+                            <li>Data Types</li>
+                            <li>Primitive Types</li>
+                            <li>URL-based identification</li>
+                            <li>Value[x] structure</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="tools-section">
+                    <h3>Profile Development Tools</h3>
+                    <div class="tools-grid">
+                        <div class="tool-card">
+                            <h4>Forge</h4>
+                            <p>Windows-based profile editor with Simplifier integration</p>
+                        </div>
+                        <div class="tool-card">
+                            <h4>Trifolia-on-FHIR</h4>
+                            <p>Web-based open source profile editor</p>
+                        </div>
+                        <div class="tool-card">
+                            <h4>FHIR Shorthand (FSH)</h4>
+                            <p>Text-based profile definition language</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">35%</div>
+                        <div class="stat-label">FHIR IGs in HL7 PH WG</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">30%</div>
+                        <div class="stat-label">CDA IGs</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">35%</div>
+                        <div class="stat-label">HL7 V2 IGs</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Block 3: Immunization Use Case -->
+            <div class="section">
+                <h2>Public Health Use Case: Immunization</h2>
+
+                <div class="highlight-box">
+                    <h3>ImmDS: Immunization Decision Support</h3>
+                    <p>FHIR Implementation Guide for Immunization Forecasting - enabling decision support for immunization recommendations.</p>
+                </div>
+
+                <div class="grid">
+                    <div class="card">
+                        <h3>Key Resources</h3>
+                        <ul>
+                            <li>ImmDS Patient</li>
+                            <li>US Core Immunization</li>
+                            <li>ImmunizationEvaluation</li>
+                            <li>ImmunizationRecommendation</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h3>Actors</h3>
+                        <ul>
+                            <li>EHR User</li>
+                            <li>IIS User</li>
+                            <li>Health System Proxies</li>
+                            <li>CDS Engine</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h3>Profile Sources</h3>
+                        <ul>
+                            <li>FHIR Spec (Core)</li>
+                            <li>US Core Profiles</li>
+                            <li>Da Vinci Project</li>
+                            <li>Simplifier.NET</li>
+                            <li>FHIR Registry</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="flow-diagram">
+                    <div class="flow-step">
+                        <h4>EHR System</h4>
+                        <p>Patient data & immunizations</p>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <h4>CDS Engine</h4>
+                        <p>Decision support processing</p>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <h4>IIS System</h4>
+                        <p>Immunization recommendations</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>CDC FHIR Public Health Training 2025</strong></p>
+            <p>Session 3: FHIR Foundations, Profiling, and Immunization Use Cases</p>
+            <p>Instructors: Diego Kaminker, Viet Nguyen, Benji Graham</p>
+        </div>
+    </div>
+</body>
+</html> 

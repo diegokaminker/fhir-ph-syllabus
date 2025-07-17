@@ -1,0 +1,56 @@
+// Section 3-3 FHIR Server and Validation Quiz Questions
+// Generated for CDC FHIR Public Health Training 2025
+
+::3-3-1. FHIR Server - Capability Statement::
+How do we fetch the capability statement of a FHIR server?
+{
+    ~GET /fhir/metadata
+    =GET /fhir/metadata
+    ~POST /fhir/capability
+    ~GET /fhir/server-info
+}
+
+::3-3-2. FHIR Server - Conformance Resource::
+What is the conformance resource for representing extensions and constraints on resources?
+{
+    ~StructureDefinition
+    =StructureDefinition
+    ~ValueSet
+    ~OperationDefinition
+}
+
+::3-3-3. FHIR Server - Valid Codes Resource::
+Which resource is used to represent the valid codes for a specific element?
+{
+    ~CodeSystem
+    =ValueSet
+    ~StructureDefinition
+    ~ConceptMap
+}
+
+::3-3-4. FHIR Server - Validation Operation::
+Which operation can be used to validate a resource in a FHIR Server?
+{
+    ~$validate-resource
+    =$validate
+    ~$check-validation
+    ~$verify-resource
+}
+
+::3-3-5. FHIR Server - Extensibility::
+What can be extended in FHIR?
+{
+    ~Only resources
+    ~Only data types
+    =Resources, data types, and primitive types
+    ~Only primitive types
+}
+
+::3-3-6. FHIR Server - Minimum Validation::
+What is the minimum validation you can use for a FHIR resource?
+{
+    ~Full profile validation
+    =Basic syntax validation
+    ~No validation
+    ~Schema validation only
+} 
