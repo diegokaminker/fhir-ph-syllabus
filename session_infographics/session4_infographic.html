@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FHIR Training Session 4 - Infographic</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+            padding: 30px;
+            border-radius: 15px;
+            background: #f8f9fa;
+            border-left: 5px solid #3498db;
+        }
+
+        .section h2 {
+            color: #2c3e50;
+            font-size: 2em;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section h2::before {
+            content: '';
+            width: 40px;
+            height: 40px;
+            background: #3498db;
+            border-radius: 50%;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .section:nth-child(1) h2::before { content: '1'; }
+        .section:nth-child(2) h2::before { content: '2'; }
+        .section:nth-child(3) h2::before { content: '3'; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-top: 4px solid #e74c3c;
+        }
+
+        .card h3 {
+            color: #2c3e50;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .card h3::before {
+            content: '🔗';
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+
+        .card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .card li {
+            padding: 8px 0;
+            border-bottom: 1px solid #ecf0f1;
+            display: flex;
+            align-items: center;
+        }
+
+        .card li::before {
+            content: '✓';
+            color: #27ae60;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .card li:last-child {
+            border-bottom: none;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .highlight-box h3 {
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        .reference-diagram {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .reference-node {
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            flex: 1;
+            margin: 10px;
+            min-width: 150px;
+            position: relative;
+        }
+
+        .reference-node h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .reference-arrow {
+            font-size: 2em;
+            color: #3498db;
+            margin: 0 10px;
+        }
+
+        .reference-node.primary {
+            background: #e3f2fd;
+            border: 2px solid #2196f3;
+        }
+
+        .reference-node.secondary {
+            background: #f3e5f5;
+            border: 2px solid #9c27b0;
+        }
+
+        .terminology-flow {
+            background: #2c3e50;
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+        }
+
+        .terminology-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .terminology-card {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+
+        .terminology-card h4 {
+            margin-bottom: 10px;
+            color: #3498db;
+        }
+
+        .binding-strengths {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .binding-card {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .binding-card.required {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .binding-card.extensible {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+
+        .binding-card.preferred {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+
+        .binding-card.example {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+        }
+
+        .binding-strength {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .binding-description {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .mapping-tools {
+            background: #34495e;
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .tool-card {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+
+        .tool-card h4 {
+            margin-bottom: 10px;
+            color: #3498db;
+        }
+
+        .tool-card .status {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .status.open-source {
+            background: #27ae60;
+            color: white;
+        }
+
+        .status.commercial {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .us-terminology {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .terminology-item {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .terminology-item h4 {
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .terminology-item p {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .footer {
+            background: #34495e;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .footer p {
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .reference-diagram {
+                flex-direction: column;
+            }
+            
+            .reference-arrow {
+                transform: rotate(90deg);
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>FHIR Training Session 4</h1>
+            <p>FHIR References • Terminology Basics • HL7 V2 to FHIR Mapping</p>
+        </div>
+
+        <div class="content">
+            <!-- Block 1: FHIR References -->
+            <div class="section">
+                <h2>FHIR References</h2>
+                
+                <div class="highlight-box">
+                    <h3>Why References?</h3>
+                    <p>One resource is usually not enough. We need multiple resources to represent relationships and complex healthcare scenarios. References connect resources together to create meaningful clinical information.</p>
+                </div>
+
+                <div class="grid">
+                    <div class="card">
+                        <h3>Reference Types</h3>
+                        <ul>
+                            <li><strong>Absolute:</strong> Full URL to specific server</li>
+                            <li><strong>Relative:</strong> Reference within same server</li>
+                            <li><strong>Contained:</strong> Resource within same resource</li>
+                            <li><strong>Identifier:</strong> Human identifier reference</li>
+                            <li><strong>Bundled:</strong> Reference within same Bundle</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h3>Reference Examples</h3>
+                        <ul>
+                            <li><strong>Absolute:</strong> http://myserver/fhir/Patient/20911</li>
+                            <li><strong>Relative:</strong> Patient/20911</li>
+                            <li><strong>Contained:</strong> #MyPatient</li>
+                            <li><strong>Identifier:</strong> System + Value</li>
+                            <li><strong>Bundled:</strong> UUID references</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h3>Contained Resources</h3>
+                        <ul>
+                            <li>When there is no external identity</li>
+                            <li>Has limitations - no reuse</li>
+                            <li>Very hard to resolve to 'real'</li>
+                            <li>Use when must include information</li>
+                            <li>No independent existence</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="reference-diagram">
+                    <div class="reference-node primary">
+                        <h4>Immunization</h4>
+                        <p>Primary Resource</p>
+                    </div>
+                    <div class="reference-arrow">→</div>
+                    <div class="reference-node secondary">
+                        <h4>Patient</h4>
+                        <p>Subject Reference</p>
+                    </div>
+                    <div class="reference-arrow">→</div>
+                    <div class="reference-node secondary">
+                        <h4>Encounter</h4>
+                        <p>Context Reference</p>
+                    </div>
+                    <div class="reference-arrow">→</div>
+                    <div class="reference-node secondary">
+                        <h4>Location</h4>
+                        <p>Location Reference</p>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>Immunization Example</h3>
+                    <p>Patient: Martin Smith, born 4/3/2019 • Administered: Feb 21, 2025 10:30hs by Nurse Eve Admin • Vaccine: DTaP (CVX#20) • Dose: 5th dose / Lot Number: 20191/88</p>
+                </div>
+            </div>
+
+            <!-- Block 2: FHIR Terminology -->
+            <div class="section">
+                <h2>FHIR Terminology</h2>
+
+                <div class="highlight-box">
+                    <h3>Key to Semantic Interoperability</h3>
+                    <p>Terminology deals with coded elements and the meaning of concepts. Interoperability = Syntax + Structure + Semantics. FHIR provides comprehensive terminology support through Code Systems, Value Sets, and Bindings.</p>
+                </div>
+
+                <div class="grid">
+                    <div class="card">
+                        <h3>Coded Data Types</h3>
+                        <ul>
+                            <li><strong>code:</strong> Simple coded value (e.g., "male")</li>
+                            <li><strong>CodeableConcept:</strong> Complex coded concept</li>
+                            <li><strong>Quantity:</strong> Numeric value with units</li>
+                            <li><strong>Coding:</strong> System + Code + Display</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h3>Terminology Components</h3>
+                        <ul>
+                            <li><strong>Code System:</strong> Defines set of concepts</li>
+                            <li><strong>Value Set:</strong> Selection of codes for context</li>
+                            <li><strong>Binding:</strong> Links element to Value Set</li>
+                            <li><strong>Display:</strong> Human-readable text</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h3>Terminology Services</h3>
+                        <ul>
+                            <li><strong>$expand:</strong> Expand Value Set</li>
+                            <li><strong>$lookup:</strong> Get display for code</li>
+                            <li><strong>$validate-code:</strong> Validate code</li>
+                            <li><strong>$translate:</strong> Translate between systems</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="binding-strengths">
+                    <div class="binding-card required">
+                        <div class="binding-strength">Required</div>
+                        <div class="binding-description">Must come from set</div>
+                    </div>
+                    <div class="binding-card extensible">
+                        <div class="binding-strength">Extensible</div>
+                        <div class="binding-description">May use alternate if needed</div>
+                    </div>
+                    <div class="binding-card preferred">
+                        <div class="binding-strength">Preferred</div>
+                        <div class="binding-description">Should use but not required</div>
+                    </div>
+                    <div class="binding-card example">
+                        <div class="binding-strength">Example</div>
+                        <div class="binding-description">Set isn't specified</div>
+                    </div>
+                </div>
+
+                <div class="us-terminology">
+                    <div class="terminology-item">
+                        <h4>LOINC</h4>
+                        <p>Lab tests, document sections, vital signs</p>
+                    </div>
+                    <div class="terminology-item">
+                        <h4>SNOMED CT</h4>
+                        <p>Problems, diagnostics, allergies</p>
+                    </div>
+                    <div class="terminology-item">
+                        <h4>RxNorm</h4>
+                        <p>Medication products and drugs</p>
+                    </div>
+                    <div class="terminology-item">
+                        <h4>CVX</h4>
+                        <p>Vaccine codes</p>
+                    </div>
+                    <div class="terminology-item">
+                        <h4>CPT</h4>
+                        <p>Procedures</p>
+                    </div>
+                    <div class="terminology-item">
+                        <h4>ICD-10 CM</h4>
+                        <p>Conditions</p>
+                    </div>
+                </div>
+
+                <div class="terminology-flow">
+                    <h3>Public Health Terminology</h3>
+                    <div class="terminology-grid">
+                        <div class="terminology-card">
+                            <h4>UMLS</h4>
+                            <p>Unified Medical Language System - comprehensive terminology integration</p>
+                        </div>
+                        <div class="terminology-card">
+                            <h4>CVX</h4>
+                            <p>Vaccine codes for immunization tracking</p>
+                        </div>
+                        <div class="terminology-card">
+                            <h4>OMB</h4>
+                            <p>Race and ethnicity classifications</p>
+                        </div>
+                        <div class="terminology-card">
+                            <h4>VSAC</h4>
+                            <p>NIH Value Set Authority Center with FHIR API access</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Block 3: HL7 V2 to FHIR Mapping -->
+            <div class="section">
+                <h2>HL7 V2 to FHIR Mapping</h2>
+
+                <div class="highlight-box">
+                    <h3>Why V2 to FHIR Conversion?</h3>
+                    <p>HL7 V2.x is still the lingua franca of healthcare despite its dialects. To get ALL clinical information from existing systems into FHIR-based repositories, the easiest way is to 'listen' to existing V2 feeds: ADT, Lab Results, Immunizations.</p>
+                </div>
+
+                <div class="grid">
+                    <div class="card">
+                        <h3>Mapping Process</h3>
+                        <ul>
+                            <li>Official mapping for common messages</li>
+                            <li>ADT, Orders, Results, Scheduling</li>
+                            <li>Not a tool - it's a mapping specification</li>
+                            <li>Custom scripts often needed</li>
+                            <li>Each V2 implementation is unique</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h3>Mapping Challenges</h3>
+                        <ul>
+                            <li>V2 implementations are opinionated</li>
+                            <li>Extensions and customizations common</li>
+                            <li>Different versions and dialects</li>
+                            <li>No one-size-fits-all solution</li>
+                            <li>Requires understanding of both standards</li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <h3>Mapping Benefits</h3>
+                        <ul>
+                            <li>Access to legacy system data</li>
+                            <li>Gradual migration to FHIR</li>
+                            <li>Preserve existing workflows</li>
+                            <li>Enable modern FHIR applications</li>
+                            <li>Bridge between old and new systems</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="mapping-tools">
+                    <h3>Mapping Tools</h3>
+                    <div class="tools-grid">
+                        <div class="tool-card">
+                            <h4>FUME</h4>
+                            <p>FHIR conversion and transformation engine by Outburn. Uses FHIR-oriented functions and RESTful API. Supports JSON, XML, CSV, and HL7 V2 input.</p>
+                            <div class="status open-source">Open Source</div>
+                        </div>
+                        <div class="tool-card">
+                            <h4>Microsoft FHIR Converter</h4>
+                            <p>Open-source project using Liquid template language and .NET runtime. Supports HL7v2 to FHIR, C-CDA to FHIR, and FHIR version conversions.</p>
+                            <div class="status open-source">Open Source</div>
+                        </div>
+                        <div class="tool-card">
+                            <h4>Mirth Connect</h4>
+                            <p>Message translation platform with filtering, transformation, extraction, and routing capabilities. Manages channels for message pathways.</p>
+                            <div class="status commercial">Commercial</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reference-diagram">
+                    <div class="reference-node primary">
+                        <h4>Hospital System</h4>
+                        <p>HL7 V2 Messages</p>
+                    </div>
+                    <div class="reference-arrow">→</div>
+                    <div class="reference-node secondary">
+                        <h4>V2 to FHIR Bridge</h4>
+                        <p>Mapping Processor</p>
+                    </div>
+                    <div class="reference-arrow">→</div>
+                    <div class="reference-node secondary">
+                        <h4>FHIR Repository</h4>
+                        <p>REST API</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>CDC FHIR Public Health Training 2025</strong></p>
+            <p>Session 4: FHIR References, Terminology, and V2 to FHIR Mapping</p>
+            <p>Instructors: Diego Kaminker, Viet Nguyen, Benji Graham</p>
+        </div>
+    </div>
+</body>
+</html> 
