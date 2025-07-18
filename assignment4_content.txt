@@ -1,0 +1,685 @@
+Assignment #4 - HL7 V2.5 TO FHIR Mapping
+Assignment #4 - HL7 V2.5 TO FHIR Mapping
+Original Example Message
+HL7 V2.5.1 Implementation Guide from Maine
+Proposed Mapping
+Mapping Table
+Proposed Template
+Standard Mapping
+Mapping Playground
+Your Job
+Hints from An Expert
+Preliminary Analysis
+1. “Review the gender”
+2. “Something is wrong about the Location”
+3. “Review code systems and identifier.system”
+4. “Pay Attention to Date-Time Formats”
+5. “Take care of internal Bundle references”
+6. “Something happens with the manufacturer”
+
+Original Example Message
+We have this immunization message in HL7 V2.5 from the Maine
+immunization registry available for download from here:
+https://gist.github.com/diegokaminker/8eafa66e14cd4c77f89d109
+768bc0555
+You can copy the message and paste it in
+https://www.hl7inspector.com/
+Clicking in any segment / field (segment are lines, fields are
+separated by | - pipes ) you can see the description of the content
+
+HL7 V2.5.1 Implementation Guide from Maine
+The implementation guide is available from here:
+https://www.maine.gov/dhhs/mecdc/infectious-disease/immunizati
+on/documents/ImmPact-HL7v2.5.1DataExchangeSpecs-v0.3-ME9.2020.pdf
+Our organization needed to transform the immunization
+messages into FHIR to feed a clinical decision support system.
+
+Proposed Mapping
+One of the big consultancy companies (in fact, one of the big 7)
+sent a 18yo trainee who after three months asking questions and
+writing notes in an ipad, finally asked ChatGPT to create a
+template with the mapping from the HL7 V2.x message to a FHIR
+Message Bundle, and a table with the mapping, to help the
+implementers.
+The results are below:
+Mapping Table
+Value in our example
+{{segment.field}} message
+
+HL7 V2.x Description Resource.Element in Bundle
+
+{{MSH.3}}
+
+MyEMR
+
+Sending Application
+
+MessageHeader.source.name
+
+{{MSH.4}}
+
+DE-000001
+
+Sending Facility
+
+MessageHeader.source.endpoint
+
+{{MSH.5}}
+{{MSH.7}}
+
+Receiving Application MessageHeader.destination.name
+20160701123030-0700
+
+Date/Time of Message MessageHeader.timestamp
+
+{{MSH.9}}
+
+VXU^V04^VXU_V04
+
+Message Type
+
+MessageHeader.eventCoding.code
+
+{{MSH.10}}
+
+CA0001
+
+Message Control ID
+
+MessageHeader.id
+
+{{PID.3}}
+
+PA123456
+
+Patient Identifier
+List
+
+Patient.id
+
+{{PID.3.4}}
+
+MYEMR
+
+Assigning Authority
+
+Patient.identifier.system
+
+{{PID.5.1}}
+
+JONES
+
+Patient Name - Family Patient.name.family
+
+{{PID.5.2}}
+
+GEORGE
+
+Patient Name - Given Patient.name.given
+
+{{PID.5.3}}
+
+M
+
+Patient Name - Middle Patient.name.given
+
+{{PID.5.4}}
+
+JR
+
+Patient Name - Suffix Patient.name.suffix
+
+{{PID.7}}
+
+20140227
+
+Date/Time of Birth
+
+Patient.birthDate
+
+{{PID.8}}
+
+M
+
+Administrative Sex
+
+Patient.gender
+
+{{PID.11.1}}
+
+1234 W FIRST ST
+
+Patient Address Street
+
+Patient.address.line
+
+{{PID.11.3}}
+
+AUGUSTA
+
+Patient Address - City Patient.address.city
+
+{{PID.11.4}}
+
+ME
+
+Patient Address State
+
+Patient.address.state
+
+{{PID.11.5}}
+
+4330
+
+Patient Address - Zip
+
+Patient.address.postalCode
+
+{{PID.13.1}}
+
+2075555555
+
+Phone Number Home
+
+Patient.telecom.value
+
+{{PID.15.1}}
+
+ENG
+
+Primary Language
+Code
+
+Patient.communication.language.coding.cod
+e
+
+{{PID.15.2}}
+
+English
+
+Primary Language
+
+Patient.communication.language.coding.dis
+play
+
+{{RXA.3}}
+
+20140730
+
+Administration Date
+
+Immunization.occurrenceDateTime
+
+{{RXA.5}}
+
+8
+
+Administered Code
+
+Immunization.vaccineCode.coding.code
+
+{{RXA.5.2}}
+
+HEPB-PEDIATRIC/ADOLES Administered
+CENT
+Description
+
+Immunization.vaccineCode.coding.display
+
+{{RXA.10}}
+
+1245319599
+
+Practitioner.id
+
+Administered By
+
+Smith
+
+Administered By Family
+
+Practitioner.name.family
+
+{{RXA.10.3}}
+
+Janet
+
+Administered By Given
+
+Practitioner.name.given
+
+{{RXA.10.14}}
+
+MD
+
+Administered By Degree
+
+Practitioner.qualification.identifier.value
+
+{{RXA.15}}
+
+0039F
+
+Lot Number
+
+Immunization.lotNumber
+
+{{RXA.16}}
+
+20200531
+
+Expiration Date
+
+Immunization.expirationDate
+
+{{RXA.17}}
+
+MSD
+
+Manufacturer
+
+Immunization.manufacturer.reference
+
+{{RXR.1}}
+
+C28161
+
+Route of
+Administration
+
+Immunization.route.coding.code
+
+{{RXR.1.2}}
+
+INTRAMUSCULAR
+
+Route Description
+
+Immunization.route.coding.display
+
+{{RXR.2}}
+
+LA
+
+Site of Administration Immunization.site.coding.code
+
+{{RXR.2.2}}
+
+LEFT ARM
+
+Site Description
+
+{{OBX.3}}
+
+64994-7
+
+Observation Identifier Observation.code.coding.code
+
+{{OBX.3.2}}
+
+Vaccine funding
+Observation
+program eligibility category Description
+
+Observation.code.coding.display
+
+{{OBX.5}}
+
+V03
+
+Observation Value
+
+Observation.valueCodeableConcept.coding.
+code
+
+{{OBX.5.2}}
+
+VFC eligibility – Not
+Insured
+
+Observation Value
+Description
+
+Observation.valueCodeableConcept.coding.
+display
+
+20110701140500
+
+Observation
+Date/Time
+
+Observation.effectiveDateTime
+
+{{OBX.14}}
+
+{{RXA.10.2}}
+
+Proposed Template
+{
+"resourceType": "Bundle",
+"type": "message",
+
+Immunization.site.coding.display
+
+"entry": [
+{
+"resource": {
+"resourceType": "MessageHeader",
+"eventCoding": {
+"system": "http://hl7.org/fhir/message-events",
+"code": "{{MSH.9}}"
+},
+"source": {
+"name": "{{MSH.3}}",
+"endpoint": "urn:uuid:{{MSH.4}}"
+},
+"destination": [
+{
+"name": "{{MSH.5}}"
+}
+],
+"timestamp": "{{MSH.7}}",
+"enterer": {
+"reference": "Practitioner/{{RXA.10}}"
+}
+}
+},
+{
+"resource": {
+"resourceType": "Patient",
+"id": "{{PID.3}}",
+"identifier": [
+{
+"system": "urn:oid:{{PID.3.4}}",
+"value": "{{PID.3}}"
+}
+
+],
+"name": [
+{
+"family": "{{PID.5.1}}",
+"given": ["{{PID.5.2}}", "{{PID.5.3}}"],
+"suffix": ["{{PID.5.4}}"]
+}
+],
+"birthDate": "{{PID.7}}",
+"gender": "{{PID.8}}",
+"address": [
+{
+"line": ["{{PID.11.1}}"],
+"city": "{{PID.11.3}}",
+"state": "{{PID.11.4}}",
+"postalCode": "{{PID.11.5}}"
+}
+],
+"telecom": [
+{
+"system": "phone",
+"value": "{{PID.13.1}}",
+"use": "home"
+}
+],
+"communication": [
+{
+"language": {
+"coding": [
+{
+"system": "urn:oid:2.16.840.1.113883.6.96",
+"code": "{{PID.15.1}}",
+
+"display": "{{PID.15.2}}"
+}
+]
+}
+}
+]
+}
+},
+{
+"resource": {
+"resourceType": "Practitioner",
+"id": "{{RXA.10}}",
+"identifier": [
+{
+"system": "urn:oid:2.16.840.1.113883.4.6",
+"value": "{{RXA.10}}"
+}
+],
+"name": [
+{
+"family": "{{RXA.10.2}}",
+"given": ["{{RXA.10.3}}"]
+}
+],
+"qualification": [
+{
+"identifier": [
+{
+"system": "urn:oid:2.16.840.1.113883.4.6",
+"value": "{{RXA.10.14}}"
+}
+]
+
+}
+]
+}
+},
+{
+"resource": {
+"resourceType": "Immunization",
+"status": "completed",
+"vaccineCode": {
+"coding": [
+{
+"system": "http://hl7.org/fhir/sid/cvx",
+"code": "{{RXA.5}}",
+"display": "{{RXA.5.2}}"
+}
+]
+},
+"patient": {
+"reference": "Patient/{{PID.3}}"
+},
+"occurrenceDateTime": "{{RXA.3}}",
+"primarySource": true,
+"location": {
+"reference": "Location/{{MSH.4}}"}
+,
+"lotNumber": "{{RXA.15}}",
+"expirationDate": "{{RXA.16}}",
+"site": {
+"coding": [
+{
+"system": "http://hl7.org/fhir/v3/ActSite",
+"code": "{{RXR.2}}",
+
+"display": "{{RXR.2.2}}"
+}
+]
+},
+"route": {
+"coding": [
+{
+"system":
+"http://hl7.org/fhir/v3/RouteOfAdministration",
+"code": "{{RXR.1}}",
+"display": "{{RXR.1.2}}"
+}
+]
+}
+}
+},
+{
+"resource": {
+"resourceType": "Observation",
+"status": "final",
+"code": {
+"coding": [
+{
+"system": "http://loinc.org",
+"code": "{{OBX.3}}",
+"display": "{{OBX.3.2}}"
+}
+]
+},
+"valueCodeableConcept": {
+"coding": [
+{
+
+"system":
+"http://terminology.hl7.org/CodeSystem/v2-0064",
+"code": "{{OBX.5}}",
+"display": "{{OBX.5.2}}"
+}
+]
+},
+"effectiveDateTime": "{{OBX.14}}"
+}
+}
+]
+}
+
+Standard Mapping
+There is a standardized mapping defined in the V2-to-FHIR
+implementation guide here:
+https://build.fhir.org/ig/HL7/v2-to-fhir/ConceptMap-message-vxu-v04-to
+-bundle.html
+
+Mapping Playground
+You can also use the FHIR Mapping Playground at
+https://diegokaminker.github.io/mapping_playground/mapping.html
+
+Your Job
+Your job is to discuss some draft solutions for the problems -not
+all of them, there are more- with the mapping created by our
+trainee (and ChatGPT)
+
+Hints from An Expert
+An initial list of problems was created by an HL7 FHIR HL7 V2.x
+expert but he retired and is now living on a private island in Bermuda.
+He faxed some handwritten notes.
+
+(Two days after leaving, he also recorded a message in our answering
+machine (we have one from the 90s): “Something happens with the
+manufacturer. Yes, please, another mojito”)
+
+Preliminary Analysis
+Let’s review each problem the HL7 Expert has pin-pointed, and you
+can suggest how to fix it
+
+1.​ “Review the gender”
+
+A)​This is gender element definition as found in the FHIR R4
+Patient spec.
+
+B)​This is the definition in HL7 table 0001 for Administrative
+Sex from the spec from Maine:
+
+​
+Discuss a proposed fix
+
+2.​ “Something is wrong about the Location”
+
+A)​The location element in the Immunization resource is
+populated through the map as follows:
+"location": {
+"reference": "Location/{{MSH.4}}"}
+B)​The problem is that both MSH.4 (Sending Facility) and
+RXA.11 (Administered-At Location) only contain a code for
+the Facility, so
+i) the reference is pointing to a resource which is not in the
+Bundle
+ii) We do not have any actual information on the location
+Hint: Read the Messaging Profile…where are the locations
+defined? How is this information used?
+Discuss proposed fixes
+
+3.​ “Review code systems and identifier.system”
+
+A)​Examples of Code Systems and System identifiers for HL7
+V2.x
+NPI identifier, assigned by CMS:
+
+Code from CDC for Race
+
+Code from CVX for Immunization
+
+B)​Required Structure and System identifiers in FHIR (same
+examples)
+i) How to identify a practitioner using NPI in FHIR (
+https://terminology.hl7.org/3.1.0/NamingSystem-npi.html)
+"identifier":[{
+"system" = "http://hl7.org/fhir/sid/us-npi",
+"value" = "1245319599"}]
+
+ii) How to specify CDC terminology for Race
+(https://hl7.org/fhir/us/core/StructureDefinition-us-core-race.
+html​ )
+
+"valueCoding" : {
+"system" : "urn:oid:2.16.840.1.113883.6.238",
+"code" : "2106-3",
+"display" : "White"}
+
+Note: this introduces another interesting mapping problem: in HL7 V2.x, Race is
+part of the demographic data for the patient, in FHIR, it is an extension defined in
+US Core!
+
+ii) How to include a CVX code from Immunization (
+https://terminology.hl7.org/3.1.0/CodeSystem-CVX.html)
+"vaccineCode": {
+"coding": [
+{
+"system": "http://hl7.org/fhir/sid/cvx",
+"code": "08",
+"display": "HEPB-PEDIATRIC/ADOLESCENT"
+}
+]}
+
+Discuss proposed fixes
+
+4.​ “Pay Attention to Date-Time Formats”
+
+A)​The date format in HL7 V2.x / from the Maine spec
+(example):
+MSH-7: Date/time of message
+The date and time the message was created.
+This field is required.
+Format: YYYYMMDDHHMMSS If sending more than 14
+digits, the following format is required:
+YYYY[MM[DD[HH[MM[SS[.S[S[S[S]]]]]]]]][+/-ZZZZ]
+Example: 19970716192030.45+0100
+
+B) The Date/Time Formats in FHIR are as follows ( date,
+dateTime ):
+Date: YYYY-MM-DD
+DateTime: YYYY-MM-DDThh:mm:ss+zz.zz
+
+Discuss proposed fixes
+
+5.​ “Take care of internal Bundle references”
+References to resources inside of the same Bundle should be created using urn:uuid to
+allow the server solve the creation/update of resources
+Each resource in a Bundle should contain an entry identifier (fullUrl) and a criteria in the
+url to add or update the contained resource. All references in the Bundle should point to the
+fullUrl of the referenced entry.
+{
+"fullUrl": "urn:uuid:25131980-1b95-4548-a01d-94786b40e4c6",
+"request": {
+"method": "PUT",
+"url":
+"Patient?identifier=http://imm-messages.gov/MyEMR-DE-000004/patients|AD445566
+"
+},
+… (in a resource related to the above)
+"reference": "urn:uuid:25131980-1b95-4548-a01d-94786b40e4c6"
+…
+
+Discuss proposed fixes
+6.​ “Something happens with the manufacturer”
+As some other data in the HL7 V2.x => FHIR template, the manufacturer was not
+included in the actual mapping.
+
+Discuss proposed fixes
+
+

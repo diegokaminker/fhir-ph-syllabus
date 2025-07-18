@@ -1,0 +1,570 @@
+FHIR TRAINING
+CDC FOUNDATION
+APRIL-JUNE 2025
+Kaminker, Nguyen, Graham
+
+© HL7 INTERNATIONAL, 2025
+
+SESSION
+04
+
+Instructors
+DIEGO KAMINKER. FHL7, FIAHSI, HL7 CE, HL7 DCSIO
+VIET NGUYEN, FHL7, HL7 CSIO
+BENJI GRAHAM, HL7 CE
+
+Session 4
+1. BLOCK 1
+1. FHIR References
+2. Hands-on Exercise
+
+2. BLOCK 2
+1. Terminology basics
+2. US Terminology / PH Terminology
+
+3. BLOCK 3
+1. Mapping – V2-to-FHIR
+2. Hands-on Exercise
+
+BLOCK 1 – FHIR REFERENCES
+1. Why references?
+2. Reference Types
+3. Example with an Immunization record
+
+No quizz in this block, just an assignment!
+
+References between resources
+• One resource is usually not enough
+• We need to use
+
+location
+
+– multiple resources
+– represent the relations
+
+In FHIR this is called
+"Reference"
+
+patient
+
+Immunization
+
+performer
+
+encounter
+
+manufacturer
+
+Types of References in FHIR (1)
+• Absolute (ref.resource is in specific server)
+<subject>
+<reference value="http://myserver/fhir/Patient/20911">
+</subject>
+
+• Relative (ref.resource is in same server)
+<subject>
+<reference value="Patient/20911">
+</subject>
+
+Types of References in FHIR (2)
+• Contained (ref.resource is in the same resource, like XML Ref)
+<contained>
+<Patient>
+<id value="MyPatient">
+…
+</Patient>
+</contained>
+
+<subject>
+<reference value="#MyPatient">
+</subject>
+
+Types of References in FHIR (3)
+• Identifier (Reference by human identifier, not a FHIR ref)
+<subject>
+<identifier>
+<system value="2.16.840.1.113883.2.10.4.2"/>
+<value value="99999999"/>
+</identifier>
+<subject>
+
+Type of Reference in FHIR (4)
+• Bundled (Ref. Resource is in the same Bundle)
+<Bundle>
+<entry fullUrl="urn:uuid:d8497ab9-b5c14cfa-971c-7b4db9dc011a">
+<Patient>
+…
+</Patient>
+</entry>
+…
+
+<entry fullUrl="urn:uuid:d8497ab9-b5c14cfa-971c-7b4db9dc011a">
+<Immunization>
+…
+<patient>
+<reference value= "Patient/d8497ab9b5c1-4cfa-971c-7b4db9dc011a"
+</patient>
+</Immunization>
+</entry>
+…
+</Bundle>
+
+Contained Resources
+• When there is no external identity
+• Has limitations
+– No reuse
+– Very hard to ‘resolve’ to ‘real’
+• Use when you must include information with no
+independent ‘existence’
+
+Example: Recording an Immunization
+• Patient: Martin Smith, born 4/3/2019
+• Administered, Feb 21,2025 10.30hs by Nurse Eve Admin,
+NPI 20293
+• Encounter: Ambulatory
+–
+
+Location: Good Health Clinic, 100 Main St., Ann Arbor,
+Michigan
+
+• Vaccine: Diphtheria, Tetanus, and Acellular Pertussis (DTaP),
+CVX#20
+• (product: Daptacel by Sanofi Pasteur Inc. , 1 Discovery Drive
+Swiftwater, PA 18370, USA)
+• Dose: 5th dose / Lot Number: 20191/88
+
+patient
+encounter
+location
+performer
+reason
+manufacturer
+
+The immunization, as linked resources
+Immunization
+
+Manufacturer
+
+Patient
+Encounter
+
+Performer
+
+Location
+
+Organization
+
+Assignment #3
+We will proceed to work in groups now, and solve Assignment #3
+
+Assignment #3 - Manage Different FHIR reference types
+
+BLOCK 2 – FHIR TERMINOLOGY
+1. Introduction to Terminology
+2. Binding
+3. Terminology Services
+4. Terminology Operations
+
+WE WILL ASK 6 QUESTIONS DURING THIS
+BLOCK – BE AWARE
+
+1
+5
+
+Terminology in FHIR
+• Key to semantic interoperability: dealing with coded
+elements and the meaning of concepts.
+• Interoperability = syntax + structure + semantics
+
+Structure
+
+Semantics
+
+Fragment from http://www.hl7.org/fhir/Observation.html
+
+1
+6
+
+Examples of Coded Data in FHIR
+– code Datatype
+
+• e.g. Patient gender = “male”
+– CodeableConcept Datatype
+• e.g. Observation code for a Blood Glucose measurement:
+LOINC = “2339-0” (Glucose [Mass/volume] in Blood)
+Displayed as Glucose, Blood
+– Quantity Datatype
+• Units of measure for the Blood Glucose measurement:
+
+80 UCUM units = mg/dL
+
+1
+7
+
+Bindings
+Code
+System:
+Defines a set
+of concepts
+with a
+coherent
+meaning
+Code
+Display
+Definition
+
+Value Set:
+A selection of
+a set of codes
+for use in a
+Selects particular
+context
+from
+
+one or
+more
+
+Binds a FHIR
+Coded
+Element
+
+1
+8
+
+Binding Strength
+• How closely the options in the value set should be followed
+• Values
+– Required
+
+(must come from set)
+
+– Extensible
+
+(may use alternate if have to)
+
+– Preferred
+
+(don’t have to, but should)
+
+– Example
+
+(set isn’t specified)
+
+• Can use a profile to vary
+– Make stronger not weaker
+
+Let's discuss with an example (1)
+• A brand new agency, called Fictitious Office for Control
+of Animal Behaviour (FOCAB), requires prompt reporting
+of some specific problems related to animals injuring
+humans
+• The FHIR IG involves using a resource with a code
+(CodeableConcept) element.
+• It will be used to represent "what happened".
+• EHRs can report code to FOCAB using either SNOMED
+CT or ICD-10.
+
+Let's discuss with an example (2)
+These are the codes requiring report to FOCAB
+CodeSystem
+
+CODES FROM ICD-10
+All
+codes descendant of:
+(http://hl7.org/fhir/sid/icd-10)
+
+CODES FROM SNOMED CT
+All
+the descendants (is-a) of
+(http://snomed.info/sct)
+
+W53 - Contact with rodent
+W54 – Contact with dogs
+W55 – Contact with other mammals
+W56 – Contact with non venomous sea animal
+W57 – Contact with non venomous insect or arthropods
+W58 – Contact with crocodrile or alligator
+W59 – Contact with non venomous reptiles
+W61 – Contact with domestic birds
+W62 - Contact with non–venomous amphibians
+T63 - Toxic effect of contact with venomous animals
+
+'Bite of a non-human animal':782162007 (is-a: 782162007)
+'Accidental physical contact with animal': 418589001 (is-a
+418589001)
+
+ValueSet
+
+We created a new ValueSet called
+http://focab.gov/fhirig/ValueSet/focuscodes
+which includes all these codes from
+SNOMED CT and ICD-10
+This ValueSet has two functions:
+- Know when to report to FOCAB
+(detection triggers report)
+- Validate code. Only these codes are valid
+
+Let's discuss with an example (3): Questions
+For each code in this list
+Discuss if it is valid for the FOCAB FHIR IG or not
+#1
+"code": {
+"coding": [
+{
+"system": "http://example.org/fhir/conditions",
+"code": "1234",
+"display": "Examplitis"
+}
+],
+"text": "Examplitis"
+},
+
+#2
+"code": {
+"coding":[{
+"system":"http://hl7.org/fhir/sid/icd-10",
+"code": "55.31",
+"display": "Bitten by Hoof Stock"
+}
+],
+"text": "Bitten by Hoof Stock"
+},
+
+Let's discuss with an example (4): Questions
+For each code in this list
+Discuss if it is valid for the FOCAB FHIR IG or not
+#3
+"code": {
+"coding": [
+{
+"system": "http://focab.gov/fhirig/ValueSet/focuscodes",
+"code": "W59.22",
+"display": "Struck by a turtle"
+}
+],
+"text": "Struck by Crush"
+},
+
+#4
+"code": {
+"coding":[{
+"system":"http://hl7.org/fhir/sid/icd-10",
+"code": "W60",
+"display": "Contact with nonvenomous plant
+thorns and spines and sharp leaves"
+}
+],
+"text": "Hurt by a cactus"
+},
+
+Let's discuss with an example (5): Questions
+For each code in this list
+Discuss if it is valid for the FOCAB FHIR IG or not
+#5
+"code": {
+"coding": [
+{
+"system": "http://snomed.info/sct",
+"code": " : "770957005",
+"display": "Bite of a seal"
+}
+],
+"text": "Bitten by a seal in the street"
+},
+
+#6
+"code": {
+"coding": [
+{
+"system": " http://hl7.org/fhir/sid/icd-10",
+"code": " : "T63.2",
+}
+],
+"text": "Venom of Scorpion"
+},
+
+Terminology Services on FHIR
+• Provides ‘services’ for consumers to access terminology
+– Hide the complex stuff from a consumer
+
+• Uses Operations framework
+– Get definition for a concept
+– Find a concept
+• Within a ValueSet
+
+•
+•
+
+Find
+Terms
+Get Term
+Definition
+
+http://hl7.org/implement/standards/fhir/terminology-service.html
+
+Terminology Servers
+• Lots of Complexity
+
+– Code Systems
+– Value Sets
+– Bindings
+• Most applications are much simpler in capacities and needs.
+– Usually lists of codes shown in a table
+
+• A terminology server concentrates the complexity in only one
+system, that can even be a third party service.
+
+Application needs
+• Give me a list of codes
+• ¿Is this code valid?
+• ¿How do I show this concept?
+• Translate this code into another code system
+• Integrate terminology search into my app
+
+Terminology Operations (FHIR)
+• $expand – obtain expansion for a valueset
+• $lookup – given code/valueset, give display
+• $validate-code – ¿is it valid? (including subsumption test)
+• $translate – translate this into another code system
+
+US Terminology – Use Cases and Domain
+(Main Use)
+• LOINC: lab tests, document sections, vital signs
+• SNOMED CT: problems, diagnostics, allergies
+• RXNORM: medication (products and drugs)
+• CVX: Vaccine codes
+• CPT: Procedures
+• ICD-10 CM: conditions
+
+PH Terminology – Main Repository
+• UMLS
+• CVX
+• OMB: Race, Ethnicity
+• VSAC - NIH
+Terminology Server :
+Public Health
+– OIDs?
+
+FHIR Access:
+https://www.nlm.nih.gov/vsac/support/usingvsac/vsacfhirapi.html
+
+BLOCK 3 – MAPPING
+1. Mapping – HL7 V2-to-FHIR
+2. Assignment
+
+NO QUESTIONS FOR THIS BLOCK – JUST A
+HANDS-ON ASSIGNMENT
+
+Mapping: HL7 V2 and FHIR
+V2 to FHIR
+bridge
+
+FHIR
+Message
+FHIR processor
+Message
+s
+
+FHIR
+Reposit
+ory
+FHIR
+RES
+T
+
+Hospital System
+Note: Messages are events,
+REST exposes a “repository”
+Model of data…
+
+Why is HL7 V2-to-FHIR Conversion Important
+• HL7 V2.x is still the lingua franca of healthcare, despite all
+its dialects (different versions and sui generis utilization and
+implementation)
+• If you want ALL the clinical information from a site or group
+of site as input for a FHIR based clinical repository, the
+easiest way is to 'listen' to existing information flows, and
+they are usually implemented as HL7 V2 feeds: ADT, Lab
+Results, Immunizations.
+
+How it is done
+• There is an official mapping for the most common HL7 V2
+messages (ADT, Orders, Results, Scheduling)
+• https://build.fhir.org/ig/HL7/v2-to-fhir/
+• IT IS NOT A TOOL: it's a mapping.
+• Is it a definitive mapping? NO. Why? because each HL7
+V2 implementation can be opinionated, extended, etc. It's
+very common to implement a custom script to tackle the
+specifics. Sorry
+
+Some tools for mapping
+• FUME
+• Microsoft FHIR
+Converter
+• Mirth Connect
+Tools to convert instances of
+HL7V2.x, CDA R2 or custom
+formats from/to FHIR
+JSON/XML
+34
+
+Mapping: FUME
+FUME
+
+https://try.fume.health/
+
+FUME is a FHIR conversion and transformation engine, designed to enable any data
+analyst to express FHIR-related data conversions in an easy, compact and expressive
+syntax.
+FUME was created by a company from Israel called Outburn.
+
+Can connect to a FHIR server that enables it to be used as a repository for saved FUME
+mappings & translation tables. Uses FHIR-oriented functions that assist in the
+transformation to or from FHIR resources. Has a RESTful API to run the transformation
+against a JSON, XML, CSV or HL7 V2 input
+35
+
+Mapping : FHIR Converter
+FHIR-Converter https://github.com/microsoft/FHIR-Converter
+• Open-source project that enables conversion of health data from legacy
+formats to and from FHIR. The FHIR converter uses the Liquid template
+language and the .NET runtime.
+• The FHIR converter supports the following conversions: HL7v2 to
+FHIR, C-CDA to FHIR, JSON to FHIR, FHIR STU3 to R4, and FHIR to
+HL7v2 (Preview).
+• Also available as API operation in the Azure based FHIR store
+
+36
+
+Mapping : Mirth Connect
+Mirth Connect
+
+https://github.com/nextgenhealthcare/connect
+
+Mirth Connect translates message standards into the one your system
+understands. Whenever a "foreign" system sends you a message,
+Mirth Connect's integration capabilities expedite the following:
+• Filtering — Mirth Connect reads message parameters and passes the
+message to or stops it on its way to the transformation stage.
+• Transformation — Mirth Connect converts the incoming message
+standard to another standard (e.g., HL7 to XML).
+• Extraction — Mirth Connect can "pull" data from and "push" data to
+a database.
+• Routing — Mirth Connect makes sure messages arrive at their
+assigned destinations.
+• Users manage and develop channels (message pathways) using the
+interface known as the Administrator
+
+WARNING NO
+LONGER OPEN
+SOURCE FROM
+VERSIONS APRIL
+2025 AND BEYOND
+37
+
+Assignment #4
+We will proceed to work in groups now, and solve Assignment #4
+
+Assignment #4 - HL7 V2.5 To FHIR Mapping
+
+

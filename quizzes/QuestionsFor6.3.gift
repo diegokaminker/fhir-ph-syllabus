@@ -1,0 +1,290 @@
+// FHIR Architecture Components Quiz - Section 6.3
+// Converted from componentsquiz.html
+
+// Clinical Data Stores Category
+::6.3-1::Which type of clinical data store is primarily used for storing, searching, and accessing clinical documents, often relying on a 'document registry' for metadata?{
+=Document Store (DS)
+~Granular Data Store (GDS)
+~Imaging Repository (IR)
+~Clinical Data Repository (CDR)
+}
+
+::6.3-2::A Clinical Data Repository (CDR) that consolidates clinical data from various sources into a centralized, patient-centric view, often storing information in FHIR resource format, is known as a:{
+=Granular Data Store (GDS)
+~Document Store (DS)
+~Imaging Repository (IR)
+~Audit Log (AL)
+}
+
+::6.3-3::Why are medical images typically stored in a separate Imaging Repository (IR) rather than the same clinical data repository as other discrete data?{
+=Images are larger (MB or TB), complex to store, retrieve, and distribute, and DICOM is the prevailing standard.
+~Images are less critical for patient care.
+~Images are smaller in size and easier to manage separately.
+~Imaging repositories offer better compression algorithms.
+}
+
+::6.3-4::Which of the following is a common issue faced by Clinical Data Stores?{
+=Scalability, Partitioning, and Multi-Tenancy
+~Lack of data standardization
+~Limited access to patient information
+~Inability to integrate with FHIR APIs
+}
+
+::6.3-5::What is a 'façade' in the context of Clinical Data Stores?{
+=A FHIR-enabled read and write access API to an existing non-FHIR clinical data store.
+~A physical security layer for data centers.
+~A non-FHIR native server that stores information internally as FHIR Resources.
+~A tool for converting FHIR resources to other formats.
+}
+
+// Infrastructure Category
+::6.3-6::Which infrastructure component ensures that a user is who they claim to be, often involving mechanisms like OAuth 2.0 or OpenID Connect?{
+=Authentication (AUTHE)
+~Authorization (AUTHO)
+~Consent Management (CONS)
+~API Gateway (AG)
+}
+
+::6.3-7::The process of checking if a user's role allows access (read or write) to requested data, often defined by 'scopes' in FHIR, is handled by which component?{
+=Authorization (AUTHO)
+~Authentication (AUTHE)
+~Audit Log (AL)
+~Digital Signature (DS)
+}
+
+::6.3-8::Which component is central to a scalable consent architecture, addressing whether a payer/provider has authority to view specific healthcare data about a patient?{
+=Consent Management (CONS)
+~API Gateway (AG)
+~Audit Log (AL)
+~Digital Signature (DS)
+}
+
+::6.3-9::All systems must ensure that records are created and maintained about when, from where, and who accessed information. This is handled by the:{
+=Audit Log (AL)
+~Authentication (AUTHE)
+~Authorization (AUTHO)
+~Consent Management (CONS)
+}
+
+::6.3-10::A centralized entry point for managing interactions between clients and backend services, often performing tasks like load balancing and request routing, is known as an:{
+=API Gateway (AG)
+~Authentication Server
+~Messaging Queue (MQ)
+~Digital Signature Service (DS)
+}
+
+// Registries Category
+::6.3-11::Which registry component maintains unique identifiers and demographic information for all patients, linking their records across different systems and facilities?{
+=Patient Identity (MPI)
+~Provider Directory (PRI)
+~Endpoint Directory (END)
+~Device Directory (DEV)
+}
+
+::6.3-12::A directory that involves identification for organizations, professionals working for them, and facilities or locations where care is delivered is called a:{
+=Provider Directory (PRI)
+~Patient Identity (MPI)
+~Device Directory (DEV)
+~Endpoint Directory (END)
+}
+
+::6.3-13::Which registry component addresses the problem of finding a FHIR server or any other server, often including attributes like payload type, status, and protocol?{
+=Endpoint Directory (END)
+~Patient Identity (MPI)
+~Provider Directory (PRI)
+~Device Directory (DEV)
+}
+
+::6.3-14::A database with unique identification and attributes for all devices used in an organization, such as imaging devices, laboratory analyzers, and implantable devices, is a:{
+=Device Directory (DEV)
+~Patient Identity (MPI)
+~Provider Directory (PRI)
+~Endpoint Directory (END)
+}
+
+::6.3-15::Why are registries considered 'Master Files' in digital health?{
+=No system in digital health is possible without proper identification of entities like patients, providers, and locations.
+~They contain highly sensitive patient data.
+~They are the only components that can store FHIR resources.
+~They are the oldest components in FHIR architecture.
+}
+
+// Integration Category
+::6.3-16::Which service performs transformations from one data syntax (e.g., HL7 V2.x, JSON, XML) to another, often with FHIR as the target syntax?{
+=Artifact Transformation Engine (ENG)
+~CDS HOOKS SERVICE (CDS)
+~Messaging Queue (MQ)
+~FHIR RESTful API (FHIR)
+}
+
+::6.3-17::A service that uses patient clinical information and context to provide guidelines around next steps for patient care, often using FHIR Resources and 'cards' for output, is a:{
+=CDS HOOKS SERVICE (CDS)
+~SMART-on-FHIR App (SMART)
+~FHIR Bulk Import Service (FHIR-IMP)
+~CQL Engine (CQL)
+}
+
+::6.3-18::What is the primary purpose of SMART-on-FHIR Apps?{
+=To integrate an app or website with an existing EHR, allowing data access through FHIR Resources.
+~To replace existing EHR systems entirely.
+~To perform bulk data export from FHIR servers.
+~To manage patient consent for data sharing.
+}
+
+::6.3-19::Which service provides a way to incorporate several thousands of records into an existing FHIR Store, useful for initial loads or migrations?{
+=FHIR Bulk Import Service (FHIR-IMP)
+~FHIR RESTful API (FHIR)
+~Messaging Queue (MQ)
+~IPS Generator (IPS)
+}
+
+::6.3-20::This service allows asynchronous communication between components by acting as a temporary storage for messages, enabling event-driven architectures.{
+=Messaging Queue (MQ)
+~FHIR RESTful API (FHIR)
+~Subscription Services (SUB)
+~Artifact Transformation Engine (ENG)
+}
+
+// Secondary Use Category
+::6.3-21::Which service accepts a '$export' operation to extract massive clinical and financial healthcare data from a FHIR Store into NDJSON files?{
+=FHIR Bulk Export (FHIR-EXP)
+~De-Identification Services (DID)
+~FHIR-to-OMOP Transformer (FHIR-OMOP)
+~SQL-on-FHIR Engine (FHIR-SQL)
+}
+
+::6.3-22::The service responsible for applying algorithms to remove or mask patient demographics (identifiers, locations, names) to ensure confidentiality is:{
+=De-Identification Services (DID)
+~FHIR Bulk Export (FHIR-EXP)
+~FHIR-to-Parquet (PARQ)
+~CQL Engine (CQL)
+}
+
+::6.3-23::Which service transforms FHIR resources into the OMOP SQL format, primarily for population health analysis and measures?{
+=FHIR-to-OMOP Transformer (FHIR-OMOP)
+~SQL-on-FHIR Engine (FHIR-SQL)
+~FHIR-to-Parquet (PARQ)
+~FHIR Bulk Import Service (FHIR-IMP)
+}
+
+::6.3-24::This service provides a standardized data layer to access any FHIR Store using plain SQL, simplifying complex FHIR structures for querying:{
+=SQL-on-FHIR Engine (FHIR-SQL)
+~FHIR-to-OMOP Transformer (FHIR-OMOP)
+~FHIR-to-Parquet (PARQ)
+~FHIR Bulk Export (FHIR-EXP)
+}
+
+::6.3-25::Which service converts FHIR resources into Parquet format, widely used for ingesting data for analytics and machine learning?{
+=FHIR-to-Parquet (PARQ)
+~FHIR-to-OMOP Transformer (FHIR-OMOP)
+~De-Identification Services (DID)
+~CQL Engine (CQL)
+}
+
+// Validation Category
+::6.3-26::Which service performs validation of FHIR resources at schema, schematron, and structure definition levels, including terminology checks?{
+=Resource Validation (VAL)
+~Terminology Access (TERM)
+~Business Rules, Workflow and Validation (BRW)
+~Questionnaire, Medication and Measure Definitions (CRM)
+}
+
+::6.3-27::This service provides standardized access to terminology, allowing applications to validate codes against value sets, and map codes between systems:{
+=Terminology Access (TERM)
+~Resource Validation (VAL)
+~Terminology Authoring and Distribution (TERM-AD)
+~Medication Definitions
+}
+
+::6.3-28::Which service allows the creation and maintenance of ValueSets, Code Systems, and Concept Maps, and facilitates terminology import/export and distribution?{
+=Terminology Authoring and Distribution (TERM-AD)
+~Terminology Access (TERM)
+~Resource Validation (VAL)
+~Business Rules, Workflow and Validation (BRW)
+}
+
+::6.3-29::This component allows defining and implementing local business rules for processing, workflow, or validation, often using scripts, rules engines, or BPMN+ diagrams:{
+=Business Rules, Workflow and Validation (BRW)
+~Resource Validation (VAL)
+~Terminology Access (TERM)
+~Questionnaire, Medication and Measure Definitions (CRM)
+}
+
+::6.3-30::Which service allows the authoring and access to 'Knowledge Representation Resources' or 'Canonical Resources' like library, medication, guideline, and questionnaire definitions?{
+=Questionnaire, Medication and Measure Definitions (CRM)
+~Resource Validation (VAL)
+~Business Rules, Workflow and Validation (BRW)
+~Terminology Access (TERM)
+}
+
+// Artificial Intelligence Category
+::6.3-31::Which AI service allows ingesting and processing datasets (including FHIR NDJSON or Parquet) to create, develop, and train models?{
+=Machine Learning Training (MLT)
+~Image Recognition (CV)
+~Natural Language Processor (NLP)
+~Generative AI (GenAI)
+}
+
+::6.3-32::This AI service interprets and analyzes visual data from digital images or videos, with applications in medical image analysis and disease detection:{
+=Image Recognition (CV)
+~Natural Language Processor (NLP)
+~Language Translator (LT)
+~Chatbot and Agents (CHAT)
+}
+
+::6.3-33::A service that understands, interprets, and generates human language, with applications in extracting information from text, chatbots, and 'ambient' systems:{
+=Natural Language Processor (NLP)
+~Language Translator (LT)
+~Generative AI (GenAI)
+~MCP Server (MCPS)
+}
+
+::6.3-34::Which AI service is a 'special case' of an NLP, recognizing the meaning of a natural language fragment and outputting it in a different natural language?{
+=Language Translator (LT)
+~Natural Language Processor (NLP)
+~Generative AI (GenAI)
+~Chatbot and Agents (CHAT)
+}
+
+::6.3-35::This AI service can create text, images, or videos based on its training on large datasets, often supplemented with specific information to avoid 'hallucinations':{
+=Generative AI (GenAI)
+~Machine Learning Training (MLT)
+~Natural Language Processor (NLP)
+~Image Recognition (CV)
+}
+
+// Notification Services Category
+::6.3-36::Which notification service sends alerts or notifications via email, facing challenges like sender/receiver email addresses, volume, and consent management?{
+=E-Mail Notification
+~EHR Push Notification
+~Messaging Integration
+~SMS Gateway
+}
+
+::6.3-37::This notification component sends alerts or notifications directly to the EHR or patient portal, leveraging existing security and privacy measures:{
+=EHR Push Notification
+~E-Mail Notification
+~Messaging Integration
+~Pub/Sub Service
+}
+
+::6.3-38::Which component integrates with messaging services like WhatsApp, Signal, or Telegram for faster alerts, often combined with bots for follow-up actions?{
+=Messaging Integration
+~E-Mail Notification
+~EHR Push Notification
+~SMS Gateway
+}
+
+::6.3-39::What is a primary advantage of EHR Push Notifications?{
+=Security, encryption, and privacy issues are often already handled by the EHR or patient portal.
+~They can send messages to any phone number without internet access.
+~They are always free to implement and use.
+~They do not require any clinician or patient interaction.
+}
+
+::6.3-40::Which of the following is NOT explicitly mentioned as a component category in the 'Notification Services' aisle?{
+=SMS Gateway
+~E-Mail Notification
+~EHR Push Notifications
+~Messaging Integration
+} 

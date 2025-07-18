@@ -1,0 +1,72 @@
+// Assignment #4 - HL7 V2.5 to FHIR Mapping Quiz
+// Based on expert advice and mapping concepts
+
+::Assignment 4-1::When mapping HL7 V2.x gender codes to FHIR Patient resource, what is the correct approach for handling administrative sex values?{
+=Map HL7 V2.x table 0001 values (M/F/O/A) to FHIR administrative gender codes (male/female/other/unknown)
+~Always use "unknown" for all HL7 V2.x gender values
+~Ignore gender mapping as it's not important for clinical data
+~Use custom gender codes that don't follow FHIR standards
+}
+
+::Assignment 4-2::What is the main problem with mapping MSH.4 (Sending Facility) directly to Immunization.location.reference?{
+=The reference points to a Location resource that doesn't exist in the Bundle
+~The facility code is not in the correct format
+~Location information should not be included in immunization records
+~The MSH.4 field contains invalid data
+}
+
+::Assignment 4-3::When mapping NPI identifiers from HL7 V2.x to FHIR, what is the correct system URL to use?{
+=http://hl7.org/fhir/sid/us-npi
+~http://terminology.hl7.org/CodeSystem/npi
+~http://hl7.org/fhir/CodeSystem/us-npi
+~urn:oid:2.16.840.1.113883.4.6
+}
+
+::Assignment 4-4::For mapping CVX immunization codes from HL7 V2.x to FHIR, what is the correct system URL?{
+=http://hl7.org/fhir/sid/cvx
+~http://terminology.hl7.org/CodeSystem/cvx
+~http://hl7.org/fhir/CodeSystem/cvx
+~urn:oid:2.16.840.1.113883.12.292
+}
+
+::Assignment 4-5::When mapping HL7 V2.x date format (YYYYMMDDHHMMSS) to FHIR dateTime, what is the correct transformation?{
+=Convert to ISO 8601 format: YYYY-MM-DDThh:mm:ss+zz:zz
+~Keep the same format as it's already compatible
+~Remove the time component and use only the date
+~Add random timezone information
+}
+
+::Assignment 4-6::For internal Bundle references between resources, what is the recommended approach?{
+=Use urn:uuid references pointing to the fullUrl of the referenced entry
+~Use relative references with resource type and ID
+~Use absolute URLs to external servers
+~Avoid references altogether and duplicate data
+}
+
+::Assignment 4-7::When mapping race/ethnicity data from HL7 V2.x to FHIR, what is the key difference in how this information is structured?{
+=In FHIR, race is an extension defined in US Core, not part of the base Patient resource
+~Race information is not supported in FHIR at all
+~Race is stored in the same location in both standards
+~Race codes are completely different between the standards
+}
+
+::Assignment 4-8::What is the correct approach for handling manufacturer information in immunization mapping from HL7 V2.x to FHIR?{
+=Map RXA.17 (Manufacturer) to Immunization.manufacturer using proper organization reference
+~Ignore manufacturer information as it's not clinically relevant
+~Always use a default manufacturer value
+~Store manufacturer as a text field instead of a reference
+}
+
+::Assignment 4-9::When creating a FHIR Message Bundle from HL7 V2.x, what is the purpose of the fullUrl field in each entry?{
+=To provide a unique identifier for internal Bundle references
+~To specify the external server URL
+~To indicate the resource type
+~To store the original HL7 V2.x segment information
+}
+
+::Assignment 4-10::What is the most critical consideration when mapping HL7 V2.x codes to FHIR terminology?{
+=Ensuring the correct system URL is used for each code system
+~Converting all codes to lowercase
+~Removing all display text from coding elements
+~Using only the most recent version of each code system
+} 

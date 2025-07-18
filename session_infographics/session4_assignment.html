@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment #4 - HL7 V2.5 TO FHIR Mapping</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+
+        .section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .section h3 {
+            color: #34495e;
+            margin: 25px 0 15px 0;
+            font-size: 1.4em;
+        }
+
+        .section h4 {
+            color: #2c3e50;
+            margin: 20px 0 10px 0;
+            font-size: 1.2em;
+        }
+
+        .problem-list {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .problem-list ol {
+            margin-left: 20px;
+        }
+
+        .problem-list li {
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .link-box {
+            background: #e3f2fd;
+            border: 1px solid #bbdefb;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .link-box a {
+            color: #1976d2;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .link-box a:hover {
+            text-decoration: underline;
+        }
+
+        .mapping-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .mapping-table th,
+        .mapping-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .mapping-table th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+
+        .mapping-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .mapping-table tr:hover {
+            background: #e3f2fd;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .code-block pre {
+            margin: 0;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .note-box {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .note-box strong {
+            color: #0c5460;
+        }
+
+        .problem-section {
+            background: #fff5f5;
+            border: 1px solid #fed7d7;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .problem-section h4 {
+            color: #c53030;
+            margin-bottom: 15px;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .comparison-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .comparison-item h5 {
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+
+        .toc {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .toc h3 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .toc ul {
+            list-style: none;
+        }
+
+        .toc li {
+            margin: 8px 0;
+        }
+
+        .toc a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Assignment #4</h1>
+            <div class="subtitle">HL7 V2.5 TO FHIR Mapping</div>
+        </div>
+
+        <div class="content">
+            <div class="toc">
+                <h3>Table of Contents</h3>
+                <ul>
+                    <li><a href="#original-message">Original Example Message</a></li>
+                    <li><a href="#implementation-guide">HL7 V2.5.1 Implementation Guide</a></li>
+                    <li><a href="#proposed-mapping">Proposed Mapping</a></li>
+                    <li><a href="#standard-mapping">Standard Mapping</a></li>
+                    <li><a href="#mapping-playground">Mapping Playground</a></li>
+                    <li><a href="#your-job">Your Job</a></li>
+                    <li><a href="#hints">Hints from An Expert</a></li>
+                    <li><a href="#preliminary-analysis">Preliminary Analysis</a></li>
+                </ul>
+            </div>
+
+            <div class="section" id="original-message">
+                <h2>Original Example Message</h2>
+                <p>We have this immunization message in HL7 V2.5 from the Maine immunization registry available for download from here:</p>
+                <div class="link-box">
+                    <a href="https://gist.github.com/diegokaminker/8eafa66e14cd4c77f89d109768bc0555" target="_blank">HL7 V2.5 Immunization Message</a>
+                </div>
+                <p>You can copy the message and paste it in:</p>
+                <div class="link-box">
+                    <a href="https://www.hl7inspector.com/" target="_blank">HL7 Inspector Tool</a>
+                </div>
+                <p>Clicking in any segment / field (segment are lines, fields are separated by | - pipes) you can see the description of the content.</p>
+            </div>
+
+            <div class="section" id="implementation-guide">
+                <h2>HL7 V2.5.1 Implementation Guide from Maine</h2>
+                <p>The implementation guide is available from here:</p>
+                <div class="link-box">
+                    <a href="https://www.maine.gov/dhhs/mecdc/infectious-disease/immunization/documents/ImmPact-HL7v2.5.1DataExchangeSpecs-v0.3-ME-9.2020.pdf" target="_blank">Maine Immunization Implementation Guide</a>
+                </div>
+                <p>Our organization needed to transform the immunization messages into FHIR to feed a clinical decision support system.</p>
+            </div>
+
+            <div class="section" id="proposed-mapping">
+                <h2>Proposed Mapping</h2>
+                <p>One of the big consultancy companies (in fact, one of the big 7) sent a 18yo trainee who after three months asking questions and writing notes in an ipad, finally asked ChatGPT to create a template with the mapping from the HL7 V2.x message to a FHIR Message Bundle, and a table with the mapping, to help the implementers.</p>
+                <p>The results are below:</p>
+
+                <h3>Mapping Table</h3>
+                <table class="mapping-table">
+                    <thead>
+                        <tr>
+                            <th>Value in our example<br>{{segment.field}} message</th>
+                            <th>HL7 V2.x Description</th>
+                            <th>Resource.Element in Bundle</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{MSH.3}}<br>MyEMR</td>
+                            <td>Sending Application</td>
+                            <td>MessageHeader.source.name</td>
+                        </tr>
+                        <tr>
+                            <td>{{MSH.4}}<br>DE-000001</td>
+                            <td>Sending Facility</td>
+                            <td>MessageHeader.source.endpoint</td>
+                        </tr>
+                        <tr>
+                            <td>{{MSH.5}}</td>
+                            <td>Receiving Application</td>
+                            <td>MessageHeader.destination.name</td>
+                        </tr>
+                        <tr>
+                            <td>{{MSH.7}}<br>20160701123030-0700</td>
+                            <td>Date/Time of Message</td>
+                            <td>MessageHeader.timestamp</td>
+                        </tr>
+                        <tr>
+                            <td>{{MSH.9}}<br>VXU^V04^VXU_V04</td>
+                            <td>Message Type</td>
+                            <td>MessageHeader.eventCoding.code</td>
+                        </tr>
+                        <tr>
+                            <td>{{MSH.10}}<br>CA0001</td>
+                            <td>Message Control ID</td>
+                            <td>MessageHeader.id</td>
+                        </tr>
+                        <tr>
+                            <td>{{PID.3}}<br>PA123456</td>
+                            <td>Patient Identifier List</td>
+                            <td>Patient.id</td>
+                        </tr>
+                        <tr>
+                            <td>{{PID.3.4}}<br>MYEMR</td>
+                            <td>Assigning Authority</td>
+                            <td>Patient.identifier.system</td>
+                        </tr>
+                        <tr>
+                            <td>{{PID.5.1}}<br>JONES</td>
+                            <td>Patient Name - Family</td>
+                            <td>Patient.name.family</td>
+                        </tr>
+                        <tr>
+                            <td>{{PID.5.2}}<br>GEORGE</td>
+                            <td>Patient Name - Given</td>
+                            <td>Patient.name.given</td>
+                        </tr>
+                        <tr>
+                            <td>{{PID.5.3}}<br>M</td>
+                            <td>Patient Name - Middle</td>
+                            <td>Patient.name.given</td>
+                        </tr>
+                        <tr>
+                            <td>{{PID.5.4}}<br>JR</td>
+                            <td>Patient Name - Suffix</td>
+                            <td>Patient.name.suffix</td>
+                        </tr>
+                        <tr>
+                            <td>{{PID.7}}<br>20140227</td>
+                            <td>Date/Time of Birth</td>
+                            <td>Patient.birthDate</td>
+                        </tr>
+                        <tr>
+                            <td>{{PID.8}}<br>M</td>
+                            <td>Administrative Sex</td>
+                            <td>Patient.gender</td>
+                        </tr>
+                        <tr>
+                            <td>{{PID.11.1}}<br>1234 W FIRST ST</td>
+                            <td>Patient Address Street</td>
+                            <td>Patient.address.line</td>
+                        </tr>
+                        <tr>
+                            <td>{{PID.11.3}}<br>AUGUSTA</td>
+                            <td>Patient Address - City</td>
+                            <td>Patient.address.city</td>
+                        </tr>
+                        <tr>
+                            <td>{{PID.11.4}}<br>ME</td>
+                            <td>Patient Address State</td>
+                            <td>Patient.address.state</td>
+                        </tr>
+                        <tr>
+                            <td>{{PID.11.5}}<br>4330</td>
+                            <td>Patient Address - Zip</td>
+                            <td>Patient.address.postalCode</td>
+                        </tr>
+                        <tr>
+                            <td>{{PID.13.1}}<br>2075555555</td>
+                            <td>Phone Number Home</td>
+                            <td>Patient.telecom.value</td>
+                        </tr>
+                        <tr>
+                            <td>{{PID.15.1}}<br>ENG</td>
+                            <td>Primary Language Code</td>
+                            <td>Patient.communication.language.coding.code</td>
+                        </tr>
+                        <tr>
+                            <td>{{PID.15.2}}<br>English</td>
+                            <td>Primary Language</td>
+                            <td>Patient.communication.language.coding.display</td>
+                        </tr>
+                        <tr>
+                            <td>{{RXA.3}}<br>20140730</td>
+                            <td>Administration Date</td>
+                            <td>Immunization.occurrenceDateTime</td>
+                        </tr>
+                        <tr>
+                            <td>{{RXA.5}}<br>8</td>
+                            <td>Administered Code</td>
+                            <td>Immunization.vaccineCode.coding.code</td>
+                        </tr>
+                        <tr>
+                            <td>{{RXA.5.2}}<br>HEPB-PEDIATRIC/ADOLESCENT</td>
+                            <td>Administered Description</td>
+                            <td>Immunization.vaccineCode.coding.display</td>
+                        </tr>
+                        <tr>
+                            <td>{{RXA.10}}<br>1245319599</td>
+                            <td>Administered By</td>
+                            <td>Practitioner.id</td>
+                        </tr>
+                        <tr>
+                            <td>{{RXA.10.2}}<br>Smith</td>
+                            <td>Administered By Family</td>
+                            <td>Practitioner.name.family</td>
+                        </tr>
+                        <tr>
+                            <td>{{RXA.10.3}}<br>Janet</td>
+                            <td>Administered By Given</td>
+                            <td>Practitioner.name.given</td>
+                        </tr>
+                        <tr>
+                            <td>{{RXA.10.14}}<br>MD</td>
+                            <td>Administered By Degree</td>
+                            <td>Practitioner.qualification.identifier.value</td>
+                        </tr>
+                        <tr>
+                            <td>{{RXA.15}}<br>0039F</td>
+                            <td>Lot Number</td>
+                            <td>Immunization.lotNumber</td>
+                        </tr>
+                        <tr>
+                            <td>{{RXA.16}}<br>20200531</td>
+                            <td>Expiration Date</td>
+                            <td>Immunization.expirationDate</td>
+                        </tr>
+                        <tr>
+                            <td>{{RXA.17}}<br>MSD</td>
+                            <td>Manufacturer</td>
+                            <td>Immunization.manufacturer.reference</td>
+                        </tr>
+                        <tr>
+                            <td>{{RXR.1}}<br>C28161</td>
+                            <td>Route of Administration</td>
+                            <td>Immunization.route.coding.code</td>
+                        </tr>
+                        <tr>
+                            <td>{{RXR.1.2}}<br>INTRAMUSCULAR</td>
+                            <td>Route Description</td>
+                            <td>Immunization.route.coding.display</td>
+                        </tr>
+                        <tr>
+                            <td>{{RXR.2}}<br>LA</td>
+                            <td>Site of Administration</td>
+                            <td>Immunization.site.coding.code</td>
+                        </tr>
+                        <tr>
+                            <td>{{RXR.2.2}}<br>LEFT ARM</td>
+                            <td>Site Description</td>
+                            <td>Immunization.site.coding.display</td>
+                        </tr>
+                        <tr>
+                            <td>{{OBX.3}}<br>64994-7</td>
+                            <td>Observation Identifier</td>
+                            <td>Observation.code.coding.code</td>
+                        </tr>
+                        <tr>
+                            <td>{{OBX.3.2}}<br>Vaccine funding program eligibility category</td>
+                            <td>Observation Description</td>
+                            <td>Observation.code.coding.display</td>
+                        </tr>
+                        <tr>
+                            <td>{{OBX.5}}<br>V03</td>
+                            <td>Observation Value</td>
+                            <td>Observation.valueCodeableConcept.coding.code</td>
+                        </tr>
+                        <tr>
+                            <td>{{OBX.5.2}}<br>VFC eligibility – Not Insured</td>
+                            <td>Observation Value Description</td>
+                            <td>Observation.valueCodeableConcept.coding.display</td>
+                        </tr>
+                        <tr>
+                            <td>{{OBX.14}}<br>20110701140500</td>
+                            <td>Observation Date/Time</td>
+                            <td>Observation.effectiveDateTime</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Proposed Template</h3>
+                <div class="code-block">
+<pre>{
+  "resourceType": "Bundle",
+  "type": "message",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "MessageHeader",
+        "eventCoding": {
+          "system": "http://hl7.org/fhir/message-events",
+          "code": "{{MSH.9}}"
+        },
+        "source": {
+          "name": "{{MSH.3}}",
+          "endpoint": "urn:uuid:{{MSH.4}}"
+        },
+        "destination": [
+          {
+            "name": "{{MSH.5}}"
+          }
+        ],
+        "timestamp": "{{MSH.7}}",
+        "enterer": {
+          "reference": "Practitioner/{{RXA.10}}"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "{{PID.3}}",
+        "identifier": [
+          {
+            "system": "urn:oid:{{PID.3.4}}",
+            "value": "{{PID.3}}"
+          }
+        ],
+        "name": [
+          {
+            "family": "{{PID.5.1}}",
+            "given": ["{{PID.5.2}}", "{{PID.5.3}}"],
+            "suffix": ["{{PID.5.4}}"]
+          }
+        ],
+        "birthDate": "{{PID.7}}",
+        "gender": "{{PID.8}}",
+        "address": [
+          {
+            "line": ["{{PID.11.1}}"],
+            "city": "{{PID.11.3}}",
+            "state": "{{PID.11.4}}",
+            "postalCode": "{{PID.11.5}}"
+          }
+        ],
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "{{PID.13.1}}",
+            "use": "home"
+          }
+        ],
+        "communication": [
+          {
+            "language": {
+              "coding": [
+                {
+                  "system": "urn:oid:2.16.840.1.113883.6.96",
+                  "code": "{{PID.15.1}}",
+                  "display": "{{PID.15.2}}"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Practitioner",
+        "id": "{{RXA.10}}",
+        "identifier": [
+          {
+            "system": "urn:oid:2.16.840.1.113883.4.6",
+            "value": "{{RXA.10}}"
+          }
+        ],
+        "name": [
+          {
+            "family": "{{RXA.10.2}}",
+            "given": ["{{RXA.10.3}}"]
+          }
+        ],
+        "qualification": [
+          {
+            "identifier": [
+              {
+                "system": "urn:oid:2.16.840.1.113883.4.6",
+                "value": "{{RXA.10.14}}"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Immunization",
+        "status": "completed",
+        "vaccineCode": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/cvx",
+              "code": "{{RXA.5}}",
+              "display": "{{RXA.5.2}}"
+            }
+          ]
+        },
+        "patient": {
+          "reference": "Patient/{{PID.3}}"
+        },
+        "occurrenceDateTime": "{{RXA.3}}",
+        "primarySource": true,
+        "location": {
+          "reference": "Location/{{MSH.4}}"
+        },
+        "lotNumber": "{{RXA.15}}",
+        "expirationDate": "{{RXA.16}}",
+        "site": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/v3/ActSite",
+              "code": "{{RXR.2}}",
+              "display": "{{RXR.2.2}}"
+            }
+          ]
+        },
+        "route": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/v3/RouteOfAdministration",
+              "code": "{{RXR.1}}",
+              "display": "{{RXR.1.2}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "{{OBX.3}}",
+              "display": "{{OBX.3.2}}"
+            }
+          ]
+        },
+        "valueCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/v2-0064",
+              "code": "{{OBX.5}}",
+              "display": "{{OBX.5.2}}"
+            }
+          ]
+        },
+        "effectiveDateTime": "{{OBX.14}}"
+      }
+    }
+  ]
+}</pre>
+                </div>
+            </div>
+
+            <div class="section" id="standard-mapping">
+                <h2>Standard Mapping</h2>
+                <p>There is a standardized mapping defined in the V2-to-FHIR implementation guide here:</p>
+                <div class="link-box">
+                    <a href="https://build.fhir.org/ig/HL7/v2-to-fhir/ConceptMap-message-vxu-v04-to-bundle.html" target="_blank">V2-to-FHIR Implementation Guide</a>
+                </div>
+            </div>
+
+            <div class="section" id="mapping-playground">
+                <h2>Mapping Playground</h2>
+                <p>You can also use the FHIR Mapping Playground at:</p>
+                <div class="link-box">
+                    <a href="https://diegokaminker.github.io/mapping_playground/mapping.html" target="_blank">FHIR Mapping Playground</a>
+                </div>
+            </div>
+
+            <div class="section" id="your-job">
+                <h2>Your Job</h2>
+                <p><strong>Your job is to reflect on each problem identified in the mapping and use your conclusions to answer the quiz questions.</strong></p>
+                <div class="note-box">
+                    <strong>Important:</strong> Instead of discussing solutions, you should carefully analyze each problem, understand the underlying issues, and apply your knowledge to answer the quiz questions that follow.
+                </div>
+            </div>
+
+            <div class="section" id="hints">
+                <h2>Hints from An Expert</h2>
+                <p>An initial list of problems was created by an HL7 FHIR HL7 V2.x expert but he retired and is now living on a private island in Bermuda. He faxed some handwritten notes.</p>
+                <div class="note-box">
+                    <strong>Note:</strong> Two days after leaving, he also recorded a message in our answering machine (we have one from the 90s): "Something happens with the manufacturer. Yes, please, another mojito"
+                </div>
+            </div>
+
+            <div class="section" id="preliminary-analysis">
+                <h2>Preliminary Analysis</h2>
+                <p><strong>Let's review each problem the HL7 Expert has identified. Reflect on each problem and use your understanding to answer the quiz questions:</strong></p>
+                <div class="note-box">
+                    <strong>Reflection Focus:</strong> For each problem below, think about:
+                    <ul>
+                        <li>What is the core issue?</li>
+                        <li>What are the implications for the FHIR mapping?</li>
+                        <li>How would you approach solving this problem?</li>
+                        <li>What knowledge from FHIR and HL7 V2.x is relevant?</li>
+                    </ul>
+                </div>
+
+                <div class="problem-list">
+                    <ol>
+                        <li>"Review the gender"</li>
+                        <li>"Something is wrong about the Location"</li>
+                        <li>"Review code systems and identifier.system"</li>
+                        <li>"Pay Attention to Date-Time Formats"</li>
+                        <li>"Take care of internal Bundle references"</li>
+                        <li>"Something happens with the manufacturer"</li>
+                    </ol>
+                </div>
+
+                <div class="problem-section">
+                    <h4>1. "Review the gender"</h4>
+                    <div class="comparison-grid">
+                        <div class="comparison-item">
+                            <h5>A) FHIR R4 Patient Gender Definition</h5>
+                            <p>This is gender element definition as found in the FHIR R4 Patient spec.</p>
+                        </div>
+                        <div class="comparison-item">
+                            <h5>B) HL7 Table 0001 Administrative Sex</h5>
+                            <p>This is the definition in HL7 table 0001 for Administrative Sex from the spec from Maine.</p>
+                        </div>
+                    </div>
+                    <p><strong>Reflect on this problem and consider how it relates to FHIR gender codes and HL7 V2.x administrative sex codes.</strong></p>
+                </div>
+
+                <div class="problem-section">
+                    <h4>2. "Something is wrong about the Location"</h4>
+                    <p><strong>A)</strong> The location element in the Immunization resource is populated through the map as follows:</p>
+                    <div class="code-block">
+<pre>"location": {
+  "reference": "Location/{{MSH.4}}"
+}</pre>
+                    </div>
+                    <p><strong>B)</strong> The problem is that both MSH.4 (Sending Facility) and RXA.11 (Administered-At Location) only contain a code for the Facility, so:</p>
+                    <ul>
+                        <li>the reference is pointing to a resource which is not in the Bundle</li>
+                        <li>We do not have any actual information on the location</li>
+                    </ul>
+                    <div class="note-box">
+                        <strong>Hint:</strong> Read the Messaging Profile…where are the locations defined? How is this information used?
+                    </div>
+                    <p><strong>Reflect on this problem and consider how location references should be handled in FHIR bundles.</strong></p>
+                </div>
+
+                <div class="problem-section">
+                    <h4>3. "Review code systems and identifier.system"</h4>
+                    <p><strong>A)</strong> Examples of Code Systems and System identifiers for HL7 V2.x:</p>
+                    <ul>
+                        <li>NPI identifier, assigned by CMS</li>
+                        <li>Code from CDC for Race</li>
+                        <li>Code from CVX for Immunization</li>
+                    </ul>
+                    <p><strong>B)</strong> Required Structure and System identifiers in FHIR (same examples):</p>
+                    <div class="comparison-grid">
+                        <div class="comparison-item">
+                            <h5>i) NPI Practitioner Identification</h5>
+                            <div class="code-block">
+<pre>"identifier":[{
+  "system" = "http://hl7.org/fhir/sid/us-npi",
+  "value" = "1245319599"
+}]</pre>
+                            </div>
+                        </div>
+                        <div class="comparison-item">
+                            <h5>ii) CDC Race Terminology</h5>
+                            <div class="code-block">
+<pre>"valueCoding" : {
+  "system" : "urn:oid:2.16.840.1.113883.6.238",
+  "code" : "2106-3",
+  "display" : "White"
+}</pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="note-box">
+                        <strong>Note:</strong> This introduces another interesting mapping problem: in HL7 V2.x, Race is part of the demographic data for the patient, in FHIR, it is an extension defined in US Core!
+                    </div>
+                    <div class="comparison-item">
+                        <h5>iii) CVX Immunization Code</h5>
+                        <div class="code-block">
+<pre>"vaccineCode": {
+  "coding": [
+    {
+      "system": "http://hl7.org/fhir/sid/cvx",
+      "code": "08",
+      "display": "HEPB-PEDIATRIC/ADOLESCENT"
+    }
+  ]
+}</pre>
+                        </div>
+                    </div>
+                    <p><strong>Reflect on this problem and consider how code systems and identifier systems should be properly mapped between HL7 V2.x and FHIR.</strong></p>
+                </div>
+
+                <div class="problem-section">
+                    <h4>4. "Pay Attention to Date-Time Formats"</h4>
+                    <div class="comparison-grid">
+                        <div class="comparison-item">
+                            <h5>A) HL7 V2.x Date Format (Maine spec)</h5>
+                            <p><strong>MSH-7: Date/time of message</strong><br>
+                            The date and time the message was created. This field is required.</p>
+                            <p><strong>Format:</strong> YYYYMMDDHHMMSS<br>
+                            If sending more than 14 digits, the following format is required:<br>
+                            YYYY[MM[DD[HH[MM[SS[.S[S[S[S]]]]]]]]][+/-ZZZZ]</p>
+                            <p><strong>Example:</strong> 19970716192030.45+0100</p>
+                        </div>
+                        <div class="comparison-item">
+                            <h5>B) FHIR Date/Time Formats</h5>
+                            <p><strong>Date:</strong> YYYY-MM-DD<br>
+                            <strong>DateTime:</strong> YYYY-MM-DDThh:mm:ss+zz.zz</p>
+                        </div>
+                    </div>
+                    <p><strong>Reflect on this problem and consider how date-time formats should be converted between HL7 V2.x and FHIR standards.</strong></p>
+                </div>
+
+                <div class="problem-section">
+                    <h4>5. "Take care of internal Bundle references"</h4>
+                    <p>References to resources inside of the same Bundle should be created using urn:uuid to allow the server solve the creation/update of resources.</p>
+                    <p>Each resource in a Bundle should contain an entry identifier (fullUrl) and a criteria in the url to add or update the contained resource. All references in the Bundle should point to the fullUrl of the referenced entry.</p>
+                    <div class="code-block">
+<pre>{
+  "fullUrl": "urn:uuid:25131980-1b95-4548-a01d-94786b40e4c6",
+  "request": {
+    "method": "PUT",
+    "url": "Patient?identifier=http://imm-messages.gov/MyEMR-DE-000004/patients|AD445566"
+  },
+  ...
+}
+
+// In a resource related to the above:
+"reference": "urn:uuid:25131980-1b95-4548-a01d-94786b40e4c6"
+...</pre>
+                    </div>
+                    <p><strong>Reflect on this problem and consider how internal bundle references should be properly structured using urn:uuid.</strong></p>
+                </div>
+
+                <div class="problem-section">
+                    <h4>6. "Something happens with the manufacturer"</h4>
+                    <p>As some other data in the HL7 V2.x => FHIR template, the manufacturer was not included in the actual mapping.</p>
+                    <p><strong>Reflect on this problem and consider how manufacturer information should be included in FHIR immunization resources.</strong></p>
+                </div>
+            </div>
+
+            <div class="section" id="quiz-instructions">
+                <h2>Quiz Instructions</h2>
+                <div class="note-box">
+                    <strong>Next Steps:</strong> After reflecting on all the problems above, you will be presented with quiz questions that test your understanding of these HL7 V2.x to FHIR mapping issues.
+                </div>
+                <p><strong>Quiz Format:</strong> The quiz will include questions related to:</p>
+                <ul>
+                    <li>Gender code mapping between HL7 V2.x and FHIR</li>
+                    <li>Location reference handling in FHIR bundles</li>
+                    <li>Code system and identifier system mapping</li>
+                    <li>Date-time format conversion</li>
+                    <li>Internal bundle reference structure</li>
+                    <li>Manufacturer information in immunization resources</li>
+                </ul>
+                <div class="highlight">
+                    <strong>Remember:</strong> Use your reflections on each problem to inform your quiz answers. The problems you've analyzed above directly relate to the quiz questions you'll encounter.
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

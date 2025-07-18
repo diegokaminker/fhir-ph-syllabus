@@ -1,0 +1,45 @@
+// Session 3 Section 3-4 Quiz - FHIR Server Validation
+// GIFT Format for Moodle Import
+// Based on: CDC Session 3 - Block 2 Questions
+
+::3-4-1::How do we fetch the capability statement of a FHIR server?{
+=GET /metadata
+~GET /$capability
+~GET /server-info
+~GET /conformance
+}
+
+::3-4-2::What is the conformance resource for representing extensions and constraints on resources?{
+=StructureDefinition
+~CapabilityStatement
+~SearchParameter
+~ProfileStructure
+}
+
+::3-4-3::Which resource is used to represent the valid codes for a specific element?{
+=ValueSet
+~CodeSystem
+~Coding
+~Terminology
+}
+
+::3-4-4::Which operation can be used to validate a resource in a FHIR Server?{
+=$validate
+~$check
+~$verify
+~$test
+}
+
+::3-4-5::What can be extended in FHIR?{
+=Resources, Data Types, and Primitive Types
+~Only Resources
+~Only Data Types
+~Only Primitive Types
+}
+
+::3-4-6::What is the minimum validation you can use for a FHIR resource?{
+=Schema Based validation
+~Schematron validation
+~Structure Definition validation
+~Profile validation
+} 
