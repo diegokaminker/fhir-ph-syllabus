@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EO Change Proposal: US Core Updates</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .infographic-container {
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            max-width: 1000px;
+            width: 100%;
+            padding: 32px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+        .section-card {
+            background-color: #f8fafc;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: left;
+            transition: transform 0.2s ease-in-out;
+            height: 100%; /* Ensure cards have equal height */
+        }
+        .section-card:hover {
+            transform: translateY(-5px);
+        }
+        .icon-box {
+            background-color: #e0f2fe; /* Light blue */
+            color: #0284c7; /* Darker blue */
+            border-radius: 50%;
+            padding: 16px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+        .change-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+        .change-item i {
+            margin-right: 10px;
+            color: #10b981; /* Green for checkmark */
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            margin-top: 4px;
+        }
+        .change-item.removed i {
+            color: #ef4444; /* Red for removed */
+        }
+        .change-item.redefined i {
+            color: #f59e0b; /* Orange for redefined */
+        }
+        .change-item.updated i {
+            color: #3b82f6; /* Blue for updated */
+        }
+        .change-item.optional i {
+            color: #6366f1; /* Indigo for optional */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-5">
+    <div class="infographic-container">
+        <h1 class="text-4xl font-extrabold text-gray-900 mb-6 leading-tight">
+            <i class="fas fa-file-alt text-purple-600 mr-3"></i>US Core Specification Updates
+        </h1>
+        <p class="text-lg text-gray-700 mb-10 max-w-3xl mx-auto">
+            Key changes to the US Core specification (Version 8.0.0) in response to Executive Order 14168, aimed at promoting interoperability and compliance.
+        </p>
+
+        <div class="grid lg:grid-cols-3 md:grid-cols-2 gap-8">
+
+            <!-- Core Data Element Changes -->
+            <div class="section-card">
+                <div class="icon-box bg-purple-100 text-purple-700">
+                    <i class="fas fa-database"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Core Data Elements</h2>
+                <div class="w-full">
+                    <div class="change-item optional">
+                        <i class="fas fa-arrow-alt-circle-right"></i>
+                        <p class="text-gray-700"><span class="font-semibold">Patient.gender:</span> Changed from mandatory to optional (min=1 to min=0).</p>
+                    </div>
+                    <div class="change-item removed">
+                        <i class="fas fa-minus-circle"></i>
+                        <p class="text-gray-700"><span class="font-semibold">"Name to Use" mapping:</span> Removed from USCDI and US Core Patient Profile guidance.</p>
+                    </div>
+                    <div class="change-item redefined">
+                        <i class="fas fa-sync-alt"></i>
+                        <p class="text-gray-700"><span class="font-semibold">US Core Sex Extension:</span> Redefined based on HHS definitions, now uses "Federal Administrative Sex" value set.</p>
+                    </div>
+                    <div class="change-item updated">
+                        <i class="fas fa-edit"></i>
+                        <p class="text-gray-700"><span class="font-semibold">Patient Profile guidance:</span> Updated to refer to FHIR R5 Patient Resource for other interoperability considerations.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Extension Changes -->
+            <div class="section-card">
+                <div class="icon-box bg-green-100 text-green-700">
+                    <i class="fas fa-puzzle-piece"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Extension Management</h2>
+                <div class="w-full">
+                    <div class="change-item removed">
+                        <i class="fas fa-minus-circle"></i>
+                        <p class="text-gray-700"><span class="font-semibold">BirthSex Extension:</span> Removed from US Core Patient Profile, examples, and guidance (remains in spec under "Other US Realm Specific Extension").</p>
+                    </div>
+                    <div class="change-item removed">
+                        <i class="fas fa-minus-circle"></i>
+                        <p class="text-gray-700"><span class="font-semibold">Individual Pronouns Extension:</span> Removed from US Core Patient Profile, examples, and guidance.</p>
+                    </div>
+                    <div class="change-item removed">
+                        <i class="fas fa-minus-circle"></i>
+                        <p class="text-gray-700"><span class="font-semibold">Patient Sex Parameter for Clinical Use (SPCU) Extension:</span> Removed from US Core Patient Profile, examples, and guidance.</p>
+                    </div>
+                    <div class="change-item removed">
+                        <i class="fas fa-minus-circle"></i>
+                        <p class="text-gray-700"><span class="font-semibold">Gender Identity Extension:</span> Deprecated and removed from US Core Profile, examples, and guidance (remains in spec under "Other US Realm Specific Extension").</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile & Terminology Updates -->
+            <div class="section-card">
+                <div class="icon-box bg-yellow-100 text-yellow-700">
+                    <i class="fas fa-book"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Profiles & Terminology</h2>
+                <div class="w-full">
+                    <div class="change-item removed">
+                        <i class="fas fa-minus-circle"></i>
+                        <p class="text-gray-700"><span class="font-semibold">Sexual Orientation Profile:</span> Removed from USCDI requirements; profile status changed from "STU" to "Informative."</p>
+                    </div>
+                    <div class="change-item updated">
+                        <i class="fas fa-language"></i>
+                        <p class="text-gray-700"><span class="font-semibold">Terminology:</span> Replaced "gender" with "sex" across the guide to align with the executive order.</p>
+                    </div>
+                    <div class="change-item updated">
+                        <i class="fas fa-handshake"></i>
+                        <p class="text-gray-700"><span class="font-semibold">Collaboration:</span> Ongoing collaboration with federal agencies to ensure regulatory alignment.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-10 text-gray-600 text-sm">
+            <p>These changes are considered substantive and breaking for existing clients and servers.</p>
+            <p>Source: FHIR-50177 EO Change Proposal</p>
+        </div>
+    </div>
+</body>
+</html>
