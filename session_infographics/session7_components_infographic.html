@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FHIR Architecture Components - Session 7B Infographic</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .component-card {
+            transition: all 0.3s ease;
+            border-left: 4px solid #3498db;
+        }
+        
+        .component-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        
+        .nav-link {
+            transition: all 0.2s ease;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background-color: #3498db;
+            color: white;
+            transform: translateX(5px);
+        }
+        
+        .sticky-nav {
+            position: sticky;
+            top: 2rem;
+        }
+        
+        .component-icon {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin-bottom: 1rem;
+        }
+        
+        .scroll-mt-24 {
+            scroll-margin-top: 6rem;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+    <!-- Header -->
+    <header class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-cogs text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800">FHIR Architecture Components</h1>
+                        <p class="text-sm text-gray-600">Session 7B - Implementation Guides</p>
+                    </div>
+                </div>
+                <div class="hidden md:block text-right">
+                    <p class="font-semibold text-gray-700">CDC Foundation FHIR Training</p>
+                    <p class="text-sm text-gray-500">April-June 2025</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container mx-auto px-6 py-8">
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Navigation Sidebar -->
+            <aside class="lg:w-1/4">
+                <div class="bg-white rounded-lg shadow-lg p-6 sticky-nav">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4 border-b-2 border-gray-200 pb-2">
+                        <i class="fas fa-list-ul mr-2 text-blue-600"></i>
+                        Component Categories
+                    </h3>
+                    <nav class="space-y-2">
+                        <a href="#clinical-data" class="nav-link block p-3 rounded-lg text-gray-700 font-medium">
+                            <i class="fas fa-database mr-2"></i>Clinical Data Stores
+                        </a>
+                        <a href="#infrastructure" class="nav-link block p-3 rounded-lg text-gray-700 font-medium">
+                            <i class="fas fa-server mr-2"></i>Infrastructure
+                        </a>
+                        <a href="#registries" class="nav-link block p-3 rounded-lg text-gray-700 font-medium">
+                            <i class="fas fa-address-book mr-2"></i>Registries
+                        </a>
+                        <a href="#integration" class="nav-link block p-3 rounded-lg text-gray-700 font-medium">
+                            <i class="fas fa-plug mr-2"></i>Integration
+                        </a>
+                        <a href="#secondary-use" class="nav-link block p-3 rounded-lg text-gray-700 font-medium">
+                            <i class="fas fa-chart-bar mr-2"></i>Secondary Use
+                        </a>
+                        <a href="#validation" class="nav-link block p-3 rounded-lg text-gray-700 font-medium">
+                            <i class="fas fa-check-circle mr-2"></i>Validation
+                        </a>
+                        <a href="#ai" class="nav-link block p-3 rounded-lg text-gray-700 font-medium">
+                            <i class="fas fa-brain mr-2"></i>Artificial Intelligence
+                        </a>
+                        <a href="#notifications" class="nav-link block p-3 rounded-lg text-gray-700 font-medium">
+                            <i class="fas fa-bell mr-2"></i>Notification Services
+                        </a>
+                    </nav>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="lg:w-3/4 space-y-8">
+                <!-- Introduction -->
+                <section class="bg-white rounded-lg shadow-lg p-8">
+                    <div class="text-center mb-8">
+                        <h2 class="text-3xl font-bold text-gray-800 mb-4">FHIR Architecture Components</h2>
+                        <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                            Understanding the key components that make up a comprehensive FHIR-based healthcare system. 
+                            Each component plays a vital role in ensuring interoperability, security, and efficient data exchange.
+                        </p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                        <div class="text-center p-4 bg-blue-50 rounded-lg">
+                            <i class="fas fa-shield-alt text-3xl text-blue-600 mb-2"></i>
+                            <h3 class="font-semibold">Security</h3>
+                            <p class="text-sm text-gray-600">Authentication & Authorization</p>
+                        </div>
+                        <div class="text-center p-4 bg-green-50 rounded-lg">
+                            <i class="fas fa-exchange-alt text-3xl text-green-600 mb-2"></i>
+                            <h3 class="font-semibold">Interoperability</h3>
+                            <p class="text-sm text-gray-600">Standards-based Exchange</p>
+                        </div>
+                        <div class="text-center p-4 bg-purple-50 rounded-lg">
+                            <i class="fas fa-database text-3xl text-purple-600 mb-2"></i>
+                            <h3 class="font-semibold">Data Management</h3>
+                            <p class="text-sm text-gray-600">Storage & Retrieval</p>
+                        </div>
+                        <div class="text-center p-4 bg-orange-50 rounded-lg">
+                            <i class="fas fa-cogs text-3xl text-orange-600 mb-2"></i>
+                            <h3 class="font-semibold">Integration</h3>
+                            <p class="text-sm text-gray-600">System Connectivity</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Clinical Data Stores -->
+                <section id="clinical-data" class="scroll-mt-24">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-database text-blue-600 mr-3"></i>
+                        Clinical Data Stores
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="component-card bg-white rounded-lg shadow-lg p-6">
+                            <div class="component-icon bg-blue-100 text-blue-600">
+                                <i class="fas fa-file-medical text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-3">Document Store (DS)</h3>
+                            <p class="text-gray-600 mb-4">Stores clinical documents with metadata management through document registries.</p>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• Clinical document storage</li>
+                                <li>• Metadata registry</li>
+                                <li>• Document search & retrieval</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="component-card bg-white rounded-lg shadow-lg p-6">
+                            <div class="component-icon bg-green-100 text-green-600">
+                                <i class="fas fa-layer-group text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-3">Granular Data Store (GDS)</h3>
+                            <p class="text-gray-600 mb-4">Patient-centric repository consolidating data from multiple sources in FHIR format.</p>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• Patient-centric view</li>
+                                <li>• FHIR resource storage</li>
+                                <li>• Multi-source integration</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="component-card bg-white rounded-lg shadow-lg p-6">
+                            <div class="component-icon bg-purple-100 text-purple-600">
+                                <i class="fas fa-x-ray text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-3">Imaging Repository (IR)</h3>
+                            <p class="text-gray-600 mb-4">Specialized storage for medical images using DICOM standards.</p>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• DICOM standard support</li>
+                                <li>• Large file management</li>
+                                <li>• Image distribution</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Infrastructure -->
+                <section id="infrastructure" class="scroll-mt-24">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-server text-blue-600 mr-3"></i>
+                        Infrastructure Components
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="component-card bg-white rounded-lg shadow-lg p-6">
+                            <div class="component-icon bg-red-100 text-red-600">
+                                <i class="fas fa-user-check text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-3">Authentication (AUTHE)</h3>
+                            <p class="text-gray-600 mb-4">Verifies user identity using OAuth 2.0 or OpenID Connect.</p>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• Identity verification</li>
+                                <li>• OAuth 2.0 support</li>
+                                <li>• OpenID Connect</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="component-card bg-white rounded-lg shadow-lg p-6">
+                            <div class="component-icon bg-orange-100 text-orange-600">
+                                <i class="fas fa-key text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-3">Authorization (AUTHO)</h3>
+                            <p class="text-gray-600 mb-4">Controls access permissions based on user roles and scopes.</p>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• Role-based access</li>
+                                <li>• FHIR scopes</li>
+                                <li>• Permission management</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="component-card bg-white rounded-lg shadow-lg p-6">
+                            <div class="component-icon bg-blue-100 text-blue-600">
+                                <i class="fas fa-handshake text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-3">Consent Management (CONS)</h3>
+                            <p class="text-gray-600 mb-4">Manages patient consent for data access and sharing.</p>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• Patient permissions</li>
+                                <li>• Consent tracking</li>
+                                <li>• Privacy compliance</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="component-card bg-white rounded-lg shadow-lg p-6">
+                            <div class="component-icon bg-green-100 text-green-600">
+                                <i class="fas fa-clipboard-list text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-3">Audit Log (AL)</h3>
+                            <p class="text-gray-600 mb-4">Records all data access activities for compliance and security.</p>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• Access tracking</li>
+                                <li>• Compliance reporting</li>
+                                <li>• Security monitoring</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="component-card bg-white rounded-lg shadow-lg p-6">
+                            <div class="component-icon bg-purple-100 text-purple-600">
+                                <i class="fas fa-route text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-3">API Gateway (AG)</h3>
+                            <p class="text-gray-600 mb-4">Centralized entry point for managing client-server interactions.</p>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• Request routing</li>
+                                <li>• Load balancing</li>
+                                <li>• Service management</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Registries -->
+                <section id="registries" class="scroll-mt-24">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-address-book text-blue-600 mr-3"></i>
+                        Registries & Directories
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="component-card bg-white rounded-lg shadow-lg p-6">
+                            <div class="component-icon bg-blue-100 text-blue-600">
+                                <i class="fas fa-user text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-3">Patient Identity (MPI)</h3>
+                            <p class="text-gray-600 mb-4">Master Patient Index maintaining unique identifiers across systems.</p>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• Unique identifiers</li>
+                                <li>• Cross-system linking</li>
+                                <li>• Demographic data</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="component-card bg-white rounded-lg shadow-lg p-6">
+                            <div class="component-icon bg-green-100 text-green-600">
+                                <i class="fas fa-user-md text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-3">Provider Directory (PRI)</h3>
+                            <p class="text-gray-600 mb-4">Directory of healthcare organizations, professionals, and facilities.</p>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• Organization registry</li>
+                                <li>• Practitioner data</li>
+                                <li>• Facility locations</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="component-card bg-white rounded-lg shadow-lg p-6">
+                            <div class="component-icon bg-purple-100 text-purple-600">
+                                <i class="fas fa-network-wired text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-3">Endpoint Directory (END)</h3>
+                            <p class="text-gray-600 mb-4">Registry of system endpoints for FHIR API communication.</p>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• System endpoints</li>
+                                <li>• API discovery</li>
+                                <li>• Connection management</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Integration -->
+                <section id="integration" class="scroll-mt-24">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-plug text-blue-600 mr-3"></i>
+                        Integration Services
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="component-card bg-white rounded-lg shadow-lg p-6">
+                            <div class="component-icon bg-blue-100 text-blue-600">
+                                <i class="fas fa-exchange-alt text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-3">Messaging Queue (MQ)</h3>
+                            <p class="text-gray-600 mb-4">Asynchronous message processing for reliable data exchange.</p>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• Asynchronous processing</li>
+                                <li>• Reliable delivery</li>
+                                <li>• Load balancing</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="component-card bg-white rounded-lg shadow-lg p-6">
+                            <div class="component-icon bg-green-100 text-green-600">
+                                <i class="fas fa-sync text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-3">Data Transformation</h3>
+                            <p class="text-gray-600 mb-4">Converts data between different formats and standards.</p>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• Format conversion</li>
+                                <li>• Standard mapping</li>
+                                <li>• Data validation</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="component-card bg-white rounded-lg shadow-lg p-6">
+                            <div class="component-icon bg-purple-100 text-purple-600">
+                                <i class="fas fa-link text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-3">System Connectors</h3>
+                            <p class="text-gray-600 mb-4">Interfaces for connecting legacy and external systems.</p>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• Legacy integration</li>
+                                <li>• External APIs</li>
+                                <li>• Protocol support</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Secondary Use -->
+                <section id="secondary-use" class="scroll-mt-24">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-chart-bar text-blue-600 mr-3"></i>
+                        Secondary Use & Analytics
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="component-card bg-white rounded-lg shadow-lg p-6">
+                            <div class="component-icon bg-blue-100 text-blue-600">
+                                <i class="fas fa-warehouse text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-3">Data Warehouse</h3>
+                            <p class="text-gray-600 mb-4">Centralized repository for analytics and reporting.</p>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• Analytics data</li>
+                                <li>• Historical records</li>
+                                <li>• Reporting support</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="component-card bg-white rounded-lg shadow-lg p-6">
+                            <div class="component-icon bg-green-100 text-green-600">
+                                <i class="fas fa-chart-line text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-3">Business Intelligence</h3>
+                            <p class="text-gray-600 mb-4">Tools for data analysis and decision support.</p>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• Data visualization</li>
+                                <li>• Trend analysis</li>
+                                <li>• Performance metrics</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="component-card bg-white rounded-lg shadow-lg p-6">
+                            <div class="component-icon bg-purple-100 text-purple-600">
+                                <i class="fas fa-search text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-3">Research Platform</h3>
+                            <p class="text-gray-600 mb-4">De-identified data access for research purposes.</p>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• De-identification</li>
+                                <li>• Research queries</li>
+                                <li>• Statistical analysis</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Validation -->
+                <section id="validation" class="scroll-mt-24">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-check-circle text-blue-600 mr-3"></i>
+                        Validation & Quality
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="component-card bg-white rounded-lg shadow-lg p-6">
+                            <div class="component-icon bg-blue-100 text-blue-600">
+                                <i class="fas fa-shield-alt text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-3">Data Validation</h3>
+                            <p class="text-gray-600 mb-4">Ensures data quality and compliance with standards.</p>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• Schema validation</li>
+                                <li>• Business rules</li>
+                                <li>• Quality checks</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="component-card bg-white rounded-lg shadow-lg p-6">
+                            <div class="component-icon bg-green-100 text-green-600">
+                                <i class="fas fa-certificate text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-3">Terminology Validation</h3>
+                            <p class="text-gray-600 mb-4">Validates clinical codes against standard terminologies.</p>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• Code validation</li>
+                                <li>• Terminology services</li>
+                                <li>• Standard compliance</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="component-card bg-white rounded-lg shadow-lg p-6">
+                            <div class="component-icon bg-purple-100 text-purple-600">
+                                <i class="fas fa-clipboard-check text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-3">Implementation Guide Validation</h3>
+                            <p class="text-gray-600 mb-4">Validates against specific implementation guide requirements.</p>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• IG compliance</li>
+                                <li>• Profile validation</li>
+                                <li>• Extension checking</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- AI -->
+                <section id="ai" class="scroll-mt-24">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-brain text-blue-600 mr-3"></i>
+                        Artificial Intelligence
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="component-card bg-white rounded-lg shadow-lg p-6">
+                            <div class="component-icon bg-blue-100 text-blue-600">
+                                <i class="fas fa-robot text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-3">Clinical Decision Support</h3>
+                            <p class="text-gray-600 mb-4">AI-powered clinical recommendations and alerts.</p>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• Clinical alerts</li>
+                                <li>• Treatment recommendations</li>
+                                <li>• Risk assessment</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="component-card bg-white rounded-lg shadow-lg p-6">
+                            <div class="component-icon bg-green-100 text-green-600">
+                                <i class="fas fa-microscope text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-3">Predictive Analytics</h3>
+                            <p class="text-gray-600 mb-4">Machine learning models for outcome prediction.</p>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• Risk prediction</li>
+                                <li>• Outcome modeling</li>
+                                <li>• Trend forecasting</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="component-card bg-white rounded-lg shadow-lg p-6">
+                            <div class="component-icon bg-purple-100 text-purple-600">
+                                <i class="fas fa-magic text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-3">Natural Language Processing</h3>
+                            <p class="text-gray-600 mb-4">Text analysis and clinical note processing.</p>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• Text extraction</li>
+                                <li>• Entity recognition</li>
+                                <li>• Clinical coding</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Notifications -->
+                <section id="notifications" class="scroll-mt-24">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-bell text-blue-600 mr-3"></i>
+                        Notification Services
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="component-card bg-white rounded-lg shadow-lg p-6">
+                            <div class="component-icon bg-blue-100 text-blue-600">
+                                <i class="fas fa-envelope text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-3">Event Notifications</h3>
+                            <p class="text-gray-600 mb-4">Real-time notifications for clinical events.</p>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• Real-time alerts</li>
+                                <li>• Event subscriptions</li>
+                                <li>• Message delivery</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="component-card bg-white rounded-lg shadow-lg p-6">
+                            <div class="component-icon bg-green-100 text-green-600">
+                                <i class="fas fa-mobile-alt text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-3">Mobile Notifications</h3>
+                            <p class="text-gray-600 mb-4">Push notifications for mobile applications.</p>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• Push notifications</li>
+                                <li>• Mobile apps</li>
+                                <li>• User preferences</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="component-card bg-white rounded-lg shadow-lg p-6">
+                            <div class="component-icon bg-purple-100 text-purple-600">
+                                <i class="fas fa-rss text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-3">Subscription Services</h3>
+                            <p class="text-gray-600 mb-4">FHIR subscription management for data updates.</p>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• FHIR subscriptions</li>
+                                <li>• Topic management</li>
+                                <li>• Webhook delivery</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Call to Action -->
+                <section class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg shadow-lg p-8 text-white text-center">
+                    <h2 class="text-3xl font-bold mb-4">Ready to Test Your Knowledge?</h2>
+                    <p class="text-xl mb-6">Take the FHIR Architecture Components Quiz to reinforce your understanding.</p>
+                    <a href="../componentsquiz.html" class="inline-block bg-white text-blue-600 font-bold py-3 px-6 rounded-lg hover:bg-gray-100 transition-colors">
+                        <i class="fas fa-question-circle mr-2"></i>
+                        Take the Quiz
+                    </a>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Back to Top Button -->
+    <button id="to-top" class="fixed bottom-8 right-8 bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 transition-colors z-50">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Active navigation highlighting
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Back to top functionality
+        const toTopBtn = document.getElementById('to-top');
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                toTopBtn.style.display = 'block';
+            } else {
+                toTopBtn.style.display = 'none';
+            }
+        });
+
+        toTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Initialize back to top button as hidden
+        toTopBtn.style.display = 'none';
+    </script>
+</body>
+</html> 
